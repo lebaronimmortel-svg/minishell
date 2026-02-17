@@ -13,7 +13,16 @@
 #ifndef HEADER_H
 # define HEADER_H
 
-# include <unistd.h>
 # include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <signal.h>
+# include <dirent.h>
+# include <string.h>
+# include <termios.h>
 
 #endif
