@@ -12,8 +12,8 @@
 
 #include "./header/header.h"
 
-int	main(void)
+int	main(int argc, char **argv)
 {
-	printf("OK\n");
+	exec(argc, argv);
 	return (0);
 }
