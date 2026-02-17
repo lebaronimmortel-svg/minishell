@@ -15,6 +15,8 @@ NAME = minishell
 SRCDIR = srcs
 UTLDIR = srcs/utils
 OBJDIR = objs
+LIBFTDIR = $(SRCDIR)/libft
+LIBFT = $(LIBFTDIR)/libft.a
 
 VPATH = $(SRCDIR) $(UTLDIR)
 
@@ -33,8 +35,11 @@ RM = rm -rf
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(FLAGS) $^ -o $@
+
+$(LIBFT):
+	$(MAKE) -C $(LIBFTDIR)
 
 $(OBJDIR)/%.o: %.c $(HEADERS)
 	mkdir -p $(OBJDIR)
@@ -42,10 +47,13 @@ $(OBJDIR)/%.o: %.c $(HEADERS)
 
 clean:
 	$(RM) $(OBJDIR)
+	$(MAKE) clean -C $(LIBFTDIR)
 
 fclean: clean
 	$(RM) $(NAME)
+	$(MAKE) fclean -C $(LIBFTDIR)
 
 re: fclean all
 
 .PHONY: all clean fclean re
+
