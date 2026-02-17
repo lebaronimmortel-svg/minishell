@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h" 
+#include "libft.h"
 
 char	*ft_cpy(char *tmp, char *g_stock, int i, int j)
 {
@@ -24,6 +24,16 @@ char	*ft_cpy(char *tmp, char *g_stock, int i, int j)
 	}
 	tmp[start] = '\0';
 	return (tmp);
+}
+
+int	ft_strlen_gnl(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str && str[i])
+		i++;
+	return (i);
 }
 
 int	is_ins(char *g_stock)
@@ -57,4 +67,11 @@ char	*ft_realloc(int len, char *g_stock, int size)
 	tmp[i] = '\0';
 	free(g_stock);
 	return (tmp);
+}
+
+void	ft_free_gnl(int fd, char *g_stock, char *tmp_buffer)
+{
+	if (fd == 0)
+		free(g_stock);
+	free(tmp_buffer);
 }

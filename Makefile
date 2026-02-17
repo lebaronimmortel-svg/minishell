@@ -21,13 +21,15 @@ LIBFT = $(LIBFTDIR)/libft.a
 VPATH = $(SRCDIR) $(UTLDIR)
 
 SRC = main.c
-UTL = 
+UTL =	exec.c \
+		
 
 OBJ = \
 	$(addprefix $(OBJDIR)/, $(SRC:.c=.o)) \
 	$(addprefix $(OBJDIR)/, $(UTL:.c=.o))
 
-HEADERS = header/header.h
+HEADERS =	header/header.h \
+			header/function.h \
 
 CC = cc
 FLAGS = -Wall -Wextra -Werror -g

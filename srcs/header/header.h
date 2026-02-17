@@ -24,5 +24,7 @@
 # include <dirent.h>
 # include <string.h>
 # include <termios.h>
+# include "../libft/libft.h"
+# include "./function.h"
 
 #endif

@@ -31,17 +31,17 @@ char	*ft_ncpy(char *g_stock, char *result, int i)
 static char	*ft_trim(char *g_stock, char **result)
 {
 	int		i;
-	size_t	j;
+	int		j;
 	char	*tmp;
 
-	if (ft_strlen(g_stock) == 0)
+	if (ft_strlen_gnl(g_stock) == 0)
 	{
 		free(g_stock);
 		return (NULL);
 	}
 	j = 0;
-	i = ft_strlen(g_stock);
-	while (g_stock && j < ft_strlen(g_stock) && g_stock[j] != '\n')
+	i = ft_strlen_gnl(g_stock);
+	while (g_stock && j < ft_strlen_gnl(g_stock) && g_stock[j] != '\n')
 		j++;
 	tmp = malloc(i - j + 1);
 	if (!tmp)
@@ -59,13 +59,13 @@ static char	*ft_trim(char *g_stock, char **result)
 static char	*ft_result(char **g_stock)
 {
 	int		i;
-	size_t	j;
+	int		j;
 	char	*result;
 
-	if (ft_strlen(*g_stock) == 0)
+	if (ft_strlen_gnl(*g_stock) == 0)
 		return (NULL);
 	j = 0;
-	while (*g_stock && j < ft_strlen(*g_stock) && (*g_stock)[j] != '\n')
+	while (*g_stock && j < ft_strlen_gnl(*g_stock) && (*g_stock)[j] != '\n')
 		j++;
 	if ((*g_stock)[j] == '\n')
 		result = malloc(j + 2);
@@ -84,7 +84,7 @@ static char	*ft_stock(char *tmp_buffer, int to_read, int fd, char *g_stock)
 	int		i;
 	int		size;
 
-	size = ft_strlen(g_stock);
+	size = ft_strlen_gnl(g_stock);
 	while (is_ins(g_stock) == 0 && to_read > 0)
 	{
 		tmp_buffer[to_read] = '\0';
@@ -127,11 +127,11 @@ char	*get_next_line(int fd)
 		to_read = read(fd, tmp_buffer, BUFFER_SIZE);
 	g_stock = ft_stock(tmp_buffer, to_read, fd, g_stock);
 	result = ft_result(&g_stock);
-	if ((ft_strlen(g_stock) == 0 && to_read == 0))
+	if (ft_strlen(g_stock) == 0 && to_read == 0)
 	{
 		free(g_stock);
 		g_stock = NULL;
 	}
-	free(tmp_buffer);
+	ft_free_gnl(fd, g_stock, tmp_buffer);
 	return (result);
 }
