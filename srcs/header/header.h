@@ -21,6 +21,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <signal.h>
+# include <sys/types.h>
 # include <dirent.h>
 # include <string.h>
 # include <termios.h>
