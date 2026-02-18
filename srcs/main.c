@@ -52,7 +52,8 @@ int	main(int argc, char **argv, char **envp)
 	sigaction(SIGQUIT, &sa, NULL);
 	//
 	
-	write(1, "============================= WELCOME TO MINISHELL =============================", 80);
+	print_header();
+	
 	write(1, "\n> ", 3);
 	while (1)
 	{

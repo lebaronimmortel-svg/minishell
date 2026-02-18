@@ -22,6 +22,7 @@ VPATH = $(SRCDIR) $(UTLDIR)
 
 SRC = main.c
 UTL =	exec.c \
+		print_header.c
 		
 
 OBJ = \
