@@ -69,9 +69,9 @@ char	*ft_realloc(int len, char *g_stock, int size)
 	return (tmp);
 }
 
-void	ft_free_gnl(int fd, char *g_stock, char *tmp_buffer)
+/*void	ft_free_gnl(int fd, char *g_stock, char *tmp_buffer)
 {
 	if (fd == 0)
 		free(g_stock);
 	free(tmp_buffer);
-}
+}*/

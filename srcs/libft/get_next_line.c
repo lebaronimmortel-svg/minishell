@@ -132,6 +132,6 @@ char	*get_next_line(int fd)
 		free(g_stock);
 		g_stock = NULL;
 	}
-	ft_free_gnl(fd, g_stock, tmp_buffer);
+	//ft_free_gnl(fd, g_stock, tmp_buffer);
 	return (result);
 }
