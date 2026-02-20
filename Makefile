@@ -24,9 +24,9 @@ all: banner $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) || { \
-		printf "$(RED)✖ Échec de la compilation$(RESET)\n"; \
+		printf "$(RED)✖ Compilation failure !$(RESET)\n"; \
 		exit 1; }
-	@printf "\n$(GREEN)✔ Build terminé avec succès !$(RESET)\n\n"
+	@printf "\n$(GREEN)✔ Compilation success !$(RESET)\n\n"
 	@printf "\a"
 	
 $(LIBFT):
@@ -64,13 +64,13 @@ clean:
 	@rm -f $(OBJ)
 	@rm -rf objs
 	@$(MAKE) clean -C $(LIBFTDIR) --no-print-directory
-	@printf "$(YELLOW)♻ Nettoyage des objets terminé.$(RESET)\n"
+	@printf "$(YELLOW)♻ Cleanup successful$(RESET)\n"
 
 fclean: clean
 	@printf "$(WHITE)"
 	@rm -f $(NAME)
 	@rm -f $(LIBFT)
-	@printf "$(YELLOW)♻ Exécutable supprimé.$(RESET)\n"
+	@printf "$(YELLOW)♻ Executable removed$(RESET)\n"
 
 re: fclean all
 
