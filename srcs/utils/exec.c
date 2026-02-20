@@ -75,6 +75,6 @@ void	exec(char *str, char **envp)
 		i++;
 	}
 	if (!ind)
-		write(1, "Unknown command\n", 19);
+		write(1, "Unknown command\n", 16);
 	free_path(path);
 }
