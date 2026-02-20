@@ -3,7 +3,7 @@
 void	print_first_line(void)
 {
 	int k;
-	
+
 	k = 0;
 	while (k < 2)
 	{
@@ -22,7 +22,7 @@ void	print_first_line(void)
 void	print_second_line(void)
 {
 	int k;
-	
+
 	k = 0;
 	while (k < 8)
 	{
@@ -34,27 +34,11 @@ void	print_second_line(void)
 
 void print_header(void)
 {
-	int i;
-	int j;
-
-	i = 0;
-	j = 0;
-	write(1, "\n", 1);
-	write(1, "\n", 1);
-	while (j < 3)
-	{
-		i = 0;
-		while (i < 72)
-		{
-			write(1, "█", 3);
-			i++;
-		}
-		write(1, "\n", 1);
-		if (j == 0)
-			print_first_line();
-		if (j == 1)
-			print_second_line();
-		write(1, "\n", 1);
-		j++;
-	}
+	printf("\n");
+	printf("███╗   ███╗██╗███╗   ██╗██╗███████╗██╗  ██╗███████╗██╗     ██╗     \n");
+	printf("████╗ ████║██║████╗  ██║██║██╔════╝██║  ██║██╔════╝██║     ██║     \n");
+	printf("██╔████╔██║██║██╔██╗ ██║██║███████╗███████║█████╗  ██║     ██║     \n");
+	printf("██║╚██╔╝██║██║██║╚██╗██║██║╚════██║██╔══██║██╔══╝  ██║     ██║     \n");
+	printf("██║ ╚═╝ ██║██║██║ ╚████║██║███████║██║  ██║███████╗███████╗███████╗\n");
+	printf("╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝\n");
 }
