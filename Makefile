@@ -22,7 +22,7 @@ WHITE	= \033[37m
 # ================= RULES =================
 all: banner $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT)
+$(NAME): $(LIBFT) $(OBJ) 
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) || { \
 		printf "$(RED)✖ Compilation failure !$(RESET)\n"; \
 		exit 1; }
@@ -30,8 +30,6 @@ $(NAME): $(OBJ) $(LIBFT)
 	@printf "\a"
 	
 $(LIBFT):
-	@printf "\n"
-	@printf "\n"
 	@$(MAKE) -C $(LIBFTDIR) --no-print-directory
 
 %.o: %.c
@@ -45,7 +43,6 @@ $(LIBFT):
 	printf "%0.s░" $$(seq 1 $$EMPTY); \
 	printf "] $(MAGENTA)%3d%%$(RESET)" $$PERCENT; \
 	$(CC) $(CFLAGS) -c $< -o $@
-
 
 banner:
 	@clear
