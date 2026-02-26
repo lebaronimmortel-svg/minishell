@@ -20,7 +20,8 @@
 # endif
 
 char	*get_next_line(int fd);
-void	ft_free_gnl(int fd, char *g_stock, char *tmp_buffer);
+void	ft_free_gnl(int fd, char **g_stock, char **tmp_buffer);
+int		ft_strlens(char *str);
 int		ft_strlen_gnl(char *str);
 int		is_ins(char *g_stock);
 char	*ft_realloc(int len, char *g_stock, int size);

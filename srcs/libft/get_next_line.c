@@ -34,14 +34,14 @@ static char	*ft_trim(char *g_stock, char **result)
 	int		j;
 	char	*tmp;
 
-	if (ft_strlen_gnl(g_stock) == 0)
+	if (ft_strlens(g_stock) == 0)
 	{
 		free(g_stock);
 		return (NULL);
 	}
 	j = 0;
-	i = ft_strlen_gnl(g_stock);
-	while (g_stock && j < ft_strlen_gnl(g_stock) && g_stock[j] != '\n')
+	i = ft_strlens(g_stock);
+	while (g_stock && j < ft_strlens(g_stock) && g_stock[j] != '\n')
 		j++;
 	tmp = malloc(i - j + 1);
 	if (!tmp)
@@ -62,10 +62,10 @@ static char	*ft_result(char **g_stock)
 	int		j;
 	char	*result;
 
-	if (ft_strlen_gnl(*g_stock) == 0)
+	if (ft_strlens(*g_stock) == 0)
 		return (NULL);
 	j = 0;
-	while (*g_stock && j < ft_strlen_gnl(*g_stock) && (*g_stock)[j] != '\n')
+	while (*g_stock && j < ft_strlens(*g_stock) && (*g_stock)[j] != '\n')
 		j++;
 	if ((*g_stock)[j] == '\n')
 		result = malloc(j + 2);
@@ -84,7 +84,7 @@ static char	*ft_stock(char *tmp_buffer, int to_read, int fd, char *g_stock)
 	int		i;
 	int		size;
 
-	size = ft_strlen_gnl(g_stock);
+	size = ft_strlens(g_stock);
 	while (is_ins(g_stock) == 0 && to_read > 0)
 	{
 		tmp_buffer[to_read] = '\0';
@@ -132,6 +132,6 @@ char	*get_next_line(int fd)
 		free(g_stock);
 		g_stock = NULL;
 	}
-	ft_free_gnl(fd, g_stock, tmp_buffer);
+	ft_free_gnl(fd, &g_stock, &tmp_buffer);
 	return (result);
 }
