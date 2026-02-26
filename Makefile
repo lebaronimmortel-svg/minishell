@@ -14,7 +14,6 @@ RESET   = \033[0m
 BOLD    = \033[1m
 RED     = \033[31m
 GREEN   = \033[32m
-YELLOW  = \033[33m
 CYAN    = \033[36m
 MAGENTA = \033[35m
 WHITE	= \033[37m
@@ -61,13 +60,13 @@ clean:
 	@rm -f $(OBJ)
 	@rm -rf objs
 	@$(MAKE) clean -C $(LIBFTDIR) --no-print-directory
-	@printf "$(YELLOW)♻ Cleanup successful$(RESET)\n"
+	@printf "$(MAGENTA)♻ Cleanup successful$(RESET)\n"
 
 fclean: clean
 	@printf "$(WHITE)"
 	@rm -f $(NAME)
 	@rm -f $(LIBFT)
-	@printf "$(YELLOW)♻ Executable removed$(RESET)\n"
+	@printf "$(MAGENTA)♻ Executable removed$(RESET)\n"
 
 re: fclean all
 
