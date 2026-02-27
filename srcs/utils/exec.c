@@ -1,14 +1,5 @@
 #include "../header/header.h"
 
-void	do_thing(char *path)
-{
-	(void) path;
-	write(1, "Commande trouvee !\n", 19);
-	
-	
-	return ;
-}
-
 void free_path(char **path)
 {
 	int i;
@@ -28,8 +19,8 @@ void free_path(char **path)
 	}
 	free(path);
 }
-#include <string.h>
-void	exec(char *str, char **envp)
+
+int	exists(char *str, char **envp)
 {
 	int i;
 	int ind;
@@ -60,12 +51,12 @@ void	exec(char *str, char **envp)
 		if (access(buf, X_OK) == 0)
 		{
 			ind = 1;
-			do_thing(path[i]);
 			break;
 		}
 		i++;
 	}
 	if (!ind)
-		write(1, "Unknown command\n", 16);
+		return(0);
 	free_path(path);
+	return (1);
 }

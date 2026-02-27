@@ -1,7 +1,9 @@
 #ifndef FUNCTION_H
 # define FUNCTION_H
 
-void	exec(char *str, char **envp);
+char	**lexer(char *str);
 void	print_header(void);
+void	lex_convert(char **split, char **envp);
+int		exists(char *str, char **envp);
 
 #endif
