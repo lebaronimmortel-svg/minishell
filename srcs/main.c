@@ -12,6 +12,21 @@
 
 #include "./header/header.h"
 
+static void free_split(char **split)
+{
+	unsigned int i;
+	
+	if (!split || !(*split))
+		return ;
+	i = 0;
+	while (split[i])
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
+}
+
 static void	handler(int sig, siginfo_t *info, void *context)
 {
 	(void) info;
@@ -37,6 +52,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	struct sigaction sa;
 	char *str;
+	char **split;
 	
 	(void) argc;
 	(void) argv;
@@ -51,9 +67,7 @@ int	main(int argc, char **argv, char **envp)
 	sigaction(SIGINT, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 	//
-	
 	print_header();
-	
 	write(1, "\n> ", 3);
 	while (1)
 	{
@@ -62,8 +76,10 @@ int	main(int argc, char **argv, char **envp)
 			str[ft_strlen(str) - 1] = '\0';
 		if (!str)
 			exit(0);
-		exec(str, envp);
+		split = lexer(str);
+		lex_convert(split, envp);
 		free(str);
+		free_split(split);
 		write(1, "> ", 2);
 	}
 	return (0);

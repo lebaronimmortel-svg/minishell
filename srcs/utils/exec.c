@@ -1,21 +1,5 @@
 #include "../header/header.h"
 
-void	do_thing(char *path)
-{
-	////
-	(void) path;
-	write(1, "Commande trouvee !\n", 19);
-	////
-	
-	/*
-	
-	insert code here 
-	
-	*/
-	
-	return ;
-}
-
 void free_path(char **path)
 {
 	int i;
@@ -35,20 +19,18 @@ void free_path(char **path)
 	}
 	free(path);
 }
-#include <string.h>
-void	exec(char *str, char **envp)
+
+int	exists(char *str, char **envp)
 {
 	int i;
 	int ind;
 	char **path;
 	char	buf[4096];
 
-	//enlever les whitespace du debut
 	i = 0;
 	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n')
 		i++;
 	ft_memmove(str, &str[i], i);
-	//
 	
 	i = 0;
 	while (envp[i])
@@ -69,12 +51,12 @@ void	exec(char *str, char **envp)
 		if (access(buf, X_OK) == 0)
 		{
 			ind = 1;
-			do_thing(path[i]);
 			break;
 		}
 		i++;
 	}
 	if (!ind)
-		write(1, "Unknown command\n", 16);
+		return(0);
 	free_path(path);
+	return (1);
 }
