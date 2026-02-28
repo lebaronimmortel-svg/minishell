@@ -4,7 +4,7 @@ CC      	= cc
 CFLAGS  	= -Wall -Wextra -Werror
 LIBFTDIR 	= ./srcs/libft
 LIBFT 		= $(LIBFTDIR)/libft.a
-SRC     	= srcs/main.c srcs/utils/print_header.c srcs/utils/exec.c srcs/lexer/lexer.c
+SRC     	= srcs/main.c srcs/utils/print_header.c srcs/utils/finder.c srcs/lexer/lexer.c
 OBJ     	= $(SRC:.c=.o)
 TOTAL   	:= $(words $(SRC))
 COUNT   	:= 0
@@ -41,7 +41,7 @@ $(LIBFT):
 	printf "%0.s▓" $$(seq 1 $$FILLED); \
 	printf "%0.s░" $$(seq 1 $$EMPTY); \
 	printf "] $(MAGENTA)%3d%%$(RESET)" $$PERCENT; \
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -g
 
 banner:
 	@clear
