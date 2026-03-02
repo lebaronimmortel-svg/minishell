@@ -51,30 +51,6 @@ char **my_realloc(char **mem)
 	return (mem);
 }
 
-static void	print_lexer(char ***lexer)
-{
-	int	i;
-	
-	i = 0;
-	while (lexer[0][i])
-	{
-		write(1, "\n", 1);
-		write (1, "█		", 5);
-		if (lexer[0][i][0] == 'F' && lexer[0][i][1] == 'L')
-			write(1, &lexer[0][i][2], ft_strlen(lexer[0][i]) - 2);
-		else
-			write(1, lexer[0][i], ft_strlen(lexer[0][i]));
-		write(1, "\n█\n", 5);
-		write(1, lexer[1][i], ft_strlen(lexer[1][i]));
-		write(1, "\n", 1);
-		write (1, "█████████████████████████████████████", 111);
-		write(1, "\n\n", 2);
-		i++;
-	}
-	return ;
-}
-
-
 static void	handler(int sig, siginfo_t *info, void *context)
 {
 	(void) info;
@@ -84,6 +60,23 @@ static void	handler(int sig, siginfo_t *info, void *context)
 		write(1, "\n> ", 3);
 	else if (sig == SIGQUIT)
 		return ;
+}
+
+static void	print_lexer(char ***lexer)
+{
+	int	i;
+
+	i = 0;
+	write(1, "\n ", 2);
+	while (lexer[0][i])
+	{
+
+		write(1, lexer[1][i], ft_strlen(lexer[1][i]));
+		write(1, " ", 1);
+		i++;
+	}
+	write(1, "\n", 1);
+	return ;
 }
 
 // ca c'est ce qui fait que Ctrl-\ ne fait rien (merci ChatGPT)
@@ -176,6 +169,67 @@ char **do_quote(char **str)
 	return (quote_arr);
 }
 
+void	print_parser(char ***lexer)
+{
+	int i;
+	
+	
+	write (1, "===============================\n\n", 33); 
+	i = 0;
+	while (lexer[1][i])
+	{
+		if (!ft_strncmp(lexer[1][i], "PIP", 3))
+		{
+			write(1, "\n    ||\n", 8);
+			write(1, " PIPE WITH\n", 11);
+			write(1, "    ||\n", 7);
+		}
+		else
+		{
+			if (!ft_strncmp(lexer[0][i], "Unknown :", 9))
+				write(1, &lexer[0][i][9], ft_strlen(lexer[0][i]) - 9);
+			else
+				write(1, lexer[0][i], ft_strlen(lexer[0][i]));
+			write(1, " ", 1);	
+		}
+		i++;
+	}
+	write(1, "\n\n", 2);
+	write (1, "===============================\n\n", 33); 
+}
+
+/*
+void	split_lexer(char ***lex)
+{
+	char **split;
+	char *join;
+	int i;
+	
+	i = 0;
+	while (lex[0][i])
+		join = ft_strjoin(join, (lex[0][i++]));
+	split = ft_split(join, '|');
+	i = 0;
+	while (split[i])
+	{
+		split[i] = ft_strtrim(split[i], " ");
+		if (!ft_strncmp(split[i], "Unknown : ", 10))
+		{
+			split[i] = ft_memmove(split[i], &split[i][10], ft_strlen(split[i]) - 10);
+			split[i][ft_strlen(split[i]) - 10] = '\0';	
+		}
+		else if (!ft_strncmp(split[i], "UNKUnknown : ", 13))
+		{
+			split[i] = ft_memmove(split[i], &split[i][13], ft_strlen(split[i]) - 13);
+			split[i][ft_strlen(split[i]) - 13] = '\0';	
+		}
+		i++;
+	}
+	print_split(split);
+	//free_split(split);
+}
+*/
+
 //ignorer les quotes !
 int	main(int argc, char **argv, char **envp)
 {
@@ -209,6 +263,8 @@ int	main(int argc, char **argv, char **envp)
 		//quote = do_quote(&str);
 		lex = lexer(str, envp);
 		print_lexer(lex);
+		print_parser(lex);
+		write(1, "\n", 1);
 		free(str);
 		//free_split(split);
 		write(1, "> ", 2);
