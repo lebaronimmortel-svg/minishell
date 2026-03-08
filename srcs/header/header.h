@@ -25,7 +25,10 @@
 # include <dirent.h>
 # include <string.h>
 # include <termios.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include "../libft/libft.h"
+# include "./typedef.h"
 # include "./function.h"
 
 #endif

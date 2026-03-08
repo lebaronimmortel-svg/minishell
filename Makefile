@@ -4,7 +4,7 @@ CC      	= cc
 CFLAGS  	= -Wall -Wextra -Werror
 LIBFTDIR 	= ./srcs/libft
 LIBFT 		= $(LIBFTDIR)/libft.a
-SRC     	= srcs/main.c srcs/utils/print_header.c srcs/utils/finder.c srcs/lexer/lexer.c
+SRC     	= srcs/main.c srcs/parser/lexer.c srcs/parser/parser.c srcs/utils/utils.c
 OBJ     	= $(SRC:.c=.o)
 TOTAL   	:= $(words $(SRC))
 COUNT   	:= 0
@@ -22,7 +22,7 @@ WHITE	= \033[37m
 all: banner $(NAME)
 
 $(NAME): $(LIBFT) $(OBJ) 
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) || { \
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline || { \
 		printf "$(RED)✖ Compilation failure !$(RESET)\n"; \
 		exit 1; }
 	@printf "\n$(GREEN)✔ Compilation success !$(RESET)\n\n"
@@ -41,7 +41,7 @@ $(LIBFT):
 	printf "%0.s▓" $$(seq 1 $$FILLED); \
 	printf "%0.s░" $$(seq 1 $$EMPTY); \
 	printf "] $(MAGENTA)%3d%%$(RESET)" $$PERCENT; \
-	$(CC) $(CFLAGS) -c $< -o $@ -g
+	$(CC) $(CFLAGS) -c $< -o $@ -g 
 
 banner:
 	@clear
@@ -71,4 +71,3 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re banner
-
