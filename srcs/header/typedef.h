@@ -20,4 +20,15 @@ typedef struct s_token
 
 }	t_token;
 
+typedef struct s_exec
+{
+	char	**all_path;
+	char	**command;
+	char	*w_path;
+	char	*path;
+	char	*input;
+	char	**env;
+	pid_t	pid[2];
+}	t_exec;
+
 #endif
