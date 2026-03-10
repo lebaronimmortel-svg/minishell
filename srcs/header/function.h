@@ -18,5 +18,7 @@ int		parser(t_token *lexer);
 void	check_quote(char *str);
 void	free_split(char **split);
 int		split_len(char **split);
+void	exec_main(char **envp, char **split);
+void	free_split_exec(t_exec *exec);
 
 #endif
