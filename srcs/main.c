@@ -12,7 +12,7 @@
 
 #include "./header/header.h"
 
-static void	print_icon(int flag)
+void	print_icon(int flag)
 {
 	if (flag == 1)
 	{
@@ -34,7 +34,7 @@ static void	print_icon(int flag)
 	}
 }
 
-static void	print_lexer(t_token *lexer)
+void	print_lexer(t_token *lexer)
 {
 	int	i;
 
@@ -61,79 +61,6 @@ static void	print_lexer(t_token *lexer)
 	return ;
 }
 
-static char **print_order(t_token *lexer)
-{
-	int	i;
-	int j;
-	char **split;
-	char *tmp;
-	
-	i = 0;
-	while(lexer[i].type)
-		i++;
-
-	split = ft_calloc(i + 1, sizeof(char *));
-	split[0] = ft_strdup("");
-	print_icon(1);
-	printf("\nExecute :\n\n");
-	i = 0;
-	j = 0;
-	while (1)
-	{
-		while (lexer[i].type == 'w')
-		{
-
-			tmp = ft_strjoin(split[j], " ");
-			free(split[j]);
-			split[j] = tmp;
-			tmp = ft_strjoin(split[j], lexer[i].value);
-			free(split[j]);
-			split[j] = tmp;
-			
-			printf("	%s", lexer[i].value);
-			i++;
-		}
-		if (lexer[i].type == 'p')
-		{
-			j++;
-			split[j] = ft_strdup("");
-			printf("\n\nPipe to :\n\n");
-		}
-		else if (lexer[i].type == 'r')
-		{
-			j++;
-			split[j] = ft_strdup("");
-			printf("\n\nRedir out to :\n\n");
-		}
-		else if (lexer[i].type == 'a')
-		{
-			j++;
-			split[j] = ft_strdup("");
-			printf("\n\nAppend to :\n\n");
-		}
-		else if (lexer[i].type == 'h')
-		{
-			j++;
-			split[j] = ft_strdup("");
-			printf("\n\nHeredoc to :\n\n");
-		}
-		else if (lexer[i].type == 's')
-		{
-			j++;
-			split[j] = ft_strdup("");
-			printf("\n\nRedir in to :\n\n");
-		}
-		else if (lexer[i].type == 0)
-		{
-			split[j + 1] = NULL;
-			break ;
-		}
-		i++;
-	}
-	printf("\n\n");
-	return (split);
-}
-
 static void	print_header(void)
 {
 	printf("\n");
@@ -151,33 +78,29 @@ static void	print_header(void)
 	printf("╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝\n");
 }
 
+void	handler0(int sig)
+{
+	(void) sig;
+	printf("\n\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
 int	main(int argc, char **argv, char **envp)
 {
-	char	*str;
 	t_token	*lex;
-	char **split;
+	char	**split;
 
-	(void) argc;
+	signal(SIGINT, handler0);
+	signal(SIGQUIT, SIG_IGN);
 	(void) argv;
+	if (argc != 1)
+		return (0);
 	print_header();
 	printf("\n");
-	while (1)
-	{
-		str = readline("\n🌈 ");
-		lex = lexer(str);
-		if (lex)
-		{
-			print_lexer(lex);
-			if (parser(lex))
-			{
-				printf("\n✅ OK\n\n\n");
-				split = print_order(lex);
-				print_icon(2);
-				exec_main(envp, split);
-			}
-			else
-				printf("\n❌ NOK\n\n");
-		}
-	}
+	lex = NULL;
+	split = NULL;
+	main_loop(split, lex, envp);
 	return (0);
 }
