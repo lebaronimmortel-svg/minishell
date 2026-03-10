@@ -59,13 +59,13 @@ void	exec_command(t_exec *exec, int i)
 {
 	find_env(exec);
 	exec->pid[i] = fork();
-	if (exec->pid[i] == 0)
+	if (exec->pid[i] == 0 && exec->w_path)
 		execve(exec->w_path, exec->command, exec->env);
 	free_split_exec(exec);
 }
 
-// only the first cmd of split is executed,
-// since we don't handle multipipe yet
+// Only the first command of split is executed,
+// since we don't handle multipipes yet
 void	exec_main(char **envp, char **split)
 {
 	t_exec	exec;
