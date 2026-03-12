@@ -12,19 +12,95 @@
 
 #include "./header/header.h"
 
-static void	handler(int sig)
+void	print_icon(int flag)
 {
-	(void) sig;
-	write(1, "\n", 1);
-	write(1, ">", 1);
+	if (flag == 1)
+	{
+		printf("╔══╗\n");
+		printf("║🛄║ -> Parsing\n");
+		printf("╚══╝\n");
+	}
+	else if (flag == 0)
+	{
+		printf("\n╔══╗\n");
+		printf("║🛃║ -> Lexing\n");
+		printf("╚══╝\n");
+	}
+	else if (flag == 2)
+	{
+		printf("\n╔══╗\n");
+		printf("║♿║ -> Executing\n");
+		printf("╚══╝\n\n");
+	}
 }
 
-int	main(int argc, char **argv)
+void	print_lexer(t_token *lexer)
 {
-	char *str;
+	int	i;
 
-	signal(SIGINT, handler);
-	exec(argc, argv);
+	print_icon(0);
+	i = 0;
+	printf("\n");
+	while (lexer[i].type)
+	{
+		if (lexer[i].type == 'p')
+			printf("PIPE : ");
+		else if (lexer[i].type == 'a')
+			printf("APPEND : ");
+		else if (lexer[i].type == 'h')
+			printf("HEREDOC : ");
+		else if (lexer[i].type == 'r')
+			printf("OUT_REDIR : ");
+		else if (lexer[i].type == 's')
+			printf("INP_REDIR : ");
+		else if (lexer[i].type == 'w')
+			printf("WORD : ");
+		printf("%s\n", lexer[i].value);
+		i++;
+	}
+	return ;
+}
 
+static void	print_header(void)
+{
+	printf("\n");
+	printf("███╗   ███╗██╗███╗   ██╗██╗███████╗");
+	printf("██╗  ██╗███████╗██╗     ██╗     \n");
+	printf("████╗ ████║██║████╗  ██║██║██╔════╝");
+	printf("██║  ██║██╔════╝██║     ██║     \n");
+	printf("██╔████╔██║██║██╔██╗ ██║██║███████╗");
+	printf("███████║█████╗  ██║     ██║     \n");
+	printf("██║╚██╔╝██║██║██║╚██╗██║██║╚════██║");
+	printf("██╔══██║██╔══╝  ██║     ██║     \n");
+	printf("██║ ╚═╝ ██║██║██║ ╚████║██║███████║");
+	printf("██║  ██║███████╗███████╗███████╗\n");
+	printf("╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝");
+	printf("╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝\n");
+}
+
+void	handler0(int sig)
+{
+	(void) sig;
+	printf("\n\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_token	*lex;
+	char	**split;
+
+	signal(SIGINT, handler0);
+	signal(SIGQUIT, SIG_IGN);
+	(void) argv;
+	if (argc != 1)
+		return (0);
+	print_header();
+	printf("\n");
+	lex = NULL;
+	split = NULL;
+	main_loop(split, lex, envp);
 	return (0);
 }
