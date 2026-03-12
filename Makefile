@@ -1,61 +1,74 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/11/10 13:51:13 by lukrodri          #+#    #+#              #
-#    Updated: 2026/01/13 10:08:42 by lukrodri         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+# ================= CONFIG =================
+NAME    	= minishell
+CC      	= cc
+CFLAGS  	= -Wall -Wextra -Werror
+LIBFTDIR 	= ./srcs/libft
+LIBFT 		= $(LIBFTDIR)/libft.a
+SRC     	= srcs/main.c srcs/parser/lexer.c srcs/parser/parser.c srcs/utils/utils.c srcs/exec/exec.c srcs/exec/free_exec.c srcs/utils/main_utils.c
+OBJ     	= $(SRC:.c=.o)
+OBJ     	= $(SRC:.c=.o)
+TOTAL   	:= $(words $(SRC))
+COUNT   	:= 0
 
-NAME = minishell
+# ================= COLORS =================
+RESET   = \033[0m
+BOLD    = \033[1m
+RED     = \033[31m
+GREEN   = \033[32m
+CYAN    = \033[36m
+MAGENTA = \033[35m
+WHITE	= \033[37m
 
-SRCDIR = srcs
-UTLDIR = srcs/utils
-OBJDIR = objs
-LIBFTDIR = $(SRCDIR)/libft
-LIBFT = $(LIBFTDIR)/libft.a
+# ================= RULES =================
+all: banner $(NAME)
 
-VPATH = $(SRCDIR) $(UTLDIR)
-
-SRC = main.c
-UTL =	exec.c \
-		
-
-OBJ = \
-	$(addprefix $(OBJDIR)/, $(SRC:.c=.o)) \
-	$(addprefix $(OBJDIR)/, $(UTL:.c=.o))
-
-HEADERS =	header/header.h \
-			header/function.h \
-
-CC = cc
-FLAGS = -Wall -Wextra -Werror -g
-RM = rm -rf
-
-all: $(NAME)
-
-$(NAME): $(OBJ) $(LIBFT)
-	$(CC) $(FLAGS) $^ -o $@
-
+$(NAME): $(LIBFT) $(OBJ) 
+	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline || { \
+		printf "$(RED)✖ Compilation failure !$(RESET)\n"; \
+		exit 1; }
+	@printf "\n$(GREEN)✔ Compilation success !$(RESET)\n\n"
+	@printf "\a"
+	
 $(LIBFT):
-	$(MAKE) -C $(LIBFTDIR)
+	@$(MAKE) -C $(LIBFTDIR) --no-print-directory
 
-$(OBJDIR)/%.o: %.c $(HEADERS)
-	mkdir -p $(OBJDIR)
-	$(CC) $(FLAGS) -c $< -o $@
+%.o: %.c
+	@$(eval COUNT=$(shell echo $$(($(COUNT)+1))))
+	@PERCENT=$$(echo $$(($(COUNT)*100/$(TOTAL)))); \
+	BAR_WIDTH=40; \
+	FILLED=$$(echo $$(($(COUNT)*BAR_WIDTH/$(TOTAL)))); \
+	EMPTY=$$(echo $$((BAR_WIDTH-FILLED))); \
+	printf "\r$(MAGENTA)⟦Compiling MINISHELL⟧	$(CYAN)["; \
+	printf "%0.s▓" $$(seq 1 $$FILLED); \
+	printf "%0.s░" $$(seq 1 $$EMPTY); \
+	printf "] $(MAGENTA)%3d%%$(RESET)" $$PERCENT; \
+	$(CC) $(CFLAGS) -c $< -o $@ -g 
+
+banner:
+	@clear
+	@printf "$(CYAN)$(BOLD)\n"
+	@printf "██████╗ ██╗   ██╗██╗██╗     ██████╗ \n"
+	@printf "██╔══██╗██║   ██║██║██║     ██╔══██╗\n"
+	@printf "██████╔╝██║   ██║██║██║     ██║  ██║\n"
+	@printf "██╔══██╗██║   ██║██║██║     ██║  ██║\n"
+	@printf "██████╔╝╚██████╔╝██║███████╗██████╔╝\n"
+	@printf "╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝ \n"
+	@printf "$(RESET)\n"
+	@sleep 0.5
 
 clean:
-	$(RM) $(OBJDIR)
-	$(MAKE) clean -C $(LIBFTDIR)
+	@printf "$(WHITE)"
+	@rm -f $(OBJ)
+	@rm -rf objs
+	@$(MAKE) clean -C $(LIBFTDIR) --no-print-directory
+	@printf "$(MAGENTA)♻ Cleanup successful$(RESET)\n"
 
 fclean: clean
-	$(RM) $(NAME)
-	$(MAKE) fclean -C $(LIBFTDIR)
+	@printf "$(WHITE)"
+	@rm -f $(NAME)
+	@rm -f $(LIBFT)
+	@printf "$(MAGENTA)♻ Executable removed$(RESET)\n"
 
 re: fclean all
 
-.PHONY: all clean fclean re
-
+.PHONY: all clean fclean re banner
