@@ -17,12 +17,15 @@ static void	exec_init(t_exec *exec, char **envp)
 	size_t	len;
 
 	exec->all_path = NULL;
+	exec->command = NULL;
+	exec->w_path = NULL;
 	exec->pid[0] = 0;
 	exec->pid[1] = 0;
 	exec->path = getenv("PATH");
+	if (!exec->path)
+		exec->path
+			= "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 	exec->env = envp;
-	if (!exec->env[0])
-		return ;
 	len = ft_strlen(exec->input);
 	if (len > 0 && exec->input[len - 1] == '\n')
 		exec->input[len - 1] = '\0';
@@ -35,9 +38,11 @@ static int	find_env(t_exec *exec)
 	char	*tmp;
 	int		i;
 
-	if (exec->command && access(exec->command[0], X_OK) == 0)
+	if (exec->command && exec->command[0]
+		&& access(exec->command[0], X_OK) == 0)
 	{
-		exec->w_path = ft_strdup(exec->command[0]);
+		if (ft_strchr(exec->command[0], '/'))
+			exec->w_path = ft_strdup(exec->command[0]);
 		return (0);
 	}
 	i = 0;
@@ -46,7 +51,7 @@ static int	find_env(t_exec *exec)
 		tmp = ft_strjoin(exec->all_path[i], "/");
 		exec->w_path = ft_strjoin(tmp, exec->command[0]);
 		free(tmp);
-		if (access(exec->w_path, X_OK) == 0)
+		if (exec->w_path && access(exec->w_path, X_OK) == 0)
 			return (0);
 		free(exec->w_path);
 		exec->w_path = NULL;
@@ -74,7 +79,7 @@ void	exec_main(char **envp, char **split)
 	exec.input = split[0];
 	i = 0;
 	exec_init(&exec, envp);
-	exec_command(&exec, 0);
+	exec_command(&exec, i);
 	free(exec.input);
 	waitpid(exec.pid[0], NULL, 0);
 }
