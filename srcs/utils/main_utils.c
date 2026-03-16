@@ -53,6 +53,7 @@ void	main_loop(char **split, t_token *lex, char **envp)
 		if (str == NULL)
 			exit(0);
 		lex = lexer(str);
+		free(str);
 		if (lex)
 		{
 			print_lexer(lex);
