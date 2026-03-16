@@ -12,6 +12,20 @@
 
 #include "../header/header.h"
 
+static void	free_var(t_exec *exec)
+{
+	if (exec->all_path)
+		free(exec->all_path);
+	if (exec->command)
+		free(exec->command);
+	if (exec->w_path)
+		free(exec->w_path);
+	exec->w_path = NULL;
+	exec->all_path = NULL;
+	exec->command = NULL;
+	exec->input = NULL;
+}
+
 void	free_split_exec(t_exec *exec)
 {
 	int	i;
@@ -29,13 +43,5 @@ void	free_split_exec(t_exec *exec)
 		exec->command[i] = NULL;
 		i++;
 	}
-	if (exec->all_path)
-		free(exec->all_path);
-	if (exec->command)
-		free(exec->command);
-	if (exec->w_path)
-		free(exec->w_path);
-	exec->w_path = NULL;
-	exec->all_path = NULL;
-	exec->command = NULL;
+	free_var(exec);
 }

@@ -12,7 +12,7 @@
 
 #include "../header/header.h"
 
-static void	exec_init(t_exec *exec, char **envp)
+static int	exec_init(t_exec *exec, char **envp)
 {
 	size_t	len;
 
@@ -21,31 +21,34 @@ static void	exec_init(t_exec *exec, char **envp)
 	exec->w_path = NULL;
 	exec->pid[0] = 0;
 	exec->pid[1] = 0;
+	exec->env = envp;
 	exec->path = getenv("PATH");
 	if (!exec->path)
 		exec->path
 			= "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
-	exec->env = envp;
 	len = ft_strlen(exec->input);
 	if (len > 0 && exec->input[len - 1] == '\n')
 		exec->input[len - 1] = '\0';
 	exec->command = ft_split(exec->input, ' ');
 	exec->all_path = ft_split(exec->path, ':');
+	if (!exec->command || !exec->all_path)
+		return (1);
+	return (0);
 }
 
-static int	find_env(t_exec *exec)
+static int	find_env(t_exec *exec, int i)
 {
 	char	*tmp;
-	int		i;
 
 	if (exec->command && exec->command[0]
 		&& access(exec->command[0], X_OK) == 0)
 	{
 		if (ft_strchr(exec->command[0], '/'))
 			exec->w_path = ft_strdup(exec->command[0]);
+		if (!exec->w_path)
+			return (1);
 		return (0);
 	}
-	i = 0;
 	while (exec->all_path && exec->all_path[i])
 	{
 		tmp = ft_strjoin(exec->all_path[i], "/");
@@ -60,13 +63,24 @@ static int	find_env(t_exec *exec)
 	return (0);
 }
 
-void	exec_command(t_exec *exec, int i)
+int	exec_command(t_exec *exec, int i)
 {
-	find_env(exec);
+	if (find_env(exec, 0) == 1)
+		return (1);
 	exec->pid[i] = fork();
-	if (exec->pid[i] == 0 && exec->w_path)
-		execve(exec->w_path, exec->command, exec->env);
+	if (exec->pid[i] < 0)
+	{
+		execve_error("fork error", "");
+		return (1);
+	}
+	if (exec->pid[i] == 0)
+	{
+		if (exec->w_path)
+			execve(exec->w_path, exec->command, exec->env);
+		execve_error("command not found : ", exec->command[0]);
+	}
 	free_split_exec(exec);
+	return (0);
 }
 
 void	exec_main(char **envp, char **split)
@@ -76,8 +90,10 @@ void	exec_main(char **envp, char **split)
 
 	exec.input = split[0];
 	i = 0;
-	exec_init(&exec, envp);
-	exec_command(&exec, i);
-	free(exec.input);
-	waitpid(exec.pid[0], NULL, 0);
+	if (exec_init(&exec, envp) == 1 || exec_command(&exec, i) == 1)
+	{
+		free_split_exec(&exec);
+		return ;
+	}
+	waitpid(exec.pid[i], NULL, 0);
 }
