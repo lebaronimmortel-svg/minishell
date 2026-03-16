@@ -19,6 +19,7 @@ void	check_quote(char *str);
 void	free_split(char **split);
 int		split_len(char **split);
 void	exec_main(char **envp, char **split);
+void	execve_error(char *str, char *command);
 void	free_split_exec(t_exec *exec);
 void	main_loop(char **split, t_token *lex, char **envp);
 void	print_lexer(t_token *lexer);
