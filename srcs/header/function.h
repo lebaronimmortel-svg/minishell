@@ -23,5 +23,6 @@ void	free_split_exec(t_exec *exec);
 void	main_loop(char **split, t_token *lex, char **envp);
 void	print_lexer(t_token *lexer);
 void	print_icon(int flag);
+void	loop(t_token *lexer, char **split);
 
 #endif
