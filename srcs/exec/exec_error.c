@@ -14,5 +14,7 @@
 
 void	execve_error(char *str, char *command)
 {
-	printf("%s%s\n", str, command);
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(command, 2);
+	ft_putstr_fd("\n", 2);
 }
