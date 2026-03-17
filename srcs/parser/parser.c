@@ -10,7 +10,26 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/header.h"
+#include "../../header/header.h"
+
+void	handle_single(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$')
+		{
+			if (str[i + 1] == 39 || str[i + 1] == 34)
+				move_one(&str[i]);
+			else
+				i++;
+		}
+		else
+			i++;
+	}
+}
 
 int	parser(t_token *lexer)
 {

@@ -13,7 +13,7 @@
 #ifndef FUNCTION_H
 # define FUNCTION_H
 
-t_token	*lexer(char *str);
+t_token	*lexer(char *str, char **envp);
 int		parser(t_token *lexer);
 void	check_quote(char *str);
 void	free_split(char **split);
@@ -24,5 +24,13 @@ void	main_loop(char **split, t_token *lex, char **envp);
 void	print_lexer(t_token *lexer);
 void	print_icon(int flag);
 void	loop(t_token *lexer, char **split);
+void	expand(char **split, char **envp);
+void	remove_quotes(char *str);
+char	*change_var(char *str, char **envp);
+int		update_flag(int flag);
+int		is_valid_var(char *str);
+int		is_ok_quote(char *str, int index);
+void	move_one(char *str);
+void	handle_single(char *str);
 
 #endif
