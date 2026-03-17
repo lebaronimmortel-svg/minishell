@@ -10,21 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/header.h"
-
-static void	join_cmd(char **split, t_token *lexer, int *i, int j)
-{
-	char	*tmp;
-
-	tmp = ft_strjoin(split[j], " ");
-	free(split[j]);
-	split[j] = tmp;
-	tmp = ft_strjoin(split[j], lexer[*i].value);
-	free(split[j]);
-	split[j] = tmp;
-	printf("	%s", lexer[*i].value);
-	(*i)++;
-}
+#include "../../header/header.h"
 
 static void	my_memmove(char *str)
 {
@@ -57,11 +43,26 @@ static void	print_token(char c)
 
 static void	join_symbol(char **split, int *j, t_token *lexer, int i)
 {
-	(*j)++;
+	if (*j)
+		(*j)++;
 	split[*j] = ft_strdup(lexer[i].value);
 	(*j)++;
 	split[*j] = ft_strdup("");
 	print_token(lexer[i].type);
+}
+
+static void	join_cmd(char **split, t_token *lexer, int *i, int j)
+{
+	char	*tmp;
+
+	tmp = ft_strjoin(split[j], " ");
+	free(split[j]);
+	split[j] = tmp;
+	tmp = ft_strjoin(split[j], lexer[*i].value);
+	free(split[j]);
+	split[j] = tmp;
+	printf("	%s", lexer[*i].value);
+	(*i)++;
 }
 
 void	loop(t_token *lexer, char **split)

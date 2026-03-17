@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./header/header.h"
+#include "../../header/header.h"
 
 void	print_icon(int flag)
 {

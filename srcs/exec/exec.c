@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/header.h"
+#include "../../header/header.h"
 
 static void	exec_init(t_exec *exec, char **envp)
 {

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/header.h"
+#include "../../header/header.h"
 
 static char	**print_order(t_token *lexer)
 {
@@ -21,6 +21,8 @@ static char	**print_order(t_token *lexer)
 	while (lexer[i].type)
 		i++;
 	split = ft_calloc(i + 1, sizeof(char *));
+	if (!split)
+		return (NULL);
 	split[0] = ft_strdup("");
 	print_icon(1);
 	printf("\nExecute :\n\n");
@@ -42,7 +44,7 @@ static void	free_lexer(t_token *lex)
 	free(lex);
 }
 
-// Commands (and symbols !) to be executed successively are in split
+// Commands and symbols to be executed successively are in split
 void	main_loop(char **split, t_token *lex, char **envp)
 {
 	char	*str;
@@ -52,7 +54,7 @@ void	main_loop(char **split, t_token *lex, char **envp)
 		str = readline("\n🌈 ");
 		if (str == NULL)
 			exit(0);
-		lex = lexer(str);
+		lex = lexer(str, envp);
 		if (lex)
 		{
 			print_lexer(lex);
@@ -67,5 +69,6 @@ void	main_loop(char **split, t_token *lex, char **envp)
 			else
 				printf("\n❌ NOK\n\n");
 		}
+		free(str);
 	}
 }

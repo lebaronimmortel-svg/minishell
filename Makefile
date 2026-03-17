@@ -4,7 +4,11 @@ CC      	= cc
 CFLAGS  	= -Wall -Wextra -Werror
 LIBFTDIR 	= ./srcs/libft
 LIBFT 		= $(LIBFTDIR)/libft.a
-SRC     	= srcs/main.c srcs/parser/lexer.c srcs/parser/parser.c srcs/utils/utils.c srcs/exec/exec.c srcs/exec/free_exec.c srcs/utils/main_utils.c srcs/utils/main_loop_utils.c 
+SRC     	= srcs/main/main.c srcs/parser/lexer.c\
+			  srcs/parser/parser.c srcs/utils/utils.c\
+			  srcs/exec/exec.c srcs/exec/free_exec.c\
+			  srcs/main/main_loop.c srcs/parser/expand_utils.c\
+			  srcs/main/main_loop_utils.c srcs/parser/expand.c 
 OBJ     	= $(SRC:.c=.o)
 TOTAL   	:= $(words $(SRC))
 COUNT   	:= 0
