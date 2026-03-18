@@ -54,7 +54,7 @@ static void	lex_convert(char **split, t_token *token, char **envp)
 	{
 		token[i].type = convert_type(split[i]);
 		token[i].value = ft_strdup(split[i]);
-		handle_single(split[i]);
+		handle_single(token[i].value);
 		while (!are_var_handled(token[i].value))
 			token[i].value = change_var(token[i].value, envp);
 		remove_quotes(token[i].value);
