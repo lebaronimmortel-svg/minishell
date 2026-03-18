@@ -12,6 +12,7 @@
 
 #include "../../header/header.h"
 
+// line 30 : split blocks the interpretation of spaces
 static void	exec_init(t_exec *exec, char **envp)
 {
 	size_t	len;
