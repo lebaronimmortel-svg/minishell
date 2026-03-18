@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_utils.c                                       :+:      :+:    :+:   */
+/*   main_loop.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alexfuen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/10 22:57:33 by alexfuen          #+#    #+#             */
-/*   Updated: 2026/03/10 22:57:35 by alexfuen         ###   ########.fr       */
+/*   Updated: 2026/03/18 18:03:52 by alexfuen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,18 @@ static void	free_lexer(t_token *lex)
 	free(lex);
 }
 
+static void	print_split(char **split)
+{
+	int	i;
+
+	i = 0;
+	while (split[i])
+	{
+		printf("%s\n", split[i]);
+		i++;
+	}
+}
+
 void	main_loop(char **split, t_token *lex, char **envp)
 {
 	char	*str;
@@ -62,6 +74,7 @@ void	main_loop(char **split, t_token *lex, char **envp)
 			{
 				printf("\n✅ OK\n\n\n");
 				split = print_order(lex);
+				print_split(split);
 				free_lexer(lex);
 				print_icon(2);
 				exec_main(envp, split);

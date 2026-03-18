@@ -28,8 +28,17 @@ int	is_valid_var(char *str)
 	int	i;
 
 	i = 0;
-	if ((str[0] == '$' && str[1] == '\0') || (str[0] == '$' && str[1] == ' '))
-		return (0);
+	if (str[0] == '$')
+	{
+		if (str[1] == ' ')
+			return (0);
+		if (str[1] == '$')
+			return (0);
+		if (str[1] == 39)
+			return (0);
+		if (str[1] == 34)
+			return (0);
+	}
 	while (str[i] && str[i] != ' ' && str[i] != 39 && str[i] != 34)
 	{
 		if (i != 0 && !is_alphanum(str[i]) && str[i] != '_')
