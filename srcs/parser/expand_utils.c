@@ -28,7 +28,7 @@ int	is_valid_var(char *str)
 	int	i;
 
 	i = 0;
-	if (str[0] == '$' && str[1] == '\0')
+	if ((str[0] == '$' && str[1] == '\0') || (str[0] == '$' && str[1] == ' '))
 		return (0);
 	while (str[i] && str[i] != ' ' && str[i] != 39 && str[i] != 34)
 	{
