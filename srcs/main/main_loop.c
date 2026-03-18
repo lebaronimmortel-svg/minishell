@@ -54,6 +54,7 @@ void	main_loop(char **split, t_token *lex, char **envp)
 		if (str == NULL)
 			exit(0);
 		lex = lexer(str, envp);
+		free(str);
 		if (lex)
 		{
 			print_lexer(lex);
@@ -68,6 +69,5 @@ void	main_loop(char **split, t_token *lex, char **envp)
 			else
 				printf("\n❌ NOK\n\n");
 		}
-		free(str);
 	}
 }
