@@ -45,7 +45,7 @@ static char	convert_type(char *str)
 	return (c);
 }
 
-static void	lex_convert(char **split, t_token *token, char **envp)
+static void	lex_convert(char **split, t_token *token, char **envp, t_data *data)
 {
 	int	i;
 
@@ -57,6 +57,7 @@ static void	lex_convert(char **split, t_token *token, char **envp)
 		handle_single(token[i].value);
 		while (!are_var_handled(token[i].value))
 			token[i].value = change_var(token[i].value, envp);
+		token[i].value = expand_code(token[i].value, data);
 		remove_quotes(token[i].value);
 		i++;
 	}
@@ -83,7 +84,7 @@ static void	quote_clean(char **split)
 	}
 }
 
-t_token	*lexer(char *str, char **envp)
+t_token	*lexer(char *str, char **envp, t_data *data)
 {
 	char	**split;
 	t_token	*token;
@@ -98,10 +99,10 @@ t_token	*lexer(char *str, char **envp)
 	token = malloc((split_len(split) + 1) * sizeof(t_token));
 	if (!token)
 	{
-		free_split(split);
+		free_split(split, 0);
 		return (NULL);
 	}
-	lex_convert(split, token, envp);
-	free_split(split);
+	lex_convert(split, token, envp, data);
+	free_split(split, 0);
 	return (token);
 }

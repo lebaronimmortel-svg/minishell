@@ -31,4 +31,10 @@ typedef struct s_exec
 	pid_t	pid[2];
 }	t_exec;
 
+// this structure is to be completed
+typedef struct s_data
+{
+	int	error_code;
+}	t_data;
+
 #endif

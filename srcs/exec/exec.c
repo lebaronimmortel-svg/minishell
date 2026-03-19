@@ -72,15 +72,22 @@ void	exec_command(t_exec *exec, int i)
 
 // Only the first command of split is executed,
 // since we don't handle multipipes yet
-void	exec_main(char **envp, char **split)
+int	exec_main(char **envp, char **split)
 {
 	t_exec	exec;
-	int		i;
+	int		status;
+	int		exit_code;
 
 	exec.input = split[0];
-	i = 0;
 	exec_init(&exec, envp);
 	exec_command(&exec, 0);
 	free(exec.input);
-	waitpid(exec.pid[0], NULL, 0);
+	waitpid(exec.pid[0], &status, 0);
+	if (WIFEXITED(status))
+		exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		exit_code = 128 + WTERMSIG(status);
+	else
+		exit_code = 1;
+	return (exit_code);
 }

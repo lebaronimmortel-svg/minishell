@@ -74,11 +74,16 @@ int	split_len(char **split)
 	return (i);
 }
 
-void	free_split(char **split)
+void	free_split(char **split, int flag)
 {
 	int	i;
 
-	i = 0;
+	if (!split)
+		return ;
+	if (!flag)
+		i = 0;
+	else
+		i = 1;
 	while (split[i])
 		free(split[i++]);
 	free(split);

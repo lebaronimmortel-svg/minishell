@@ -12,6 +12,14 @@
 
 #include "../../header/header.h"
 
+static void	exit_cleanly(int code, t_data *data, char **split)
+{
+	free(data);
+	free_split(split, 1);
+	rl_clear_history();
+	exit(code);
+}
+
 static char	**print_order(t_token *lexer)
 {
 	int		i;
@@ -45,7 +53,7 @@ static void	free_lexer(t_token *lex)
 }
 
 // Commands and symbols to be executed successively are in split
-void	main_loop(char **split, t_token *lex, char **envp)
+void	main_loop(char **split, t_token *lex, char **envp, t_data *data)
 {
 	char	*str;
 
@@ -53,8 +61,8 @@ void	main_loop(char **split, t_token *lex, char **envp)
 	{
 		str = readline("\n🌈 ");
 		if (str == NULL)
-			exit(0);
-		lex = lexer(str, envp);
+			exit_cleanly(0, data, split);
+		lex = lexer(str, envp, data);
 		free(str);
 		if (lex)
 		{
@@ -65,7 +73,7 @@ void	main_loop(char **split, t_token *lex, char **envp)
 				split = print_order(lex);
 				free_lexer(lex);
 				print_icon(2);
-				exec_main(envp, split);
+				data->error_code = exec_main(envp, split);
 			}
 			else
 				printf("\n❌ NOK\n\n");
