@@ -59,8 +59,13 @@ void	exec_command(t_exec *exec, int i)
 {
 	find_env(exec);
 	exec->pid[i] = fork();
-	if (exec->pid[i] == 0 && exec->w_path)
-		execve(exec->w_path, exec->command, exec->env);
+	if (exec->pid[i] == 0)
+	{
+		if (exec->w_path)
+			execve(exec->w_path, exec->command, exec->env);
+		perror("execve");
+		exit(127);
+	}
 	free_split_exec(exec);
 }
 
