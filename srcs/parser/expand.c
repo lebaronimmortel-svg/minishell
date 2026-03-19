@@ -12,14 +12,19 @@
 
 #include "../../header/header.h"
 
-static char	*transpose(char *str, int index, char *buffer)
+static char	*transpose(char *str, int index, char *buffer, int flag)
 {
 	int		i;
 	char	*tmp;
 
 	i = 0;
 	i++;
-	while (ft_isalnum(str[index + i]) || str[index + i] == '_')
+	if (flag)
+	{
+		while (ft_isalnum(str[index + i]) || str[index + i] == '_')
+			i++;
+	}
+	else
 		i++;
 	tmp = ft_strjoin(buffer, &str[index + i]);
 	if (!tmp)
@@ -27,6 +32,26 @@ static char	*transpose(char *str, int index, char *buffer)
 	str[index] = '\0';
 	str = ft_strjoin(str, tmp);
 	free(tmp);
+	return (str);
+}
+
+char	*expand_code(char *str, t_data *data)
+{
+	int	i;
+
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (str[i] && str[i + 1])
+	{
+		if (str[i] == '$' && str[i + 1] == '?' && is_ok_quote(str, i))
+		{
+			str = transpose(str, i, ft_itoa(data->error_code), 0);
+			i = 0;
+		}
+		else
+			i++;
+	}
 	return (str);
 }
 
@@ -77,7 +102,7 @@ static char	*convert_var(char *str, int index, char **envp)
 	}
 	buffer[i - index - 1] = '\0';
 	var_search(buffer, envp);
-	str = transpose(str, index, buffer);
+	str = transpose(str, index, buffer, 1);
 	free(buffer);
 	return (str);
 }

@@ -31,4 +31,9 @@ typedef struct s_exec
 	pid_t	pid[2];
 }	t_exec;
 
+typedef struct s_data
+{
+	int	error_code;
+}	t_data;
+
 #endif

@@ -78,7 +78,7 @@ static void	print_header(void)
 	printf("╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝\n");
 }
 
-void	handler0(int sig)
+static void	handler0(int sig)
 {
 	(void) sig;
 	printf("\n\n");
@@ -91,16 +91,20 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_token	*lex;
 	char	**split;
+	t_data	*data;
 
 	signal(SIGINT, handler0);
 	signal(SIGQUIT, SIG_IGN);
 	(void) argv;
 	if (argc != 1)
 		return (0);
+	data = malloc(sizeof(t_data));
+	if (!data)
+		return (1);
 	print_header();
 	printf("\n");
 	lex = NULL;
 	split = NULL;
-	main_loop(split, lex, envp);
+	main_loop(split, lex, envp, data);
 	return (0);
 }
