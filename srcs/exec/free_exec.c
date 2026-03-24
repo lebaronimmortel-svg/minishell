@@ -40,7 +40,6 @@ void	free_split_exec(t_exec *exec)
 	while (exec->command && exec->command[i])
 	{
 		free(exec->command[i]);
-		exec->command[i] = NULL;
 		i++;
 	}
 	free_var(exec);

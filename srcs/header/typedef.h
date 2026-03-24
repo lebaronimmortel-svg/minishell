@@ -28,7 +28,8 @@ typedef struct s_exec
 	char	*path;
 	char	*input;
 	char	**env;
-	pid_t	pid[2];
+	pid_t	*pid;
+	int		fd[1024][2];
 }	t_exec;
 
 #endif

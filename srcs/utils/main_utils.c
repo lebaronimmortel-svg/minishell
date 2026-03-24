@@ -62,7 +62,7 @@ void	main_loop(char **split, t_token *lex, char **envp)
 				split = print_order(lex);
 				free_lexer(lex);
 				print_icon(2);
-				exec_main(envp, split);
+				exec_main(envp, split, 0, 0);
 			}
 			else
 				printf("\n❌ NOK\n\n");

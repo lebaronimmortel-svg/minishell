@@ -12,6 +12,22 @@
 
 #include "../header/header.h"
 
+int	count_cmds(char **split)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (split && split[i])
+	{
+		if (i % 2 == 0)
+			count++;
+		i++;
+	}
+	return (count);
+}
+
 static int	exec_init(t_exec *exec, char **envp)
 {
 	size_t	len;
@@ -19,8 +35,6 @@ static int	exec_init(t_exec *exec, char **envp)
 	exec->all_path = NULL;
 	exec->command = NULL;
 	exec->w_path = NULL;
-	exec->pid[0] = 0;
-	exec->pid[1] = 0;
 	exec->env = envp;
 	exec->path = getenv("PATH");
 	if (!exec->path)
@@ -31,69 +45,64 @@ static int	exec_init(t_exec *exec, char **envp)
 		exec->input[len - 1] = '\0';
 	exec->command = ft_split(exec->input, ' ');
 	exec->all_path = ft_split(exec->path, ':');
-	if (!exec->command || !exec->all_path)
+	if (!exec->command || !exec->all_path || !exec->command[0])
 		return (1);
 	return (0);
 }
 
-static int	find_env(t_exec *exec, int i)
+int	pipe_and_pid(t_exec *exec, int cmd_count)
 {
-	char	*tmp;
+	int	i;
 
-	if (exec->command && exec->command[0]
-		&& access(exec->command[0], X_OK) == 0)
+	exec->pid = NULL;
+	exec->pid = malloc(sizeof(pid_t) * cmd_count);
+	if (!exec->pid)
+		return (1);
+	i = 0;
+	while (i < cmd_count - 1)
 	{
-		if (ft_strchr(exec->command[0], '/'))
-			exec->w_path = ft_strdup(exec->command[0]);
-		if (!exec->w_path)
+		if (pipe(exec->fd[i]) == -1)
+		{
+			i--;
+			while (i >= 0)
+			{
+				close(exec->fd[i][0]);
+				close(exec->fd[i][1]);
+				i--;
+			}
+			free(exec->pid);
+			exec->pid = NULL;
 			return (1);
-		return (0);
-	}
-	while (exec->all_path && exec->all_path[i])
-	{
-		tmp = ft_strjoin(exec->all_path[i], "/");
-		exec->w_path = ft_strjoin(tmp, exec->command[0]);
-		free(tmp);
-		if (exec->w_path && access(exec->w_path, X_OK) == 0)
-			return (0);
-		free(exec->w_path);
-		exec->w_path = NULL;
+		}
 		i++;
 	}
 	return (0);
 }
 
-int	exec_command(t_exec *exec, int i)
-{
-	if (find_env(exec, 0) == 1)
-		return (1);
-	exec->pid[i] = fork();
-	if (exec->pid[i] < 0)
-	{
-		execve_error("fork error", "");
-		return (1);
-	}
-	if (exec->pid[i] == 0)
-	{
-		if (exec->w_path)
-			execve(exec->w_path, exec->command, exec->env);
-		execve_error("command not found : ", exec->command[0]);
-	}
-	free_split_exec(exec);
-	return (0);
-}
-
-void	exec_main(char **envp, char **split)
+void	exec_main(char **envp, char **split, int i, int cmd_index)
 {
 	t_exec	exec;
-	int		i;
+	int		cmd_count;
 
-	exec.input = split[0];
-	i = 0;
-	if (exec_init(&exec, envp) == 1 || exec_command(&exec, i) == 1)
-	{
-		free_split_exec(&exec);
+	cmd_count = count_cmds(split);
+	if (pipe_and_pid(&exec, cmd_count) == 1)
 		return ;
+	while (split && split[i])
+	{
+		if (i % 2 == 0)
+		{
+			exec.input = split[i];
+			if (exec_init(&exec, envp))
+			{
+				free_split_exec(&exec);
+				i++;
+				continue ;
+			}
+			fork_created(&exec, cmd_index, cmd_count, 0);
+			free_split_exec(&exec);
+			cmd_index++;
+		}
+		i++;
 	}
-	waitpid(exec.pid[i], NULL, 0);
+	end_exec(&exec, cmd_count);
 }
