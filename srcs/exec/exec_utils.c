@@ -1,0 +1,106 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/20 08:48:18 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/03/20 08:48:19 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../header/header.h"
+
+static int	find_env(t_exec *exec, int i)
+{
+	char	*tmp;
+
+	if (!exec->command || !exec->command[0])
+		return (1);
+	if (access(exec->command[0], X_OK) == 0)
+	{
+		exec->w_path = ft_strdup(exec->command[0]);
+		if (!exec->w_path)
+			return (1);
+		return (0);
+	}
+	while (exec->all_path && exec->all_path[i])
+	{
+		tmp = ft_strjoin(exec->all_path[i], "/");
+		exec->w_path = ft_strjoin(tmp, exec->command[0]);
+		free(tmp);
+		if (exec->w_path && access(exec->w_path, X_OK) == 0)
+			return (0);
+		free(exec->w_path);
+		exec->w_path = NULL;
+		i++;
+	}
+	return (1);
+}
+
+static int exec_command(t_exec *exec)
+{
+	if (find_env(exec, 0) == 1)
+	{
+		execve_error("command not found : ", exec->command[0]);
+		free_split_exec(exec);
+		if (exec->pid)
+			free(exec->pid);
+		exec->pid = NULL;
+		exit(127);
+	}
+	if (exec->w_path)
+	{
+		execve(exec->w_path, exec->command, exec->env);
+		perror(exec->command[0]);
+		free_split_exec(exec);
+		if (exec->pid)
+			free(exec->pid);
+		exit(126);
+	}
+	execve_error("command not found : ", exec->command[0]);
+	exit(127);
+}
+
+void	fork_created(t_exec *exec, int cmd_index, int cmd_count, int j)
+{
+	exec->pid[cmd_index] = fork();
+	if (exec->pid[cmd_index] == 0)
+	{
+		if (cmd_index > 0)
+			dup2(exec->fd[cmd_index - 1][0], STDIN_FILENO);
+		if (cmd_index < cmd_count - 1)
+			dup2(exec->fd[cmd_index][1], STDOUT_FILENO);
+		while (j < cmd_count - 1)
+		{
+			close(exec->fd[j][0]);
+			close(exec->fd[j][1]);
+			j++;
+		}
+		exec_command(exec);
+		free_split_exec(exec);
+		exit(1);
+	}
+	else
+	{
+		if (cmd_index > 0)
+			close(exec->fd[cmd_index - 1][0]);
+		if (cmd_index < cmd_count - 1)
+			close(exec->fd[cmd_index][1]);
+	}
+}
+
+void	end_exec(t_exec *exec, int cmd_count)
+{
+	int	i;
+
+	i = 0;
+	while (i < cmd_count)
+	{
+		wait(NULL);
+		i++;
+	}
+	if (exec->pid)
+		free(exec->pid);
+}
