@@ -12,6 +12,42 @@
 
 #include "../../header/header.h"
 
+void	free_redir(t_exec *exec)
+{
+	if (exec->redir)
+	{
+		free(exec->redir);
+		exec->redir = NULL;
+	}
+}
+
+void	close_fd(t_exec *exec, int cmd_count)
+{
+	int	j;
+
+	j = 0;
+	while (j < cmd_count - 1)
+	{
+		close(exec->fd[j][0]);
+		close(exec->fd[j][1]);
+		j++;
+	}
+}
+
+static void	free_var(t_exec *exec)
+{
+	if (exec->all_path)
+		free(exec->all_path);
+	if (exec->command)
+		free(exec->command);
+	if (exec->w_path)
+		free(exec->w_path);
+	exec->w_path = NULL;
+	exec->all_path = NULL;
+	exec->command = NULL;
+	exec->input = NULL;
+}
+
 void	free_split_exec(t_exec *exec)
 {
 	int	i;
@@ -26,16 +62,7 @@ void	free_split_exec(t_exec *exec)
 	while (exec->command && exec->command[i])
 	{
 		free(exec->command[i]);
-		exec->command[i] = NULL;
 		i++;
 	}
-	if (exec->all_path)
-		free(exec->all_path);
-	if (exec->command)
-		free(exec->command);
-	if (exec->w_path)
-		free(exec->w_path);
-	exec->w_path = NULL;
-	exec->all_path = NULL;
-	exec->command = NULL;
+	free_var(exec);
 }

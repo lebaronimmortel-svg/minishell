@@ -72,7 +72,7 @@ void	main_loop(char **split, t_token *lex, char **envp, t_data *data)
 				split = print_order(lex);
 				free_lexer(lex);
 				print_icon(2);
-				data->error_code = exec_main(envp, split);
+				data->error_code = exec_main(envp, split, 0, 0);
 			}
 			else
 				printf("\n❌ NOK\n\n");

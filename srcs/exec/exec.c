@@ -12,78 +12,107 @@
 
 #include "../../header/header.h"
 
-static void	exec_init(t_exec *exec, char **envp)
+int	count_cmds(char **split)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (split && split[i])
+	{
+		if (i % 2 == 0)
+			count++;
+		i++;
+	}
+	return (count);
+}
+
+static int	exec_init(t_exec *exec, char **envp)
 {
 	size_t	len;
 
 	exec->all_path = NULL;
 	exec->command = NULL;
 	exec->w_path = NULL;
-	exec->pid[0] = 0;
-	exec->pid[1] = 0;
+	exec->env = envp;
 	exec->path = getenv("PATH");
 	if (!exec->path)
 		exec->path
 			= "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
-	exec->env = envp;
 	len = ft_strlen(exec->input);
 	if (len > 0 && exec->input[len - 1] == '\n')
 		exec->input[len - 1] = '\0';
 	exec->command = ft_split(exec->input, ' ');
 	exec->all_path = ft_split(exec->path, ':');
+	if (!exec->command || !exec->all_path || !exec->command[0])
+		return (1);
+	return (0);
 }
 
-static int	find_env(t_exec *exec)
+int	pipe_and_pid(t_exec *exec, int cmd_count)
 {
-	char	*tmp;
-	int		i;
+	int	i;
 
-	if (exec->command && exec->command[0]
-		&& access(exec->command[0], X_OK) == 0)
-	{
-		if (ft_strchr(exec->command[0], '/'))
-			exec->w_path = ft_strdup(exec->command[0]);
-		return (0);
-	}
+	exec->pid = NULL;
+	exec->pid = malloc(sizeof(pid_t) * cmd_count);
+	if (!exec->pid)
+		return (1);
 	i = 0;
-	while (exec->all_path && exec->all_path[i])
+	while (i < cmd_count - 1)
 	{
-		tmp = ft_strjoin(exec->all_path[i], "/");
-		exec->w_path = ft_strjoin(tmp, exec->command[0]);
-		free(tmp);
-		if (exec->w_path && access(exec->w_path, X_OK) == 0)
-			return (0);
-		free(exec->w_path);
-		exec->w_path = NULL;
+		if (pipe(exec->fd[i]) == -1)
+		{
+			i--;
+			while (i >= 0)
+			{
+				close(exec->fd[i][0]);
+				close(exec->fd[i][1]);
+				i--;
+			}
+			free(exec->pid);
+			exec->pid = NULL;
+			return (1);
+		}
 		i++;
 	}
 	return (0);
 }
 
-void	exec_command(t_exec *exec, int i)
+static void	fork_and_free_exec(t_exec *exec, int cmd_index, int cmd_count)
 {
-	find_env(exec);
-	exec->pid[i] = fork();
-	if (exec->pid[i] == 0)
-	{
-		if (exec->w_path)
-			execve(exec->w_path, exec->command, exec->env);
-		perror("execve");
-		exit(127);
-	}
+	fork_created(exec, cmd_index, cmd_count);
 	free_split_exec(exec);
+	free_redir(exec);
 }
 
-int	exec_main(char **envp, char **split)
+int	exec_main(char **envp, char **split, int i, int cmd_index)
 {
 	t_exec	exec;
+	int		cmd_count;
 	int		status;
 	int		exit_code;
 
-	exec.input = split[0];
-	exec_init(&exec, envp);
-	exec_command(&exec, i);
-	free(exec.input);
+	cmd_count = count_cmds(split);
+	if (pipe_and_pid(&exec, cmd_count) == 1)
+		return (1);
+	while (split && split[i])
+	{
+		if (i % 2 == 0)
+		{
+			exec.input = split[i];
+			collect_redirs(&exec, split, i, 0);
+			if (exec_init(&exec, envp))
+			{
+				free_split_exec(&exec);
+				i++;
+				continue ;
+			}
+			fork_and_free_exec(&exec, cmd_index, cmd_count);
+			cmd_index++;
+		}
+		i++;
+	}
 	waitpid(exec.pid[0], &status, 0);
 	if (WIFEXITED(status))
 		exit_code = WEXITSTATUS(status);
