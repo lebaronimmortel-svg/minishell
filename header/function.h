@@ -27,7 +27,7 @@ int		first_part_apply_redir(char type, t_exec *exec, int i, int fd);
 int		apply_redirs(t_exec *exec);
 void	fork_created(t_exec *exec, int cmd_index, int cmd_count);
 void	execve_error(char *str, char *command);
-void	end_exec(t_exec *exec, int cmd_count);
+void	end_exec(t_exec *exec, int cmd_count, int *status);
 void	free_redir(t_exec *exec);
 void	close_fd(t_exec *exec, int cmd_count);
 void	main_loop(char **split, t_token *lex, char **envp, t_data *data);

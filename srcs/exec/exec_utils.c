@@ -97,14 +97,14 @@ void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 		end_fork_created(exec, cmd_index, cmd_count);
 }
 
-void	end_exec(t_exec *exec, int cmd_count)
+void	end_exec(t_exec *exec, int cmd_count, int *status)
 {
 	int	i;
 
 	i = 0;
 	while (i < cmd_count)
 	{
-		wait(NULL);
+		waitpid(exec->pid[i], status, 0);
 		i++;
 	}
 	if (exec->pid)
