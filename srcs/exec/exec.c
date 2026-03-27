@@ -107,6 +107,7 @@ int	exec_main(char **envp, char **split, int i, int cmd_index)
 			}
 			exec.input = split[i];
 			collect_redirs(&exec, split, i, 0);
+			// if exec.input est un built in, executer la fonction
 			if (exec_init(&exec, envp))
 			{
 				free_split_exec(&exec);
