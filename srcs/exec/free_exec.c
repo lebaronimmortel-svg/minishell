@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/header.h"
+#include "../../header/header.h"
 
 void	free_split_exec(t_exec *exec)
 {

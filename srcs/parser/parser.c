@@ -10,7 +10,35 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/header.h"
+#include "../../header/header.h"
+
+void	handle_single(char *str)
+{
+	int	i;
+	int	flag1;
+	int	flag2;
+
+	i = 0;
+	flag1 = 0;
+	flag2 = 0;
+	while (str[i])
+	{
+		if (str[i] == 39)
+			flag2 = update_flag(flag2);
+		if (str[i] == 34)
+			flag1 = update_flag(flag1);
+		if (str[i] == '$')
+		{
+			if ((str[i + 1] == 39 && flag2 == 0)
+				|| (str[i + 1] == 34 && flag1 == 0))
+				move_one(&str[i]);
+			else
+				i++;
+		}
+		else
+			i++;
+	}
+}
 
 int	parser(t_token *lexer)
 {
