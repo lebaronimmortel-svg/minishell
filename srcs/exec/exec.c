@@ -100,6 +100,11 @@ int	exec_main(char **envp, char **split, int i, int cmd_index)
 	{
 		if (i % 2 == 0)
 		{
+			if (split[i][0] == 0)
+			{
+				i++;
+				continue ;
+			}
 			exec.input = split[i];
 			collect_redirs(&exec, split, i, 0);
 			if (exec_init(&exec, envp))
@@ -113,7 +118,7 @@ int	exec_main(char **envp, char **split, int i, int cmd_index)
 		}
 		i++;
 	}
-	waitpid(exec.pid[0], &status, 0);
+	end_exec(&exec, cmd_count, &status);
 	if (WIFEXITED(status))
 		exit_code = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
@@ -121,5 +126,4 @@ int	exec_main(char **envp, char **split, int i, int cmd_index)
 	else
 		exit_code = 1;
 	return (exit_code);
-	//end_exec(&exec, cmd_count);
 }

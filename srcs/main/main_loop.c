@@ -52,7 +52,6 @@ static void	free_lexer(t_token *lex)
 	free(lex);
 }
 
-// Commands and symbols to be executed successively are in split
 void	main_loop(char **split, t_token *lex, char **envp, t_data *data)
 {
 	char	*str;

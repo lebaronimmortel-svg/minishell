@@ -43,8 +43,7 @@ static void	print_token(char c)
 
 static void	join_symbol(char **split, int *j, t_token *lexer, int i)
 {
-	if (*j)
-		(*j)++;
+	(*j)++;
 	split[*j] = ft_strdup(lexer[i].value);
 	(*j)++;
 	split[*j] = ft_strdup("");
