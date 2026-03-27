@@ -20,6 +20,13 @@ typedef struct s_token
 
 }	t_token;
 
+typedef struct s_redir
+{
+	char	type;
+	char	*file;
+
+}	t_redir;
+
 typedef struct s_exec
 {
 	char	**all_path;
@@ -28,7 +35,10 @@ typedef struct s_exec
 	char	*path;
 	char	*input;
 	char	**env;
-	pid_t	pid[2];
+	pid_t	*pid;
+	int		fd[1024][2];
+	t_redir	*redir;
+	int		redir_count;
 }	t_exec;
 
 // this structure is to be completed
