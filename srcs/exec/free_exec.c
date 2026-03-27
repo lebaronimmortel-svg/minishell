@@ -12,6 +12,28 @@
 
 #include "../header/header.h"
 
+void	free_redir(t_exec *exec)
+{
+	if (exec->redir)
+	{
+		free(exec->redir);
+		exec->redir = NULL;
+	}
+}
+
+void	close_fd(t_exec *exec, int cmd_count)
+{
+	int	j;
+
+	j = 0;
+	while (j < cmd_count - 1)
+	{
+		close(exec->fd[j][0]);
+		close(exec->fd[j][1]);
+		j++;
+	}
+}
+
 static void	free_var(t_exec *exec)
 {
 	if (exec->all_path)

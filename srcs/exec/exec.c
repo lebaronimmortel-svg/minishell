@@ -79,6 +79,13 @@ int	pipe_and_pid(t_exec *exec, int cmd_count)
 	return (0);
 }
 
+static void	fork_and_free_exec(t_exec *exec, int cmd_index, int cmd_count)
+{
+	fork_created(exec, cmd_index, cmd_count);
+	free_split_exec(exec);
+	free_redir(exec);
+}
+
 void	exec_main(char **envp, char **split, int i, int cmd_index)
 {
 	t_exec	exec;
@@ -92,14 +99,14 @@ void	exec_main(char **envp, char **split, int i, int cmd_index)
 		if (i % 2 == 0)
 		{
 			exec.input = split[i];
+			collect_redirs(&exec, split, i, 0);
 			if (exec_init(&exec, envp))
 			{
 				free_split_exec(&exec);
 				i++;
 				continue ;
 			}
-			fork_created(&exec, cmd_index, cmd_count, 0);
-			free_split_exec(&exec);
+			fork_and_free_exec(&exec, cmd_index, cmd_count);
 			cmd_index++;
 		}
 		i++;

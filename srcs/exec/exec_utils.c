@@ -39,7 +39,7 @@ static int	find_env(t_exec *exec, int i)
 	return (1);
 }
 
-static int exec_command(t_exec *exec)
+static int	exec_command(t_exec *exec)
 {
 	if (find_env(exec, 0) == 1)
 	{
@@ -63,32 +63,38 @@ static int exec_command(t_exec *exec)
 	exit(127);
 }
 
-void	fork_created(t_exec *exec, int cmd_index, int cmd_count, int j)
+static void	end_fork_created(t_exec *exec, int cmd_index, int cmd_count)
+{
+	if (cmd_index > 0)
+		close(exec->fd[cmd_index - 1][0]);
+	if (cmd_index < cmd_count - 1)
+		close(exec->fd[cmd_index][1]);
+}
+
+void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 {
 	exec->pid[cmd_index] = fork();
+	if (exec->pid[cmd_index] < 0)
+	{
+		execve_error("Fork error", "");
+		close_fd(exec, cmd_count);
+		return ;
+	}
 	if (exec->pid[cmd_index] == 0)
 	{
 		if (cmd_index > 0)
 			dup2(exec->fd[cmd_index - 1][0], STDIN_FILENO);
 		if (cmd_index < cmd_count - 1)
 			dup2(exec->fd[cmd_index][1], STDOUT_FILENO);
-		while (j < cmd_count - 1)
-		{
-			close(exec->fd[j][0]);
-			close(exec->fd[j][1]);
-			j++;
-		}
+		close_fd(exec, cmd_count);
+		if (apply_redirs(exec) != 0)
+			exit(1);
 		exec_command(exec);
 		free_split_exec(exec);
 		exit(1);
 	}
 	else
-	{
-		if (cmd_index > 0)
-			close(exec->fd[cmd_index - 1][0]);
-		if (cmd_index < cmd_count - 1)
-			close(exec->fd[cmd_index][1]);
-	}
+		end_fork_created(exec, cmd_index, cmd_count);
 }
 
 void	end_exec(t_exec *exec, int cmd_count)
