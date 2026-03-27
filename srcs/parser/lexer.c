@@ -10,7 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/header.h"
+#include "../../header/header.h"
+
+static int	are_var_handled(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' && is_valid_var(&str[i]) && is_ok_quote(str, i))
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 static char	convert_type(char *str)
 {
@@ -31,7 +45,7 @@ static char	convert_type(char *str)
 	return (c);
 }
 
-static void	lex_convert(char **split, t_token *token)
+static void	lex_convert(char **split, t_token *token, char **envp, t_data *data)
 {
 	int	i;
 
@@ -39,7 +53,12 @@ static void	lex_convert(char **split, t_token *token)
 	while (split[i])
 	{
 		token[i].type = convert_type(split[i]);
-		token[i].value = split[i];
+		token[i].value = ft_strdup(split[i]);
+		handle_single(token[i].value);
+		while (!are_var_handled(token[i].value))
+			token[i].value = change_var(token[i].value, envp);
+		token[i].value = expand_code(token[i].value, data);
+		remove_quotes(token[i].value);
 		i++;
 	}
 	token[i].type = 0;
@@ -65,7 +84,7 @@ static void	quote_clean(char **split)
 	}
 }
 
-t_token	*lexer(char *str)
+t_token	*lexer(char *str, char **envp, t_data *data)
 {
 	char	**split;
 	t_token	*token;
@@ -80,9 +99,10 @@ t_token	*lexer(char *str)
 	token = malloc((split_len(split) + 1) * sizeof(t_token));
 	if (!token)
 	{
-		free_split(split);
+		free_split(split, 0);
 		return (NULL);
 	}
-	lex_convert(split, token);
+	lex_convert(split, token, envp, data);
+	free_split(split, 0);
 	return (token);
 }
