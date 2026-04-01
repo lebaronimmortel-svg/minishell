@@ -36,7 +36,7 @@ void	print_icon(int flag);
 void	loop(t_token *lexer, char **split);
 void	expand(char **split, char **envp);
 void	remove_quotes(char *str);
-int	    ft_strcmp(char *s1, char *s2);
+int		ft_strcmp(char *s1, char *s2);
 char	*change_var(char *str, char **envp);
 int		update_flag(int flag);
 int		is_valid_var(char *str);

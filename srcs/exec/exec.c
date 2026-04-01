@@ -21,7 +21,7 @@ int	count_cmds(char **split)
 	count = 0;
 	while (split && split[i])
 	{
-		if (i % 2 == 0)
+		if (i % 2 == 0 && split[i][0] != 0)
 			count++;
 		i++;
 	}
@@ -58,6 +58,9 @@ int	pipe_and_pid(t_exec *exec, int cmd_count)
 	exec->pid = malloc(sizeof(pid_t) * cmd_count);
 	if (!exec->pid)
 		return (1);
+  	i = 0;
+	while (i < cmd_count)
+		exec->pid[i++] = -1;
 	i = 0;
 	while (i < cmd_count - 1)
 	{
@@ -86,6 +89,37 @@ static void	fork_and_free_exec(t_exec *exec, int cmd_index, int cmd_count)
 	free_redir(exec);
 }
 
+void	infile_redir(char **split, int *i)
+{
+	int	z;
+	int		j;
+
+	j = 0;
+	while (split[*i] && split[*i][j] && split[*i][j] != ' ')
+		j++;
+	z = 0;
+	while (split[*i] && split[*i][j + z])
+	{
+		split[*i][z] = split[*i][j + 1 + z];
+		z++;
+	}
+}
+
+int	exec_main_sequel(char **envp, char **split, int *i, t_exec *exec)
+{
+	collect_redirs(exec, split, *i, 0);
+	if (*i >= 1 && split[(*i) - 1][0] == '<')
+		infile_redir(split, i);
+	exec->input = split[*i];
+	if (exec_init(exec, envp))
+	{
+		free_split_exec(exec);
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
 int	exec_main(char **envp, char **split, int i, int cmd_index)
 {
 	t_exec	exec;
@@ -100,24 +134,19 @@ int	exec_main(char **envp, char **split, int i, int cmd_index)
 	{
 		if (i % 2 == 0)
 		{
-			if (split[i][0] == 0)
+			if (split[i][0] == 0 || (i > 0 && split[i - 1][0] == '>'))
 			{
 				i++;
 				continue ;
 			}
-			exec.input = split[i];
-			collect_redirs(&exec, split, i, 0);
-			if (exec_init(&exec, envp))
-			{
-				free_split_exec(&exec);
-				i++;
+			if (exec_main_sequel(envp, split, &i, &exec))
 				continue ;
-			}
 			fork_and_free_exec(&exec, cmd_index, cmd_count);
 			cmd_index++;
 		}
 		i++;
 	}
+	close_fd(&exec, cmd_count);
 	end_exec(&exec, cmd_count, &status);
 	if (WIFEXITED(status))
 		exit_code = WEXITSTATUS(status);
