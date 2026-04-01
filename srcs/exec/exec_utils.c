@@ -104,7 +104,8 @@ void	end_exec(t_exec *exec, int cmd_count, int *status)
 	i = 0;
 	while (i < cmd_count)
 	{
-		waitpid(exec->pid[i], status, 0);
+		if (exec->pid[i] > 0)
+			waitpid(exec->pid[i], status, 0);
 		i++;
 	}
 	if (exec->pid)
