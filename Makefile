@@ -6,9 +6,12 @@ LIBFTDIR 	= ./srcs/libft
 LIBFT 		= $(LIBFTDIR)/libft.a
 SRC     	= srcs/main/main.c srcs/parser/lexer.c\
 			  srcs/parser/parser.c srcs/utils/utils.c\
-			  srcs/exec/exec.c srcs/exec/free_exec.c srcs/exec/exec_utils.c srcs/exec/exec_error.c srcs/exec/redir.c srcs/exec/redir_utils.c\
+			  srcs/exec/exec.c srcs/exec/free_exec.c\
+			  srcs/exec/exec_utils.c srcs/exec/exec_error.c\
+			  srcs/exec/redir.c srcs/exec/redir_utils.c\
 			  srcs/main/main_loop.c srcs/utils/expand_utils.c\
-			  srcs/utils/main_loop_utils.c srcs/parser/expand.c 
+			  srcs/utils/main_loop_utils.c srcs/parser/expand.c\
+			  srcs/built_in/built_in.c srcs/built_in/echo.c
 OBJ     	= $(SRC:.c=.o)
 TOTAL   	:= $(words $(SRC))
 COUNT   	:= 0
