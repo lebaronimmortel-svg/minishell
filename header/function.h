@@ -18,7 +18,7 @@ int		parser(t_token *lexer);
 void	check_quote(char *str);
 void	free_split(char **split, int flag);
 int		split_len(char **split);
-int		exec_main(char **envp, char **split, int i, int cmd_index);
+int		exec_main(char **envp, char **split, int i, int cmd_index, t_data *data);
 void	free_split_exec(t_exec *exec);
 void	collect_redirs(t_exec *exec, char **split, int cmd_pos, int count);
 int		space_pos(char *str);
@@ -44,5 +44,9 @@ int		is_ok_quote(char *str, int index);
 void	move_one(char *str);
 void	handle_single(char *str);
 char	*expand_code(char *str, t_data *data);
+void	unset(char **split, char **envp);
+void	pwd(void);
+void	env(char **envp);
+void	exec_built_in(char *input, char **envp, t_data *data);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 11:02:16 by lukrodri          #+#    #+#             */
-/*   Updated: 2026/03/05 11:02:17 by lukrodri         ###   ########.fr       */
+/*   Updated: 2026/03/31 01:00:26 by alexfuen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static void	fork_and_free_exec(t_exec *exec, int cmd_index, int cmd_count)
 	free_redir(exec);
 }
 
-int	exec_main(char **envp, char **split, int i, int cmd_index)
+int	exec_main(char **envp, char **split, int i, int cmd_index, t_data *data)
 {
 	t_exec	exec;
 	int		cmd_count;
@@ -107,6 +107,9 @@ int	exec_main(char **envp, char **split, int i, int cmd_index)
 			}
 			exec.input = split[i];
 			collect_redirs(&exec, split, i, 0);
+			
+			exec_built_in(exec.input, envp, data);
+			
 			if (exec_init(&exec, envp))
 			{
 				free_split_exec(&exec);
@@ -125,5 +128,6 @@ int	exec_main(char **envp, char **split, int i, int cmd_index)
 		exit_code = 128 + WTERMSIG(status);
 	else
 		exit_code = 1;
+	data->error_code = exit_code;
 	return (exit_code);
 }
