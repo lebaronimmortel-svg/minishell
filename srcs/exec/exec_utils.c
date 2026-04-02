@@ -103,6 +103,8 @@ int	end_exec(t_exec *exec, int cmd_count)
 	int	status;
 	int	exit_code;
 
+	exit_code = 0;
+	status = 0;
 	close_fd(exec, cmd_count);
 	i = 0;
 	while (i < cmd_count)

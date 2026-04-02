@@ -28,7 +28,7 @@ static char	**print_order(t_token *lexer)
 	i = 0;
 	while (lexer[i].type)
 		i++;
-	split = ft_calloc(i + 1, sizeof(char *));
+	split = ft_calloc(2 * (i + 1), sizeof(char *));
 	if (!split)
 		return (NULL);
 	split[0] = ft_strdup("");

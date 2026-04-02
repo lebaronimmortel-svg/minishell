@@ -15,6 +15,7 @@
 static void	end_redir_sequel(t_exec *exec, char **split, int i, char type)
 {
 	exec->redir[exec->redir_count].type = type;
+	exec->redir[exec->redir_count].malloced = 0;
 	exec->redir[exec->redir_count].file = split[i + 1];
 	if (space_pos(split[i + 1]) != -1)
 		exec->redir[exec->redir_count].file[space_pos(split[i + 1])] = 0;
@@ -80,12 +81,12 @@ static void	collect_pre_redir(t_exec *exec, char **split, int cmd_pos)
 	end_pre_redir(exec, type);
 }
 
-void	collect_redirs(t_exec *exec, char **split, int cmd_pos, int count)
+void	collect_redirs(t_exec *exec, char **split, int cmd_pos, char **envp)
 {
 	int	i;
+	int	count;
 
-	exec->redir_count = 0;
-	exec->redir = NULL;
+	count = 0;
 	if (cmd_pos >= 1 && split[cmd_pos - 1]
 		&& (split[cmd_pos - 1][0] == '<' || split[cmd_pos - 1][0] == '>'))
 		count++;
@@ -103,6 +104,13 @@ void	collect_redirs(t_exec *exec, char **split, int cmd_pos, int count)
 	exec->redir = malloc(sizeof(t_redir) * count);
 	if (!exec->redir)
 		return ;
+	i = 0;
+	while (i < count)
+	{
+		exec->redir[i].fd = -1;
+		i++;
+	}
 	collect_pre_redir(exec, split, cmd_pos);
 	collect_redirs_sequel(exec, split, cmd_pos, 0);
+	end_collect_redir(exec, envp);
 }

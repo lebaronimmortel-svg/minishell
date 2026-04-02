@@ -42,14 +42,26 @@ int	count_cmds(char **split)
 	return (count);
 }
 
-void	infile_redir(char **split, int *i)
+void	infile_redir(char **split, int *i, int check)
 {
 	int	z;
 	int	j;
 
 	j = 0;
-	while (split[*i] && split[*i][j] && split[*i][j] != ' ')
+	while (split[*i] && split[*i][j])
+	{
+		if (split[*i][j] == ' ')
+		{
+			check = 1;
+			break ;
+		}
 		j++;
+	}
+	if (check == 0)
+	{
+		split[*i][0] = 0;
+		return ;
+	}
 	z = 0;
 	while (split[*i] && split[*i][j + z])
 	{

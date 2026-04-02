@@ -23,6 +23,8 @@ void	free_redir(t_exec *exec)
 	{
 		if (exec->redir[i].malloced && exec->redir[i].file)
 			free(exec->redir[i].file);
+		if (exec->redir[i].fd >= 0)
+			close(exec->redir[i].fd);
 		i++;
 	}
 	free(exec->redir);

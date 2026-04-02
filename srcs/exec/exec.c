@@ -61,21 +61,24 @@ int	pipe_and_pid(t_exec *exec, int cmd_count)
 	return (0);
 }
 
-static void	fork_and_free_exec(t_exec *exec, int cmd_index, int cmd_count)
+static void	fork_and_free_exec(t_exec *exec, int *cmd_index, int cmd_count)
 {
-	fork_created(exec, cmd_index, cmd_count);
+	fork_created(exec, *cmd_index, cmd_count);
 	free_split_exec(exec);
-	free_redir(exec);
+	(*cmd_index)++;
 }
 
 int	exec_main_sequel(char **envp, char **split, int *i, t_exec *exec)
 {
-	collect_redirs(exec, split, *i, 0);
-	if (*i >= 1 && split[(*i) - 1][0] == '<')
-		infile_redir(split, i);
+	exec->redir_count = 0;
+	exec->redir = NULL;
+	collect_redirs(exec, split, *i, envp);
+	if (*i >= 1 && (split[(*i) - 1][0] == '<'))
+		infile_redir(split, i, 0);
 	exec->input = split[*i];
 	if (exec_init(exec, envp))
 	{
+		free_redir(exec);
 		free_split_exec(exec);
 		(*i)++;
 		return (1);
@@ -94,20 +97,20 @@ int	exec_main(char **envp, char **split, int i, int cmd_index)
 		return (1);
 	while (split && split[i])
 	{
-		if (i % 2 == 0)
+		if (split[i][0] == 0 || split[i][0] == '|'
+			|| split[i][0] == '<'
+			|| split[i][0] == '>'
+			|| (i > 0 && (split[i - 1][0] == '>')))
 		{
-			if (split[i][0] == 0 || (i > 0 && split[i - 1][0] == '>'))
-			{
-				i++;
-				continue ;
-			}
-			if (exec_main_sequel(envp, split, &i, &exec))
-				continue ;
-			fork_and_free_exec(&exec, cmd_index, cmd_count);
-			cmd_index++;
+			i++;
+			continue ;
 		}
+		if (exec_main_sequel(envp, split, &i, &exec))
+			continue ;
+		fork_and_free_exec(&exec, &cmd_index, cmd_count);
 		i++;
 	}
 	exit_code = end_exec(&exec, cmd_count);
+	free_redir(&exec);
 	return (exit_code);
 }
