@@ -15,7 +15,7 @@
 static void	exit_cleanly(int code, t_data *data, char **split)
 {
 	free(data);
-	free_split(split, 1);
+	free_split(split, 0);
 	rl_clear_history();
 	exit(code);
 }
@@ -70,6 +70,7 @@ void	main_loop(char **split, t_token *lex, char **envp, t_data *data)
 			if (parser(lex))
 			{
 				printf("\n✅ OK\n\n\n");
+				free_split(split, 0);
 				split = print_order(lex);
 				free_lexer(lex);
 				print_icon(2);
