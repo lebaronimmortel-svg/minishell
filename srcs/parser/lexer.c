@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-static int	are_var_handled(char *str)
+int	are_var_handled(char *str)
 {
 	int	i;
 

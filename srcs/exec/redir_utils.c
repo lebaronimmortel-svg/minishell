@@ -26,7 +26,7 @@ int	space_pos(char *str)
 	return (-1);
 }
 
-static int	handle_heredoc(char *delimiter)
+int	handle_heredoc(char *delimiter, char **envp)
 	{
 	int		pipefd[2];
 	char	*line;
@@ -41,6 +41,8 @@ static int	handle_heredoc(char *delimiter)
 			free(line);
 			break ;
 		}
+		while (!are_var_handled(line))
+			line = change_var(line, envp);
 		write(pipefd[1], line, ft_strlen(line));
 		write(pipefd[1], "\n", 1);
 		free(line);
@@ -95,7 +97,7 @@ int	second_part_apply_redir(char type, t_exec *exec, int i)
 	}
 	else if (type == 'h')
 	{
-		fd = handle_heredoc(exec->redir[i].file);
+		fd = exec->redir[i].fd;
 		if (fd < 0)
 			return (1);
 		dup2(fd, STDIN_FILENO);

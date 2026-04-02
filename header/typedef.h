@@ -25,6 +25,7 @@ typedef struct s_redir
 	char	type;
 	char	*file;
 	int		malloced;
+	int		fd;
 
 }	t_redir;
 
