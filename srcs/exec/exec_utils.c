@@ -97,17 +97,27 @@ void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 		end_fork_created(exec, cmd_index, cmd_count);
 }
 
-void	end_exec(t_exec *exec, int cmd_count, int *status)
+int	end_exec(t_exec *exec, int cmd_count)
 {
 	int	i;
+	int	status;
+	int	exit_code;
 
+	close_fd(exec, cmd_count);
 	i = 0;
 	while (i < cmd_count)
 	{
 		if (exec->pid[i] > 0)
-			waitpid(exec->pid[i], status, 0);
+			waitpid(exec->pid[i], &status, 0);
 		i++;
 	}
 	if (exec->pid)
 		free(exec->pid);
+	if (WIFEXITED(status))
+		exit_code = WEXITSTATUS(status);
+	else if (WIFSIGNALED(status))
+		exit_code = 128 + WTERMSIG(status);
+	else
+		exit_code = 1;
+	return (exit_code);
 }

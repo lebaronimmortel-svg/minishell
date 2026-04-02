@@ -12,21 +12,21 @@
 
 #include "../../header/header.h"
 
-void    free_redir(t_exec *exec)
+void	free_redir(t_exec *exec)
 {
-    int i;
+	int	i;
 
-    if (!exec->redir)
-        return ;
-    i = 0;
-    while (i < exec->redir_count)
-    {
-        if (exec->redir[i].malloced && exec->redir[i].file)
-            free(exec->redir[i].file);
-        i++;
-    }
-    free(exec->redir);
-    exec->redir = NULL;
+	if (!exec->redir)
+		return ;
+	i = 0;
+	while (i < exec->redir_count)
+	{
+		if (exec->redir[i].malloced && exec->redir[i].file)
+			free(exec->redir[i].file);
+		i++;
+	}
+	free(exec->redir);
+	exec->redir = NULL;
 }
 
 void	close_fd(t_exec *exec, int cmd_count)
