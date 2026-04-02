@@ -6,7 +6,7 @@
 /*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/05 11:02:16 by lukrodri          #+#    #+#             */
-/*   Updated: 2026/03/05 11:02:17 by lukrodri         ###   ########.fr       */
+/*   Updated: 2026/03/31 01:00:26 by alexfuen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ static void	fork_and_free_exec(t_exec *exec, int *cmd_index, int cmd_count)
 	(*cmd_index)++;
 }
 
-int	exec_main_sequel(char **envp, char **split, int *i, t_exec *exec)
+int	exec_main_sequel(char **envp, char **split, int *i, t_exec *exec, t_data *data)
 {
 	exec->redir_count = 0;
 	exec->redir = NULL;
@@ -76,6 +76,7 @@ int	exec_main_sequel(char **envp, char **split, int *i, t_exec *exec)
 	if (*i >= 1 && (split[(*i) - 1][0] == '<'))
 		infile_redir(split, i, 0);
 	exec->input = split[*i];
+	exec_built_in(exec->input, envp, data);
 	if (exec_init(exec, envp))
 	{
 		free_redir(exec);
@@ -86,7 +87,7 @@ int	exec_main_sequel(char **envp, char **split, int *i, t_exec *exec)
 	return (0);
 }
 
-int	exec_main(char **envp, char **split, int i, int cmd_index)
+int	exec_main(char **envp, char **split, int i, int cmd_index, t_data *data)
 {
 	t_exec	exec;
 	int		cmd_count;
@@ -105,12 +106,12 @@ int	exec_main(char **envp, char **split, int i, int cmd_index)
 			i++;
 			continue ;
 		}
-		if (exec_main_sequel(envp, split, &i, &exec))
+		if (exec_main_sequel(envp, split, &i, &exec, data))
 			continue ;
 		fork_and_free_exec(&exec, &cmd_index, cmd_count);
 		i++;
 	}
-	exit_code = end_exec(&exec, cmd_count);
+	exit_code = end_exec(&exec, cmd_count, data);
 	free_redir(&exec);
 	return (exit_code);
 }
