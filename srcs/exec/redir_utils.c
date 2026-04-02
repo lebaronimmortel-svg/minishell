@@ -103,3 +103,26 @@ int	second_part_apply_redir(char type, t_exec *exec, int i)
 	}
 	return (0);
 }
+
+int	apply_redirs(t_exec *exec)
+{
+	int		i;
+	int		result;
+	char	type;
+
+	if (!exec->redir || exec->redir_count == 0)
+		return (0);
+	i = 0;
+	while (i < exec->redir_count)
+	{
+		type = exec->redir[i].type;
+		result = first_part_apply_redir(type, exec, i, 0);
+		if (result == 1)
+			return (1);
+		if (result != 2)
+			if (second_part_apply_redir(type, exec, i) == 1)
+				return (1);
+		i++;
+	}
+	return (0);
+}
