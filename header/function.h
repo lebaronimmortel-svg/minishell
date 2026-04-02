@@ -18,7 +18,7 @@ int		parser(t_token *lexer);
 void	check_quote(char *str);
 void	free_split(char **split, int flag);
 int		split_len(char **split);
-int		exec_main(char **envp, char **split, int i, int cmd_index);
+int		exec_main(char **envp, char **split, int i, int cmd_index, t_data *data);
 int		pipe_and_pid_init(t_exec *exec, int cmd_count);
 int		count_cmds(char **split);
 void	infile_redir(char **split, int *i, int check);
@@ -32,7 +32,7 @@ int		apply_redirs(t_exec *exec);
 int		handle_heredoc(char *delimiter, char **envp);
 void	fork_created(t_exec *exec, int cmd_index, int cmd_count);
 void	execve_error(char *str, char *command);
-int		end_exec(t_exec *exec, int cmd_count);
+int	    end_exec(t_exec *exec, int cmd_count, t_data *data);
 void	free_redir(t_exec *exec);
 void	close_fd(t_exec *exec, int cmd_count);
 void	main_loop(char **split, t_token *lex, char **envp, t_data *data);
@@ -50,5 +50,9 @@ int		is_ok_quote(char *str, int index);
 void	move_one(char *str);
 void	handle_single(char *str);
 char	*expand_code(char *str, t_data *data);
+void	unset(char **split, char **envp);
+void	pwd(void);
+void	env(char **envp);
+void	exec_built_in(char *input, char **envp, t_data *data);
 
 #endif

@@ -61,23 +61,6 @@ void	print_lexer(t_token *lexer)
 	return ;
 }
 
-static void	print_header(void)
-{
-	printf("\n");
-	printf("███╗   ███╗██╗███╗   ██╗██╗███████╗");
-	printf("██╗  ██╗███████╗██╗     ██╗     \n");
-	printf("████╗ ████║██║████╗  ██║██║██╔════╝");
-	printf("██║  ██║██╔════╝██║     ██║     \n");
-	printf("██╔████╔██║██║██╔██╗ ██║██║███████╗");
-	printf("███████║█████╗  ██║     ██║     \n");
-	printf("██║╚██╔╝██║██║██║╚██╗██║██║╚════██║");
-	printf("██╔══██║██╔══╝  ██║     ██║     \n");
-	printf("██║ ╚═╝ ██║██║██║ ╚████║██║███████║");
-	printf("██║  ██║███████╗███████╗███████╗\n");
-	printf("╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝");
-	printf("╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝\n");
-}
-
 static void	handler0(int sig)
 {
 	(void) sig;
@@ -105,7 +88,6 @@ int	main(int argc, char **argv, char **envp)
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (1);
-	print_header();
 	printf("\n");
 	lex = NULL;
 	split = NULL;

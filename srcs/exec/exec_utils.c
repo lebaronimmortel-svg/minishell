@@ -97,7 +97,7 @@ void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 		end_fork_created(exec, cmd_index, cmd_count);
 }
 
-int	end_exec(t_exec *exec, int cmd_count)
+int	end_exec(t_exec *exec, int cmd_count, t_data *data)
 {
 	int	i;
 	int	status;
@@ -121,5 +121,6 @@ int	end_exec(t_exec *exec, int cmd_count)
 		exit_code = 128 + WTERMSIG(status);
 	else
 		exit_code = 1;
+	data->error_code = exit_code;
 	return (exit_code);
 }
