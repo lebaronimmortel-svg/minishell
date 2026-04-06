@@ -12,10 +12,11 @@
 
 #include "../../header/header.h"
 
-static void	exit_cleanly(int code, t_data *data, char **split)
+static void	exit_cleanly(int code, t_data *data, char **split, char **envp)
 {
 	free(data);
 	free_split(split, 0);
+	free_split(envp, 0);
 	rl_clear_history();
 	exit(code);
 }
@@ -60,7 +61,7 @@ void	main_loop(char **split, t_token *lex, char **envp, t_data *data)
 	{
 		str = readline("\n🌈 ");
 		if (str == NULL)
-			exit_cleanly(0, data, split);
+			exit_cleanly(0, data, split, envp);
 		add_history(str);
 		lex = lexer(str, envp, data);
 		free(str);
