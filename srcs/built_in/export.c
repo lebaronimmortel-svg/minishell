@@ -56,9 +56,31 @@ int	add_var(char *src, t_data *data)
 	return (0);
 }
 
+static void	sort_split(char **split)
+{
+	int		i;
+	char	*tmp;
+
+	if (!split || !(*split))
+		return ;
+	i = 1;
+	while (split[i])
+	{
+		if (ft_strncmp(split[i - 1], split[i], ft_strlen(split[i] + 1)) > 0)
+		{
+			tmp = split[i];
+			split[i] = split[i - 1];
+			split[i - 1] = tmp;
+			i = 1;
+		}
+		else
+			i++;
+	}
+}
+
 void	export_single(t_data *data)
 {
-	print_split(data->env);
+	sort_split(data->env_bis);
 	print_split(data->env_bis);
 }
 
