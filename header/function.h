@@ -15,6 +15,9 @@
 
 t_token	*lexer(char *str, t_data *data);
 int		parser(t_token *lexer);
+char	**split_dup(char **envp);
+int		is_alphanum(char c);
+void	unset(char **split, t_data *data);
 void	ft_export(char *input, t_data *data);
 void	check_quote(char *str);
 void	export_single(t_data *data);

@@ -12,6 +12,19 @@
 
 #include "../../header/header.h"
 
+static int	assign_flag(int flag, char *input, int *i)
+{
+	while (input[*i] && ft_isalpha((int)input[*i]))
+	{
+		if (input[*i] == 'n' && flag)
+			flag = 2;
+		if (input[*i] != 'n')
+			flag = 0;
+		(*i)++;
+	}
+	return (flag);
+}
+
 static int	has_n_flag(char *input)
 {
 	int	i;
@@ -30,14 +43,7 @@ static int	has_n_flag(char *input)
 		if (!input[i])
 			break ;
 		i++;
-		while (input[i] && ft_isalpha((int)input[i]))
-		{
-			if (input[i] == 'n' && flag)
-				flag = 2;
-			if (input[i] != 'n')
-				flag = 0;
-			i++;
-		}
+		flag = assign_flag(flag, input, &i);
 	}
 	if (flag == 2)
 		return (1);

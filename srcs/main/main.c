@@ -12,18 +12,6 @@
 
 #include "../../header/header.h"
 
-int	my_memlen(char **split)
-{
-	int	i;
-
-	if (!split)
-		return (0);
-	i = 0;
-	while (split[i])
-		i++;
-	return (i);
-}
-
 void	print_icon(int flag)
 {
 	if (flag == 1)
@@ -82,32 +70,6 @@ static void	handler0(int sig)
 	rl_redisplay();
 }
 
-char	**split_dup(char **envp)
-{
-	char	**new_split;
-	int		i;
-	int		len;
-
-	len = my_memlen(envp);
-	if (!len)
-		return (NULL);
-	new_split = ft_calloc(len + 1, sizeof(char *));
-	if (!new_split)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		new_split[i] = ft_strdup(envp[i]);
-		if (!new_split)
-		{
-			free_split(new_split, 0);
-			return (NULL);
-		}
-		i++;
-	}
-	return (new_split);
-}
-
 static int	init(t_data *data, char **envp)
 {
 	data->env = split_dup(envp);
@@ -116,7 +78,7 @@ static int	init(t_data *data, char **envp)
 		free(data);
 		return (0);
 	}
-	data->env_bis = malloc(sizeof(char *));
+	data->env_bis = split_dup(envp);
 	if (!data->env_bis)
 	{
 		free_split(data->env, 0);

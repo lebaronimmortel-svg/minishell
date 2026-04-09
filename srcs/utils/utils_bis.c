@@ -32,3 +32,52 @@ void	print_split(char **split)
 	while (split[i])
 		printf("declare -x %s\n", split[i++]);
 }
+
+char	**split_dup(char **envp)
+{
+	char	**new_split;
+	int		i;
+	int		len;
+
+	len = my_memlen(envp);
+	if (!len)
+		return (NULL);
+	new_split = ft_calloc(len + 1, sizeof(char *));
+	if (!new_split)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		new_split[i] = ft_strdup(envp[i]);
+		if (!new_split)
+		{
+			free_split(new_split, 0);
+			return (NULL);
+		}
+		i++;
+	}
+	return (new_split);
+}
+
+int	my_memlen(char **split)
+{
+	int	i;
+
+	if (!split)
+		return (0);
+	i = 0;
+	while (split[i])
+		i++;
+	return (i);
+}
+
+int	is_alphanum(char c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	if (c >= 'a' && c <= 'z')
+		return (1);
+	if (c >= 'A' && c <= 'Z')
+		return (1);
+	return (0);
+}

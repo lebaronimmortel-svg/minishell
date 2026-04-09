@@ -1,14 +1,26 @@
 
-Si je mets /, ./, ../, etc... avant la commande. Exemple : /ls
-Ca doit pas marcher !
+# Flag pour l'execution Valgrind :
 
-Tab doit etre géré
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --child-silent-after-fork=yes --track-fds=yes --suppressions=valgrind.supp ./minishell
 
-Built-in : faire cd, export
+# Parsing : 
 
-Lukas : les redir
+- Si je mets /, ./, ../, etc... avant la commande. Exemple : /ls
+	-> ça doit pas marcher
 
-Si export VALUE= 
-	-> apparait dans env et non export
+- Tab doit etre géré
+
+# Built_in : 
+
+- Les built-in s'executent mais le binaire aussi.
+	-> l'outstream est pour l'instant celui du binaire. 
+
+- Faire cd
+
+- Quand j'export deux fois la même variable, 
+	elle s'accumule au lieu de remplacer
+
+- Si export VALUE= 
+	-> doit apparaitre dans env et non export
 
 
