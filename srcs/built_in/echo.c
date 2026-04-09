@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/08 19:10:33 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/04/08 19:10:35 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/header.h"
 
 static int	has_n_flag(char *input)
@@ -33,7 +45,7 @@ static int	has_n_flag(char *input)
 		return (0);
 }
 
-static void	echo(char *input)
+void	echo(char *input)
 {
 	int	i;
 
@@ -53,35 +65,4 @@ static void	echo(char *input)
 	printf("%s", &input[i]);
 	if (has_n_flag(input))
 		printf("\n");
-}
-
-int	status_code(char *input, t_data *data)
-{
-	int i;
-
-	i = 0;
-	while (input[i] && input[i] != ' ')
-		i++;
-	if (!input[i])
-		return (data->error_code);
-	return (ft_atoi(&input[i]));
-}
-
-void	exec_built_in(char *input, char **envp, t_data *data)
-{
-	if (!ft_strncmp(input, "pwd", 3) && ft_strlen(input) == 3)
-		pwd();
-	else if (!ft_strncmp(input, "unset ", 6))
-		unset(&ft_split(input, ' ')[1], envp);
-	else if (!ft_strncmp(input, "env", 3) && ft_strlen(input) == 3)
-		env(envp);
-	else if ((!ft_strncmp(input, "exit", 4) && ft_strlen(input) == 4) || (!ft_strncmp(input, "exit ", 5)))
-		exit(status_code(input, data));
-	else if ((!ft_strncmp(input, "echo ", 5)))
-		echo(input);
-	/*
-	...
-	...
-	...	
-	*/
 }

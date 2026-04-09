@@ -113,7 +113,7 @@ char	*change_var(char *str, char **envp)
 	char	*tmp;
 
 	i = 0;
-	while (!(str[i] == '$' && is_valid_var(&str[i]) && is_ok_quote(str, i)))
+	while (!(str[i] == '$' && is_valid_var(&str[i], 0) && is_ok_quote(str, i)))
 		i++;
 	tmp = convert_var(str, i, envp);
 	return (tmp);

@@ -19,7 +19,7 @@ int	are_var_handled(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && is_valid_var(&str[i]) && is_ok_quote(str, i))
+		if (str[i] == '$' && is_valid_var(&str[i], 0) && is_ok_quote(str, i))
 			return (0);
 		i++;
 	}
@@ -45,7 +45,7 @@ static char	convert_type(char *str)
 	return (c);
 }
 
-static void	lex_convert(char **split, t_token *token, char **envp, t_data *data)
+static void	lex_convert(char **split, t_token *token, t_data *data)
 {
 	int	i;
 
@@ -56,7 +56,7 @@ static void	lex_convert(char **split, t_token *token, char **envp, t_data *data)
 		token[i].value = ft_strdup(split[i]);
 		handle_single(token[i].value);
 		while (!are_var_handled(token[i].value))
-			token[i].value = change_var(token[i].value, envp);
+			token[i].value = change_var(token[i].value, data->env);
 		token[i].value = expand_code(token[i].value, data);
 		remove_quotes(token[i].value);
 		i++;
@@ -84,7 +84,7 @@ static void	quote_clean(char **split)
 	}
 }
 
-t_token	*lexer(char *str, char **envp, t_data *data)
+t_token	*lexer(char *str, t_data *data)
 {
 	char	**split;
 	t_token	*token;
@@ -102,7 +102,7 @@ t_token	*lexer(char *str, char **envp, t_data *data)
 		free_split(split, 0);
 		return (NULL);
 	}
-	lex_convert(split, token, envp, data);
+	lex_convert(split, token, data);
 	free_split(split, 0);
 	return (token);
 }

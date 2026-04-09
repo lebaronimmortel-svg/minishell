@@ -43,10 +43,11 @@ typedef struct s_exec
 	int		redir_count;
 }	t_exec;
 
-// this structure is to be completed
 typedef struct s_data
 {
-	int	error_code;
+	int		error_code;
+	char	**env;
+	char	**env_bis;
 }	t_data;
 
 #endif
