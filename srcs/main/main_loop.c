@@ -51,6 +51,7 @@ static void	free_lexer(t_token *lex)
 		free(lex[i].value);
 		i++;
 	}
+	free(lex[i].value);
 	free(lex);
 }
 
@@ -60,11 +61,11 @@ static void	execute_prompt(char **split, t_token *lex, t_data *data)
 	if (parser(lex))
 	{
 		printf("\n✅ OK\n\n\n");
-		free_split(split, 0);
 		split = print_order(lex);
 		free_lexer(lex);
 		print_icon(2);
 		data->error_code = exec_main(split, 0, 0, data);
+		free_split(split, 0);
 		printf("\n");
 	}
 	else
@@ -77,7 +78,7 @@ void	main_loop(char **split, t_token *lex, t_data *data)
 
 	while (1)
 	{
-		str = readline("\n🌈 ");
+		str = readline("\n$> ");
 		if (str == NULL)
 			exit_cleanly(0, data, split);
 		add_history(str);

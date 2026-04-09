@@ -23,4 +23,13 @@
 - Si export VALUE= 
 	-> doit apparaitre dans env et non export
 
+# Exec :
+
+- si on fait entrée sans rien dans le prompt
+	-> Conditional jump or move depends on uninitialised value
+	
+- si on colle le mot au heredoc. Ex : <<word
+	-> Conditional jump or move depends on uninitialised value
+
+# + leaks + protections
 
