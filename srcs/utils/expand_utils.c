@@ -23,24 +23,36 @@ static int	is_alphanum(char c)
 	return (0);
 }
 
-int	is_valid_var(char *str)
+int	valid_expand(char c)
+{
+	if (c == ' ')
+		return (0);
+	if (c == '$')
+		return (0);
+	if (c == 39)
+		return (0);
+	if (c == 34)
+		return (0);
+	return (1);
+}
+
+int	is_valid_var(char *str, int flag)
 {
 	int	i;
 
 	i = 0;
 	if (str[0] == '$')
 	{
-		if (str[1] == ' ')
-			return (0);
-		if (str[1] == '$')
-			return (0);
-		if (str[1] == 39)
-			return (0);
-		if (str[1] == 34)
+		if (!valid_expand(str[1]))
 			return (0);
 	}
 	while (str[i] && str[i] != ' ' && str[i] != 39 && str[i] != 34)
 	{
+		if (flag)
+		{
+			if (str[i] == '=')
+				break ;
+		}
 		if (i != 0 && !is_alphanum(str[i]) && str[i] != '_')
 			return (0);
 		i++;

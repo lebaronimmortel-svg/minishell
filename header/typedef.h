@@ -45,7 +45,9 @@ typedef struct s_exec
 
 typedef struct s_data
 {
-	int	error_code;
+	int		error_code;
+	char	**env;
+	char	**env_bis;
 }	t_data;
 
 #endif

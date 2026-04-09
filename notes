@@ -1,9 +1,6 @@
 
-
-Si je mets / avant la commande. Exemple : /ls
+Si je mets /, ./, ../, etc... avant la commande. Exemple : /ls
 Ca doit pas marcher !
-
-Le split dans exec_init qui skip les spaces
 
 Tab doit etre géré
 
@@ -11,7 +8,7 @@ Built-in : faire cd, export
 
 Lukas : les redir
 
-Echo : si je mets un flag entre quotes
-	-> les quotes disparaissent et il 
-	est pris pour un flag
-(car les quotes sont traitees avant)
+Si export VALUE= 
+	-> apparait dans env et non export
+
+

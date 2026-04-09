@@ -12,11 +12,12 @@
 
 #include "../../header/header.h"
 
-static void	exit_cleanly(int code, t_data *data, char **split, char **envp)
+static void	exit_cleanly(int code, t_data *data, char **split)
 {
-	free(data);
 	free_split(split, 0);
-	free_split(envp, 0);
+	free_split(data->env, 0);
+	free_split(data->env_bis, 0);
+	free(data);
 	rl_clear_history();
 	exit(code);
 }
@@ -53,7 +54,24 @@ static void	free_lexer(t_token *lex)
 	free(lex);
 }
 
-void	main_loop(char **split, t_token *lex, char **envp, t_data *data)
+static void	execute_prompt(char **split, t_token *lex, t_data *data)
+{
+	print_lexer(lex);
+	if (parser(lex))
+	{
+		printf("\n✅ OK\n\n\n");
+		free_split(split, 0);
+		split = print_order(lex);
+		free_lexer(lex);
+		print_icon(2);
+		data->error_code = exec_main(split, 0, 0, data);
+		printf("\n");
+	}
+	else
+		printf("\n❌ NOK\n\n");
+}
+
+void	main_loop(char **split, t_token *lex, t_data *data)
 {
 	char	*str;
 
@@ -61,25 +79,11 @@ void	main_loop(char **split, t_token *lex, char **envp, t_data *data)
 	{
 		str = readline("\n🌈 ");
 		if (str == NULL)
-			exit_cleanly(0, data, split, envp);
+			exit_cleanly(0, data, split);
 		add_history(str);
-		lex = lexer(str, envp, data);
+		lex = lexer(str, data);
 		free(str);
 		if (lex)
-		{
-			print_lexer(lex);
-			if (parser(lex))
-			{
-				printf("\n✅ OK\n\n\n");
-				free_split(split, 0);
-				split = print_order(lex);
-				free_lexer(lex);
-				print_icon(2);
-				data->error_code = exec_main(envp, split, 0, 0, data);
-				printf("\n");
-			}
-			else
-				printf("\n❌ NOK\n\n");
-		}
+			execute_prompt(split, lex, data);
 	}
 }

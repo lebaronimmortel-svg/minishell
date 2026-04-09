@@ -9,7 +9,8 @@ SRC     	= srcs/main/main.c srcs/parser/lexer.c\
 			  srcs/exec/exec.c srcs/exec/free_exec.c srcs/exec/exec_utils.c srcs/exec/exec_error.c srcs/exec/redir.c srcs/exec/redir_utils.c srcs/exec/redir_utils_sec.c srcs/exec/exec_utils_sec.c\
 			  srcs/main/main_loop.c srcs/utils/expand_utils.c\
 			  srcs/utils/main_loop_utils.c srcs/parser/expand.c\
-			  srcs/built_in/built_in.c srcs/built_in/echo.c
+			  srcs/built_in/built_in.c srcs/built_in/echo.c\
+			  srcs/built_in/export.c
 OBJ     	= $(SRC:.c=.o)
 TOTAL   	:= $(words $(SRC))
 COUNT   	:= 0

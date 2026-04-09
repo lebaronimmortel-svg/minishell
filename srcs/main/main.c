@@ -12,10 +12,10 @@
 
 #include "../../header/header.h"
 
-static int my_memlen(char **split)
+int	my_memlen(char **split)
 {
-	int i;
-	
+	int	i;
+
 	if (!split)
 		return (0);
 	i = 0;
@@ -82,12 +82,12 @@ static void	handler0(int sig)
 	rl_redisplay();
 }
 
-char **split_dup(char **envp)
+char	**split_dup(char **envp)
 {
-	char **new_split;
-	int i;
-	int len;
-	
+	char	**new_split;
+	int		i;
+	int		len;
+
 	len = my_memlen(envp);
 	if (!len)
 		return (NULL);
@@ -105,7 +105,25 @@ char **split_dup(char **envp)
 		}
 		i++;
 	}
-	return(new_split);
+	return (new_split);
+}
+
+static int	init(t_data *data, char **envp)
+{
+	data->env = split_dup(envp);
+	if (!data->env)
+	{
+		free(data);
+		return (0);
+	}
+	data->env_bis = malloc(sizeof(char *));
+	if (!data->env_bis)
+	{
+		free_split(data->env, 0);
+		free(data);
+		return (0);
+	}
+	return (1);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -113,25 +131,20 @@ int	main(int argc, char **argv, char **envp)
 	t_token	*lex;
 	char	**split;
 	t_data	*data;
-	char **env;
 
 	signal(SIGINT, handler0);
 	signal(SIGQUIT, SIG_IGN);
 	(void) argv;
 	if (argc != 1)
-		return (0);
-	env = split_dup(envp);
-	if (!env)
-		return (0);
+		return (1);
 	data = malloc(sizeof(t_data));
 	if (!data)
-	{	
-		free_split(env, 0);
 		return (1);
-	}
+	if (!init(data, envp))
+		return (1);
 	printf("\n");
 	lex = NULL;
 	split = NULL;
-	main_loop(split, lex, env, data);
+	main_loop(split, lex, data);
 	return (0);
 }

@@ -21,3 +21,14 @@ int	ft_strcmp(char *s1, char *s2)
 		i++;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
+
+void	print_split(char **split)
+{
+	int	i;
+
+	if (!split || !(*split))
+		return ;
+	i = 0;
+	while (split[i])
+		printf("declare -x %s\n", split[i++]);
+}
