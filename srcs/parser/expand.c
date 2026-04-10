@@ -85,11 +85,8 @@ static void	var_search(char *buffer, char **envp)
 static char	*convert_var(char *str, int index, char **envp)
 {
 	int		i;
-	char	*buffer;
+	char	buffer[2048];
 
-	buffer = malloc(5000);
-	if (!buffer)
-		return (NULL);
 	if (str[index] != '$')
 		return (NULL);
 	i = index;
@@ -103,7 +100,6 @@ static char	*convert_var(char *str, int index, char **envp)
 	buffer[i - index - 1] = '\0';
 	var_search(buffer, envp);
 	str = transpose(str, index, buffer, 1);
-	free(buffer);
 	return (str);
 }
 
@@ -116,5 +112,6 @@ char	*change_var(char *str, char **envp)
 	while (!(str[i] == '$' && is_valid_var(&str[i], 0) && is_ok_quote(str, i)))
 		i++;
 	tmp = convert_var(str, i, envp);
+	free(str);
 	return (tmp);
 }
