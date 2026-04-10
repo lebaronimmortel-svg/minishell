@@ -3,33 +3,44 @@
 
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --child-silent-after-fork=yes --track-fds=yes --suppressions=valgrind.supp ./minishell
 
+# Fichier valgrind.supp :
+
+	{
+	   name
+	   Memcheck:Leak
+	   fun:*
+	   ...
+	   obj:*libreadline.so*
+	   ...
+	}
+
 # Parsing : 
 
 - Si je mets /, ./, ../, etc... avant la commande. Exemple : /ls
 	-> ça doit pas marcher
 
-- Tab doit etre géré
+- Tab comme séparateur doit etre géré
 
 # Built_in : 
 
 - Les built-in s'executent mais le binaire aussi.
 	-> l'outstream est pour l'instant celui du binaire. 
+	
+- Rajouter les exit_code aux built_in
 
 - Faire cd
 
+## Export :
+
 - Quand j'export deux fois la même variable, 
 	elle s'accumule au lieu de remplacer
-
-- Si export VALUE= 
-	-> doit apparaitre dans env et non export
-
-# Exec :
-
-- si on fait entrée sans rien dans le prompt
-	-> Conditional jump or move depends on uninitialised value
 	
-- si on colle le mot au heredoc. Ex : <<word
-	-> Conditional jump or move depends on uninitialised value
+- Dans bash :
+	-> si j'ai une var sans '=' et que j'export la même avec '='
+		-> la valeur s'ajoute et la variable apparait dans env 
+	-> inversement ? 
+		-> ça ne fait rien
+	(Faire pareil)
 
 # + leaks + protections
 
