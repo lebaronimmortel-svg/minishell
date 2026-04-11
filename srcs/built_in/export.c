@@ -25,9 +25,10 @@ static char	**my_realloc(char **split, int old_size)
 	i = 0;
 	while (i < old_size)
 	{
-		new_split[i] = split[i];
+		new_split[i] = ft_strdup(split[i]);
 		i++;
 	}
+	free_split(split, 0);
 	return (new_split);
 }
 
@@ -97,5 +98,6 @@ void	ft_export(char *input, t_data *data)
 	i = 1;
 	while (split[i])
 		add_var(split[i++], data);
+	free_split(split, 0);
 	return ;
 }

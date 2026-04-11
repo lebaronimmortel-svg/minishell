@@ -45,10 +45,16 @@ static int	status_code(char *input, t_data *data)
 
 void	exec_built_in(char *input, t_data *data)
 {
+	char	**split;
+
 	if (!ft_strncmp(input, "pwd", 3) && ft_strlen(input) == 3)
 		pwd();
 	else if (!ft_strncmp(input, "unset ", 6))
-		unset(&ft_split(input, ' ')[1], data);
+	{
+		split = ft_split(input, ' ');
+		unset(&split[1], data);
+		free_split(split, 0);
+	}
 	else if (!ft_strncmp(input, "env", 3) && ft_strlen(input) == 3)
 		env(data->env);
 	else if ((!ft_strncmp(input, "exit", 4)
