@@ -24,11 +24,9 @@ static int	is_var(char *str, char **envp)
 	{
 		len = ft_strlen(str);
 		if (!ft_strncmp(str, envp[i], len)
-			&& envp[i][len] == '='
-			&& envp[i][len + 1]
-			&& envp[i][len + 1] != ' ')
+			&& envp[i][len] == '=')
 			return (2);
-		if (!ft_strncmp(str, envp[i], len) && !envp[i][len + 1])
+		if (!ft_strncmp(str, envp[i], len) && !envp[i][len])
 			return (1);
 		i++;
 	}
@@ -49,6 +47,7 @@ static void	free_line(t_data *data, char **split, int flag, int i)
 	j = 0;
 	while (ft_strncmp(split[i], envp[j], ft_strlen(split[i])))
 		j++;
+	free(envp[j]);
 	while (envp[j + 1])
 	{
 		envp[j] = envp[j + 1];

@@ -32,7 +32,7 @@
 
 ## Export :
 
-- Quand j'export deux fois la même variable, 
+- Quand j'export deux fois la même variable,
 	elle s'accumule au lieu de remplacer
 	
 - Dans bash :
@@ -41,6 +41,9 @@
 	-> inversement ? 
 		-> ça ne fait rien
 	(Faire pareil)
+	
+- 
 
 # + leaks + protections
+
 
