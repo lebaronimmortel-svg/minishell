@@ -23,7 +23,7 @@
 
 # Built_in : 
 
-- Les built-in s'executent mais le binaire aussi.
+- La built-in s'execute mais le binaire aussi.
 	-> l'outstream est pour l'instant celui du binaire. 
 	
 - Rajouter les exit_code aux built_in
@@ -32,17 +32,24 @@
 
 ## Export :
 
+/////// AUJD /////////
+
 - Quand j'export deux fois la même variable,
 	elle s'accumule au lieu de remplacer
 	
 - Dans bash :
-	-> si j'ai une var sans '=' et que j'export la même avec '='
+	-> si j'ai une var sans '=' et que j'export la même avec '=' ?
 		-> la valeur s'ajoute et la variable apparait dans env 
 	-> inversement ? 
 		-> ça ne fait rien
+	-> si j'ai une var avec '=' et que j'export la même avec '=' et une autre valeur ?
+		-> la valeur se remplace
 	(Faire pareil)
 	
-- 
+- Si j'unset une variable qui n'existe pas :
+	Explosion totale
+	
+/////// AUJD /////////
 
 # + leaks + protections
 
