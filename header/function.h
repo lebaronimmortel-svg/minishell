@@ -14,7 +14,9 @@
 # define FUNCTION_H
 
 t_token	*lexer(char *str, t_data *data);
+int		exists(char *str, t_data *data, int *i);
 int		parser(t_token *lexer);
+int		add_var(char *str, t_data *data);
 char	**split_dup(char **envp);
 int		is_alphanum(char c);
 void	unset(char **split, t_data *data);
