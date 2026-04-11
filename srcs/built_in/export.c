@@ -94,7 +94,10 @@ void	ft_export(char *input, t_data *data)
 	split = ft_split(input, ' ');
 	len = my_memlen(split);
 	if (len < 2)
+	{
+		free_split(split, 0);
 		return ;
+	}
 	i = 1;
 	while (split[i])
 		add_var(split[i++], data);
