@@ -82,13 +82,10 @@ int	add_var(char *str, t_data *data)
 			data->env[len] = ft_strdup(str);
 		}
 	}
-	else
-	{
-		len = my_memlen(data->env_bis);
-		data->env_bis = my_realloc(data->env_bis, len);
-		if (!data->env_bis)
-			return (1);
-		data->env_bis[len] = ft_strdup(str);
-	}
+	len = my_memlen(data->env_bis);
+	data->env_bis = my_realloc(data->env_bis, len);
+	if (!data->env_bis)
+		return (1);
+	data->env_bis[len] = ft_strdup(str);
 	return (0);
 }

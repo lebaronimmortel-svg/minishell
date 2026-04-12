@@ -76,7 +76,7 @@ int	exec_main_sequel(char **split, int *i, t_exec *exec, t_data *data)
 	if (*i >= 1 && (split[(*i) - 1][0] == '<'))
 		infile_redir(split, i, 0);
 	exec->input = split[*i];
-	exec_built_in(exec->input, data);
+	exec_built_in(exec->input, data, split);
 	if (exec_init(exec, data->env))
 	{
 		free_redir(exec);

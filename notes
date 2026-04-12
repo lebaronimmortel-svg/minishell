@@ -26,11 +26,9 @@
 - La built-in s'execute mais le binaire aussi.
 	-> l'outstream est pour l'instant celui du binaire. 
 	
-- Rajouter les exit_code aux built_in
+- Rajouter les exit_code aux built_in (comme fait pour pwd)
 
-- Faire cd
-
-## Export :
+- Cd doit modifier les var d'env pwd et old_pwd
 
 # + leaks + protections
 
