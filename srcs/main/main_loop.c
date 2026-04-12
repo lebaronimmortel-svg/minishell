@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-static void	exit_cleanly(int code, t_data *data, char **split)
+void	exit_cleanly(int code, t_data *data, char **split)
 {
 	free_split(split, 0);
 	free_split(data->env, 0);

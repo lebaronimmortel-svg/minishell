@@ -12,6 +12,19 @@
 
 #include "../../header/header.h"
 
+static int	cd(char *input, t_data *data)
+{
+	char	*path;
+
+	(void)data;
+	path = &input[3];
+	if (!(*path))
+		return (0);
+	if (!chdir(path))
+		return (0);
+	return (1);
+}
+
 static void	pwd(void)
 {
 	char	buffer[1024];
@@ -43,7 +56,7 @@ static int	status_code(char *input, t_data *data)
 	return (ft_atoi(&input[i]));
 }
 
-void	exec_built_in(char *input, t_data *data)
+void	exec_built_in(char *input, t_data *data, char **cmd_split)
 {
 	char	**split;
 
@@ -60,11 +73,13 @@ void	exec_built_in(char *input, t_data *data)
 	else if ((!ft_strncmp(input, "exit", 4)
 			&& ft_strlen(input) == 4)
 		|| (!ft_strncmp(input, "exit ", 5)))
-		exit(status_code(input, data));
+		exit_cleanly(status_code(input, data), data, cmd_split);
 	else if ((!ft_strncmp(input, "echo ", 5)))
 		echo(input);
 	else if ((!ft_strncmp(input, "export", 6)) && ft_strlen(input) == 6)
 		export_single(data);
 	else if ((!ft_strncmp(input, "export ", 7)))
 		ft_export(input, data);
+	else if ((!ft_strncmp(input, "cd ", 3)))
+		cd(input, data);
 }
