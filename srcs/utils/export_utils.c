@@ -90,6 +90,18 @@ int	add_var(char *str, t_data *data)
 	return (0);
 }
 
+static int	update_var(t_data *data, char *prefix, char *path, int i)
+{
+	free(data->env[i]);
+	free(data->env_bis[i]);
+	data->env[i] = ft_strjoin(prefix, path);
+	data->env_bis[i] = ft_strjoin(prefix, path);
+	free(prefix);
+	if (!data->env[i] || !data->env_bis[i])
+		return (1);
+	return (0);
+}
+
 int	change_path(int flag, char *path, t_data *data)
 {
 	int		i;
@@ -109,16 +121,7 @@ int	change_path(int flag, char *path, t_data *data)
 	while (data->env[i])
 	{
 		if (!ft_strncmp(data->env[i], prefix, ft_strlen(prefix)))
-		{
-			free(data->env[i]);
-			free(data->env_bis[i]);
-			data->env[i] = ft_strjoin(prefix, path);
-			data->env_bis[i] = ft_strjoin(prefix, path);
-			free(prefix);
-			if (!data->env[i] || !data->env_bis[i])
-				return (1);
-			return (0);
-		}
+			return (update_var(data, prefix, path, i));
 		i++;
 	}
 	free(prefix);

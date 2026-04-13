@@ -1,4 +1,3 @@
-
 # Flag pour l'execution Valgrind :
 
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --child-silent-after-fork=yes --track-fds=yes --suppressions=valgrind.supp ./minishell
@@ -28,8 +27,4 @@
 	
 - Rajouter les exit_code aux built_in (comme fait pour pwd)
 
-- Cd doit modifier les var d'env pwd et old_pwd
-
 # + leaks + protections
-
-
