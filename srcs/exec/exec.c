@@ -33,12 +33,11 @@ static int	exec_init(t_exec *exec)
 	return (0);
 }
 
-int	pipe_and_pid(t_exec *exec, int cmd_count, char **envp, t_data *data)
+int	pipe_and_pid(t_exec *exec, int cmd_count, char **envp)
 {
 	int	i;
 
 	exec->env = envp;
-	data->env = envp;
 	if (pipe_and_pid_init(exec, cmd_count) == 1)
 		return (1);
 	i = 0;
@@ -97,7 +96,7 @@ int	exec_main(char **envp, char **split, int i, t_data *data)
 	int			exit_code;
 
 	cmd_count = count_cmds(split, 0, 0);
-	if (pipe_and_pid(&exec, cmd_count, envp, data) == 1)
+	if (pipe_and_pid(&exec, cmd_count, envp) == 1)
 		return (1);
 	ctx.exec = &exec;
 	ctx.data = data;
