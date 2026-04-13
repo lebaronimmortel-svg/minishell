@@ -41,6 +41,8 @@ static int	find_env(t_exec *exec, int i)
 
 static int	exec_command(t_exec *exec)
 {
+	if (!exec->command || !exec->command[0] || exec->command[0][0] == '\0')
+		exit(0);
 	if (find_env(exec, 0) == 1)
 	{
 		execve_error("command not found : ", exec->command[0]);

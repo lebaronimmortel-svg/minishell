@@ -55,7 +55,7 @@ static void	free_lexer(t_token *lex)
 	free(lex);
 }
 
-static void	execute_prompt(char **split, t_token *lex, t_data *data)
+static void	execute_prompt(char **envp, char **split, t_token *lex, t_data *data)
 {
 	print_lexer(lex);
 	if (parser(lex))
@@ -64,7 +64,7 @@ static void	execute_prompt(char **split, t_token *lex, t_data *data)
 		split = print_order(lex);
 		free_lexer(lex);
 		print_icon(2);
-		data->error_code = exec_main(split, 0, 0, data);
+		data->error_code = exec_main(envp, split, 0, data);
 		free_split(split, 0);
 		printf("\n");
 	}
@@ -72,7 +72,7 @@ static void	execute_prompt(char **split, t_token *lex, t_data *data)
 		printf("\n❌ NOK\n\n");
 }
 
-void	main_loop(char **split, t_token *lex, t_data *data)
+void	main_loop(char **envp, char **split, t_token *lex, t_data *data)
 {
 	char	*str;
 
@@ -85,6 +85,6 @@ void	main_loop(char **split, t_token *lex, t_data *data)
 		lex = lexer(str, data);
 		free(str);
 		if (lex)
-			execute_prompt(split, lex, data);
+			execute_prompt(envp, split, lex, data);
 	}
 }

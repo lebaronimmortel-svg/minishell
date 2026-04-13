@@ -107,6 +107,6 @@ int	main(int argc, char **argv, char **envp)
 	printf("\n");
 	lex = NULL;
 	split = NULL;
-	main_loop(split, lex, data);
+	main_loop(envp, split, lex, data);
 	return (0);
 }
