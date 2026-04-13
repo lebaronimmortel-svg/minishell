@@ -50,4 +50,12 @@ typedef struct s_data
 	char	**env_bis;
 }	t_data;
 
+typedef struct s_exec_ctx
+{
+	t_exec	*exec;
+	t_data	*data;
+	int		cmd_index;
+	int		cmd_count;
+}	t_exec_ctx;
+
 #endif

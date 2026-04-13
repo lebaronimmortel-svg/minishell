@@ -83,33 +83,13 @@ static void	collect_pre_redir(t_exec *exec, char **split, int cmd_pos)
 
 void	collect_redirs(t_exec *exec, char **split, int cmd_pos, char **envp)
 {
-	int	i;
 	int	count;
 
-	count = 0;
-	if (cmd_pos >= 1 && split[cmd_pos - 1]
-		&& (split[cmd_pos - 1][0] == '<' || split[cmd_pos - 1][0] == '>'))
-		count++;
-	i = cmd_pos + 1;
-	while (split[i] && split[i + 1])
-	{
-		if (split[i][0] == '|')
-			break ;
-		if (split[i][0] == '>' || split[i][0] == '<')
-			count++;
-		i += 2;
-	}
+	count = count_redirs(split, cmd_pos);
 	if (count == 0)
 		return ;
-	exec->redir = malloc(sizeof(t_redir) * count);
-	if (!exec->redir)
+	if (!init_redirs(exec, count))
 		return ;
-	i = 0;
-	while (i < count)
-	{
-		exec->redir[i].fd = -1;
-		i++;
-	}
 	collect_pre_redir(exec, split, cmd_pos);
 	collect_redirs_sequel(exec, split, cmd_pos, 0);
 	end_collect_redir(exec, envp);
