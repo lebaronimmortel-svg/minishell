@@ -83,7 +83,10 @@ void	loop(t_token *lexer, char **split)
 			if (i)
 				split[j + 1] = NULL;
 			else
+			{
+				free(split[0]);
 				split[0] = NULL;
+			}
 			break ;
 		}
 		i++;

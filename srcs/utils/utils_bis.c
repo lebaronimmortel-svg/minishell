@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_sec.c                                        :+:      :+:    :+:   */
+/*   utils_bis.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -54,7 +54,7 @@ char	**split_dup(char **envp)
 	while (i < len)
 	{
 		new_split[i] = ft_strdup(envp[i]);
-		if (!new_split)
+		if (!new_split[i])
 		{
 			free_split(new_split, 0);
 			return (NULL);
