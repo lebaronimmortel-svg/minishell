@@ -15,13 +15,18 @@
 static int	cd(char *input, t_data *data)
 {
 	char	*path;
+	char	buffer[1024];
 
 	(void)data;
 	path = &input[3];
-	if (!(*path))
+	if (!(*path) || !getcwd(buffer, sizeof(buffer)))
 		return (0);
-	if (!chdir(path))
+	if (chdir(path))
 		return (0);
+	change_path(0, buffer, data);
+	if (!getcwd(buffer, sizeof(buffer)))
+		return (0);
+	change_path(1, buffer, data);
 	return (1);
 }
 

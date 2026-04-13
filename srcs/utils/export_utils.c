@@ -89,3 +89,38 @@ int	add_var(char *str, t_data *data)
 	data->env_bis[len] = ft_strdup(str);
 	return (0);
 }
+
+int	change_path(int flag, char *path, t_data *data)
+{
+	int		i;
+	char	*prefix;
+	char	*tmp;
+
+	prefix = ft_strdup("PWD=\0");
+	if (prefix && !flag)
+	{
+		tmp = prefix;
+		prefix = ft_strjoin("OLD\0", tmp);
+		free(tmp);
+	}
+	if (!prefix)
+		return (1);
+	i = 0;
+	while (data->env[i])
+	{
+		if (!ft_strncmp(data->env[i], prefix, ft_strlen(prefix)))
+		{
+			free(data->env[i]);
+			free(data->env_bis[i]);
+			data->env[i] = ft_strjoin(prefix, path);
+			data->env_bis[i] = ft_strjoin(prefix, path);
+			free(prefix);
+			if (!data->env[i] || !data->env_bis[i])
+				return (1);
+			return (0);
+		}
+		i++;
+	}
+	free(prefix);
+	return (1);
+}
