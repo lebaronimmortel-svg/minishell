@@ -12,6 +12,24 @@
 
 #include "../../header/header.h"
 
+void	do_built_in_part(t_exec *exec, t_data *data, char **split, int *i)
+{
+	int	saved_stdin;
+	int	saved_stdout;
+
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
+	if (exec->redir_count > 0)
+		apply_redirs(exec);
+	exec_built_in(exec->input, data, split);
+	dup2(saved_stdin, STDIN_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
+	close(saved_stdin);
+	close(saved_stdout);
+	free_redir(exec);
+	(*i)++;
+}
+
 int	should_skip_token(char **split, int *i)
 {
 	if (is_pipe(split[*i]))

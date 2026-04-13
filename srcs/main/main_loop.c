@@ -55,7 +55,8 @@ static void	free_lexer(t_token *lex)
 	free(lex);
 }
 
-static void	execute_prompt(char **envp, char **split, t_token *lex, t_data *data)
+static void	execute_prompt(char **envp, char **split, t_token *lex,
+	t_data *data)
 {
 	print_lexer(lex);
 	if (parser(lex))

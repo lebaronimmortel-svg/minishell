@@ -68,7 +68,7 @@ void	echo(char *input)
 		if (input[i] != '-')
 			break ;
 	}
-	printf("%s", &input[i]);
-	if (has_n_flag(input))
-		printf("\n");
+	ft_putstr_fd(&input[i], 1);
+	if (!has_n_flag(input))
+		write(1, "\n", 1);
 }
