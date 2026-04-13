@@ -21,6 +21,13 @@
 - BASH : ls > a | < a cat --> a: No such file or directory
 - Minishell : ls > a | < a cat --> the result
 
+-HEREDOC: Quoted Delimiter (Literal Mode)
+	Quoting the delimiter with single or double quotes disables all shell expansions:
+
+	enlever les parentheses exemple -> $(whoami) devient $whoami
+	regler undefined behavior quand $unknow example -> $5.00
+	checker les fd open car leaks
+
 - Tab comme séparateur doit etre géré
 
 # Built_in : 
