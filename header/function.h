@@ -40,6 +40,7 @@ int		handle_heredoc(char *delimiter, char **envp);
 void	fork_created(t_exec *exec, int cmd_index, int cmd_count);
 void	execve_error(char *str, char *command);
 void	exit_cleanly(int code, t_data *data, char **split);
+int		change_path(int flag, char *path, t_data *data);
 int		end_exec(t_exec *exec, int cmd_count, t_data *data);
 void	free_redir(t_exec *exec);
 void	close_fd(t_exec *exec, int cmd_count);
