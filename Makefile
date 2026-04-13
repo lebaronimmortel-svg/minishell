@@ -4,6 +4,7 @@ CC      	= cc
 CFLAGS  	= -Wall -Wextra -Werror
 LIBFTDIR 	= ./srcs/libft
 LIBFT 		= $(LIBFTDIR)/libft.a
+
 SRC     	= srcs/main/main.c srcs/parser/lexer.c\
 			  srcs/parser/parser.c srcs/utils/utils.c\
 			  srcs/utils/utils_bis.c srcs/exec/exec.c\
@@ -16,7 +17,10 @@ SRC     	= srcs/main/main.c srcs/parser/lexer.c\
 			  srcs/utils/main_loop_utils.c srcs/parser/expand.c\
 			  srcs/built_in/built_in.c srcs/built_in/echo.c\
 			  srcs/built_in/export.c srcs/built_in/unset.c
-OBJ     	= $(SRC:.c=.o)
+
+OBJDIR  	= objs
+OBJ     	= $(SRC:%.c=$(OBJDIR)/%.o)
+
 TOTAL   	:= $(words $(SRC))
 COUNT   	:= 0
 
@@ -32,17 +36,18 @@ WHITE	= \033[37m
 # ================= RULES =================
 all: banner $(NAME)
 
-$(NAME): $(LIBFT) $(OBJ) 
+$(NAME): $(LIBFT) $(OBJ)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline || { \
 		printf "$(RED)✖ Compilation failure !$(RESET)\n"; \
 		exit 1; }
 	@printf "\n$(GREEN)✔ Compilation success !$(RESET)\n\n"
 	@printf "\a"
-	
+
 $(LIBFT):
 	@$(MAKE) -C $(LIBFTDIR) --no-print-directory
 
-%.o: %.c
+$(OBJDIR)/%.o: %.c
+	@mkdir -p $(dir $@)
 	@$(eval COUNT=$(shell echo $$(($(COUNT)+1))))
 	@PERCENT=$$(echo $$(($(COUNT)*100/$(TOTAL)))); \
 	BAR_WIDTH=40; \
@@ -52,7 +57,7 @@ $(LIBFT):
 	printf "%0.s▓" $$(seq 1 $$FILLED); \
 	printf "%0.s░" $$(seq 1 $$EMPTY); \
 	printf "] $(MAGENTA)%3d%%$(RESET)" $$PERCENT; \
-	$(CC) $(CFLAGS) -c $< -o $@ -g 
+	$(CC) $(CFLAGS) -c $< -o $@ -g
 
 banner:
 	@clear
@@ -68,8 +73,7 @@ banner:
 
 clean:
 	@printf "$(WHITE)"
-	@rm -f $(OBJ)
-	@rm -rf objs
+	@rm -rf $(OBJDIR)
 	@$(MAKE) clean -C $(LIBFTDIR) --no-print-directory
 	@printf "$(MAGENTA)♻ Cleanup successful$(RESET)\n"
 
