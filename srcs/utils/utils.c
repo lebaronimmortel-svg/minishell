@@ -84,7 +84,8 @@ void	free_split(char **split, int flag)
 		i = 0;
 	else
 		i = 1;
-	while (split[i])
+	while (split && split[i])
 		free(split[i++]);
-	free(split);
+	if (split)
+		free(split);
 }
