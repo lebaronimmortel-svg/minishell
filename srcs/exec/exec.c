@@ -71,9 +71,7 @@ int	exec_main_sequel(char **split, int *i, t_exec *exec, t_data *data)
 	exec->input = split[*i];
 	if (is_built_in(exec->input))
 	{
-		exec_built_in(exec->input, data, split);
-		free_redir(exec);
-		(*i)++;
+		do_built_in_part(exec, data, split, i);
 		return (1);
 	}
 	if (exec_init(exec))

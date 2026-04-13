@@ -30,7 +30,12 @@ void	print_split(char **split)
 		return ;
 	i = 0;
 	while (split[i])
-		printf("declare -x %s\n", split[i++]);
+	{
+		ft_putstr_fd("declare -x ", 1);
+		ft_putstr_fd(split[i], 1);
+		write(1, "\n", 1);
+		i++;
+	}
 }
 
 char	**split_dup(char **envp)
