@@ -27,4 +27,6 @@
 
 - Rajouter les exit_code aux built_in (comme fait pour pwd)
 
+- command 'cd' toute seule ne fait rien, devrait ramener au root (vrai behavior)
+
 # + leaks + protections
