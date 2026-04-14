@@ -37,14 +37,6 @@ void	free_data_split(t_exec *exec)
 	}
 }
 
-void	fork_and_free_exec(t_exec *exec, int *cmd_index, int cmd_count)
-{
-	fork_created(exec, *cmd_index, cmd_count);
-	free_split_exec(exec);
-	free_data_split(exec);
-	(*cmd_index)++;
-}
-
 void	free_redir(t_exec *exec)
 {
 	int	i;

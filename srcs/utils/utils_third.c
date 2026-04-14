@@ -84,15 +84,3 @@ void	close_fd(t_exec *exec, int cmd_count)
 		j++;
 	}
 }
-
-void	free_exec_failed(t_exec *exec)
-{
-	free_split_exec(exec);
-	if (exec->split)
-		free(exec->split);
-	if (exec->data)
-		free(exec->data);
-	if (exec->pid)
-		free(exec->pid);
-	exec->pid = NULL;
-}

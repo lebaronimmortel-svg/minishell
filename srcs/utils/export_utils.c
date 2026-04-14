@@ -80,6 +80,8 @@ int	add_var(char *str, t_data *data)
 			if (!data->env)
 				return (1);
 			data->env[len] = ft_strdup(str);
+			if (!data->env[len])
+				return (1);
 		}
 	}
 	len = my_memlen(data->env_bis);

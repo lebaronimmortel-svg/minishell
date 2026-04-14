@@ -55,9 +55,13 @@ static void	join_cmd(char **split, t_token *lexer, int *i, int j)
 	char	*tmp;
 
 	tmp = ft_strjoin(split[j], " ");
+	if (!tmp)
+		return ;
 	free(split[j]);
 	split[j] = tmp;
 	tmp = ft_strjoin(split[j], lexer[*i].value);
+	if (!tmp)
+		return ;
 	free(split[j]);
 	split[j] = tmp;
 	printf("	%s", lexer[*i].value);
