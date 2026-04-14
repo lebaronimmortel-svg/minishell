@@ -12,6 +12,25 @@
 
 #include "../../header/header.h"
 
+int	find_env_loop(t_exec *exec, int i)
+{
+	char	*tmp;
+
+	tmp = NULL;
+	while (exec->all_path && exec->all_path[i])
+	{
+		tmp = ft_strjoin(exec->all_path[i], "/");
+		exec->w_path = ft_strjoin(tmp, exec->command[0]);
+		free(tmp);
+		if (exec->w_path && access(exec->w_path, X_OK) == 0)
+			return (0);
+		free(exec->w_path);
+		exec->w_path = NULL;
+		i++;
+	}
+	return (1);
+}
+
 void	do_built_in_part(t_exec *exec, t_data *data, char **split, int *i)
 {
 	int	saved_stdin;

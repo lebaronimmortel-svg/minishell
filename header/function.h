@@ -35,6 +35,7 @@ int		pipe_and_pid_init(t_exec *exec, int cmd_count);
 int		count_cmds(char **split, int i, int count);
 int		should_skip_token(char **split, int *i);
 void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx);
+int		find_env_loop(t_exec *exec, int i);
 void	do_built_in_part(t_exec *exec, t_data *data, char **split, int *i);
 int		count_redirs(char **split, int cmd_pos);
 int		init_redirs(t_exec *exec, int count);
