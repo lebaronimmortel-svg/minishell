@@ -37,7 +37,9 @@ static char	*transpose(char *str, int index, char *buffer, int flag)
 
 char	*expand_code(char *str, t_data *data)
 {
-	int	i;
+	int		i;
+	char	*code_str;
+	char	*old_str;
 
 	if (!str)
 		return (NULL);
@@ -46,7 +48,11 @@ char	*expand_code(char *str, t_data *data)
 	{
 		if (str[i] == '$' && str[i + 1] == '?' && is_ok_quote(str, i))
 		{
-			str = transpose(str, i, ft_itoa(data->error_code), 0);
+			code_str = ft_itoa(data->error_code);
+			old_str = str;
+			str = transpose(str, i, code_str, 0);
+			free(old_str);
+			free(code_str);
 			i = 0;
 		}
 		else

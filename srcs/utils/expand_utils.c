@@ -34,6 +34,8 @@ int	is_valid_var(char *str, int flag)
 	{
 		if (!valid_expand(str[1]))
 			return (0);
+		if (!is_alphanum(str[1]) && str[1] != '_' && str[1] != '?')
+			return (0);
 	}
 	while (str[i] && str[i] != ' ' && str[i] != 39 && str[i] != 34)
 	{
@@ -43,7 +45,7 @@ int	is_valid_var(char *str, int flag)
 				break ;
 		}
 		if (i != 0 && !is_alphanum(str[i]) && str[i] != '_')
-			return (0);
+			break ;
 		i++;
 	}
 	return (1);

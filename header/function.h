@@ -48,7 +48,7 @@ int		space_pos(char *str);
 int		second_part_apply_redir(char type, t_exec *exec, int i);
 int		first_part_apply_redir(char type, t_exec *exec, int i, int fd);
 int		apply_redirs(t_exec *exec);
-int		handle_heredoc(char *delimiter, char **envp);
+int		handle_heredoc(char *delimiter, char **envp, int expand, int len);
 void	fork_created(t_exec *exec, int cmd_index, int cmd_count);
 void	execve_error(char *str, char *command);
 void	exit_cleanly(int code, t_data *data, char **split);
