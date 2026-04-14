@@ -14,8 +14,6 @@
 
 static int	find_env(t_exec *exec, int i)
 {
-	char	*tmp;
-
 	if (!exec->command || !exec->command[0])
 		return (1);
 	if (access(exec->command[0], X_OK) == 0)
@@ -25,17 +23,13 @@ static int	find_env(t_exec *exec, int i)
 			return (1);
 		return (0);
 	}
-	while (exec->all_path && exec->all_path[i])
+	if (exec->command[0][0] == '/')
 	{
-		tmp = ft_strjoin(exec->all_path[i], "/");
-		exec->w_path = ft_strjoin(tmp, exec->command[0]);
-		free(tmp);
-		if (exec->w_path && access(exec->w_path, X_OK) == 0)
-			return (0);
-		free(exec->w_path);
 		exec->w_path = NULL;
-		i++;
+		return (1);
 	}
+	if (find_env_loop(exec, i) == 0)
+		return (0);
 	return (1);
 }
 
@@ -45,7 +39,10 @@ static int	exec_command(t_exec *exec)
 		exit(0);
 	if (find_env(exec, 0) == 1)
 	{
-		execve_error("command not found : ", exec->command[0]);
+		if (exec->w_path)
+			execve_error("command not found : ", exec->command[0]);
+		else
+			execve_error(exec->command[0], ": No such file or directory");
 		free_split_exec(exec);
 		if (exec->pid)
 			free(exec->pid);
