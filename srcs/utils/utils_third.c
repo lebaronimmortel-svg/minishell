@@ -38,3 +38,36 @@ int	is_built_in(char *input)
 		return (1);
 	return (0);
 }
+
+int	are_var_handled(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' && str[i + 1] == '?')
+		{
+			i++;
+		}
+		else if (str[i] == '$' && is_valid_var(&str[i], 0)
+			&& is_ok_quote(str, i))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	space_pos(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str && str[i])
+	{
+		if (str[i] == ' ')
+			return (i);
+		i++;
+	}
+	return (-1);
+}

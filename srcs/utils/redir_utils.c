@@ -12,24 +12,32 @@
 
 #include "../../header/header.h"
 
-int	space_pos(char *str)
+static void	handle_hdoc_bis(char *delim, int expand, char **envp, int *pipefd)
 {
-	int	i;
+	char	*line;
 
-	i = 0;
-	while (str && str[i])
+	while (1)
 	{
-		if (str[i] == ' ')
-			return (i);
-		i++;
+		line = readline("heredoc> ");
+		if (!line || ft_strcmp(line, delim) == 0)
+		{
+			free(line);
+			break ;
+		}
+		if (expand)
+		{
+			while (!are_var_handled(line))
+				line = change_var(line, envp);
+		}
+		write(pipefd[1], line, ft_strlen(line));
+		write(pipefd[1], "\n", 1);
+		free(line);
 	}
-	return (-1);
 }
 
 int	handle_heredoc(char *delimiter, char **envp, int expand, int len)
 {
 	int		pipefd[2];
-	char	*line;
 	char	*delim;
 
 	if (delimiter[0] == 34 || delimiter[0] == 39)
@@ -49,23 +57,7 @@ int	handle_heredoc(char *delimiter, char **envp, int expand, int len)
 		free(delim);
 		return (-1);
 	}
-	while (1)
-	{
-		line = readline("heredoc> ");
-		if (!line || ft_strcmp(line, delim) == 0)
-		{
-			free(line);
-			break ;
-		}
-		if (expand)
-		{
-			while (!are_var_handled(line))
-				line = change_var(line, envp);
-		}
-		write(pipefd[1], line, ft_strlen(line));
-		write(pipefd[1], "\n", 1);
-		free(line);
-	}
+	handle_hdoc_bis(delim, expand, envp, pipefd);
 	free(delim);
 	close(pipefd[1]);
 	return (pipefd[0]);

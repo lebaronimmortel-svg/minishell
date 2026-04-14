@@ -12,25 +12,6 @@
 
 #include "../../header/header.h"
 
-int	are_var_handled(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '$' && str[i + 1] == '?')
-		{
-			i++;
-		}
-		else if (str[i] == '$' && is_valid_var(&str[i], 0)
-			&& is_ok_quote(str, i))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 static char	convert_type(char *str)
 {
 	char	c;
@@ -90,17 +71,13 @@ static void	quote_clean(char **split)
 	}
 }
 
-static char	*preprocess_operators(const char *str)
+static char	*preprocess_operators(char *str, int i, int j)
 {
-	int		i;
-	int		j;
 	char	*result;
 
 	result = malloc(ft_strlen(str) * 3 + 1);
 	if (!result)
 		return (NULL);
-	i = 0;
-	j = 0;
 	while (str[i])
 	{
 		if (str[i] == '<' || str[i] == '>' || str[i] == '|')
@@ -129,7 +106,7 @@ t_token	*lexer(char *str, t_data *data)
 
 	if (!str)
 		return (NULL);
-	processed = preprocess_operators(str);
+	processed = preprocess_operators(str, 0, 0);
 	if (!processed)
 		return (NULL);
 	check_quote(processed);
