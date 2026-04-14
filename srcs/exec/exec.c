@@ -92,6 +92,8 @@ int	exec_main(char **envp, char **split, int i, t_data *data)
 	int			exit_code;
 
 	exec.redir = NULL;
+	exec.data = data;
+	exec.split = split;
 	cmd_count = count_cmds(split, 0, 0);
 	if (pipe_and_pid(&exec, cmd_count, envp) == 1)
 		return (1);

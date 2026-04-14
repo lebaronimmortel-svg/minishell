@@ -102,9 +102,9 @@ int	main(int argc, char **argv, char **envp)
 		return (1);
 	data = malloc(sizeof(t_data));
 	if (!data)
-		return (1);
+		return (139);
 	if (!init(data, envp))
-		return (1);
+		return (139);
 	printf("\n");
 	lex = NULL;
 	split = NULL;

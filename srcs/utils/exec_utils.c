@@ -51,6 +51,7 @@ static int	exec_command(t_exec *exec)
 	}
 	if (exec->w_path)
 	{
+		free_data_split(exec);
 		execve(exec->w_path, exec->command, exec->env);
 		perror(exec->command[0]);
 		free_split_exec(exec);
@@ -58,7 +59,6 @@ static int	exec_command(t_exec *exec)
 			free(exec->pid);
 		exit(126);
 	}
-	execve_error("command not found : ", exec->command[0]);
 	exit(127);
 }
 

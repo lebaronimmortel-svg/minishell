@@ -1,15 +1,24 @@
 # Flag pour l'execution Valgrind :
 
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --child-silent-after-fork=yes --track-fds=yes --suppressions=valgrind.supp ./minishell
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --trace-children=yes --suppressions=valgrind.supp ./minishell
 
 # Fichier valgrind.supp :
 
 	{
-	   name
+	   readline_leak
 	   Memcheck:Leak
-	   fun:*
+	   match-leak-kinds: reachable
 	   ...
-	   obj:*libreadline.so*
+	   obj:*/libreadline.so*
+	   ...
+	}
+
+	{
+	   libtinfo_leak
+	   Memcheck:Leak
+	   match-leak-kinds: reachable
+	   ...
+	   obj:*/libtinfo.so*
 	   ...
 	}
 
@@ -18,8 +27,6 @@
 - BASH : ls > a | < a cat --> a: No such file or directory
 - Minishell : ls > a | < a cat --> the result
 
-- command : touch a | rm a | ls > out | < out cat	LEAK
-
 - Tab comme séparateur doit etre géré
 
 # Built_in : 
@@ -27,6 +34,7 @@
 - Rajouter les exit_code aux built_in (comme fait pour pwd)
 
 - command 'cd' toute seule ne fait rien, devrait ramener au root (vrai behavior)
+	(a voir)
 
 # Signaux :
 

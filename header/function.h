@@ -24,6 +24,7 @@ void	ft_export(char *input, t_data *data);
 void	check_quote(char *str);
 void	export_single(t_data *data);
 void	free_split(char **split, int flag);
+void	free_data_split(t_exec *exec);
 int		split_len(char **split);
 int		exec_main(char **envp, char **split, int i, t_data *data);
 int		exec_main_sequel(char **split, int *i, t_exec *exec, t_data *data);
