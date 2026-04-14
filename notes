@@ -24,10 +24,17 @@
 
 # Parsing : 
 
-- BASH : ls > a | < a cat --> a: No such file or directory
-- Minishell : ls > a | < a cat --> the result
+- CAT : "cat sad asd" ; 
+result ->	/usr/bin/cat: sad: No such file or directory
+			/usr/bin/cat: asd: No such file or directory
 
-- Tab comme séparateur doit etre géré
+		"< Makefile cat | cat -e"
+result ->	nothing
+should be the Makefile with $ at each end of line
+
+
+- BASH : ls > a | < a cat --> a: No such file or directory
+- Minishell : ls > a | < a cat --> write in file but do not display "a: No such file or directory"
 
 # Built_in : 
 
@@ -40,11 +47,12 @@
 
 - sleep 10 | echo a		puis Ctrl-C pendant le sleep renvoie exit status (130) au lieu de 0
 						duplique le '<' input de minishell
+						n'affiche pas a
 - Ctrl-C devrait exit heredoc
 - Ctrl-D devrait afficher heredoc :warning: here-document at line 2 delimited by end-of-file (wanted `EOF')
 
 # Exit STATUS :
 
-- Segfault pour tous les malloc -> exit status (139)
+- check Segfault pour tous les malloc -> exit status (139)
 
 # + leaks + protections

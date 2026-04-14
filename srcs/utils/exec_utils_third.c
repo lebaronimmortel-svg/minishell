@@ -46,6 +46,8 @@ void	do_built_in_part(t_exec *exec, t_data *data, char **split, int *i)
 	close(saved_stdin);
 	close(saved_stdout);
 	free_redir(exec);
+	if (data->error_code == 0)
+		data->error_code = 0;
 	(*i)++;
 }
 

@@ -67,11 +67,21 @@ int	first_part_apply_redir(char type, t_exec *exec, int i, int fd)
 {
 	if (type == 's')
 	{
-		fd = open(exec->redir[i].file, O_RDONLY);
-		if (fd < 0)
-		{
-			perror(exec->redir[i].file);
+		if (exec->redir[i].fd == -2)
 			return (1);
+		else if (exec->redir[i].fd >= 0)
+		{
+			fd = exec->redir[i].fd;
+			exec->redir[i].fd = -1;
+		}
+		else
+		{
+			fd = open(exec->redir[i].file, O_RDONLY);
+			if (fd < 0)
+			{
+				perror(exec->redir[i].file);
+				return (1);
+			}
 		}
 		dup2(fd, STDIN_FILENO);
 		close(fd);
