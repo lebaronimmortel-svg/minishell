@@ -77,7 +77,7 @@ int	exec_main_sequel(char **split, int *i, t_exec *exec, t_data *data)
 	if (exec_init(exec))
 	{
 		free_redir(exec);
-		free_split_exec(exec);
+		free_exec_cmd(exec);
 		(*i)++;
 		return (1);
 	}
