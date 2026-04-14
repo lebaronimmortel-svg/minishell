@@ -41,9 +41,10 @@
 - sleep 10 | echo a		puis Ctrl-C pendant le sleep renvoie exit status (130) au lieu de 0
 						duplique le '<' input de minishell
 - Ctrl-C devrait exit heredoc
+- Ctrl-D devrait afficher heredoc :warning: here-document at line 2 delimited by end-of-file (wanted `EOF')
 
 # Exit STATUS :
 
-- Segfault -> exit status (139)
+- Segfault pour tous les malloc -> exit status (139)
 
 # + leaks + protections

@@ -39,14 +39,11 @@ static int	exec_command(t_exec *exec)
 		exit(0);
 	if (find_env(exec, 0) == 1)
 	{
-		if (exec->w_path)
-			execve_error("command not found : ", exec->command[0]);
-		else
+		if (ft_strchr(exec->command[0], '/'))
 			execve_error(exec->command[0], ": No such file or directory");
-		free_split_exec(exec);
-		if (exec->pid)
-			free(exec->pid);
-		exec->pid = NULL;
+		else
+			execve_error(exec->command[0], ": command not found");
+		free_exec_failed(exec);
 		exit(127);
 	}
 	if (exec->w_path)
