@@ -33,20 +33,15 @@ static int	is_var(char *str, char **envp)
 	return (0);
 }
 
-static void	free_line(t_data *data, char **split, int flag, int i)
+static void	free_line(char **envp, char **split, int i)
 {
 	int		j;
-	char	**envp;
 
-	if (flag == 1)
-		envp = data->env_bis;
-	else if (flag == 2)
-		envp = data->env;
-	else
-		return ;
 	j = 0;
-	while (ft_strncmp(split[i], envp[j], ft_strlen(split[i])))
+	while (envp[j] && ft_strncmp(split[i], envp[j], ft_strlen(split[i])))
 		j++;
+	if (!envp[j])
+		return ;
 	free(envp[j]);
 	while (envp[j + 1])
 	{
@@ -59,16 +54,15 @@ static void	free_line(t_data *data, char **split, int flag, int i)
 void	unset(char **split, t_data *data)
 {
 	int		i;
-	int		flag;
 
 	i = 0;
 	while (split[i])
 	{
-		flag = is_var(split[i], data->env);
-		if (!flag)
-			flag = is_var(split[i], data->env_bis);
-		if (flag)
-			free_line(data, split, flag, i);
+		if (is_var(split[i], data->env_bis))
+		{
+			free_line(data->env, split, i);
+			free_line(data->env_bis, split, i);
+		}
 		i++;
 	}
 }

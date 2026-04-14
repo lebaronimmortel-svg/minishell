@@ -27,4 +27,15 @@
 	
 - Rajouter les exit_code aux built_in (comme fait pour pwd)
 
+- Rajouter les " " autour des valeurs quand on tape export 
+
+- Ne mettre le = dans export que s'il y en a un dANS LA VAr
+
 # + leaks + protections
+
+
+
+
+
+????? QUaND j'exporte sans val puis meme avec val
+	Ne se met pas a jour dans export -> regler cela
