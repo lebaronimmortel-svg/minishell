@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils_sec.c                                        :+:      :+:    :+:   */
+/*   utils_bis.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -22,15 +22,32 @@ int	ft_strcmp(char *s1, char *s2)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-void	print_split(char **split)
+int	print_split(char **split)
 {
-	int	i;
+	int		i;
+	char	**word_split;
 
 	if (!split || !(*split))
-		return ;
+		return (1);
 	i = 0;
 	while (split[i])
-		printf("declare -x %s\n", split[i++]);
+	{
+		if (ft_strchr(split[i], '='))
+		{
+			word_split = ft_split(split[i], '=');
+			if (!word_split)
+				return (1);
+			if (word_split[1])
+				printf("declare -x %s=\"%s\"\n", word_split[0], word_split[1]);
+			else
+				printf("declare -x %s=\"\"\n", word_split[0]);
+			free_split(word_split, 0);
+		}
+		else
+			printf("declare -x %s\n", split[i]);
+		i++;
+	}
+	return (0);
 }
 
 char	**split_dup(char **envp)
@@ -49,7 +66,7 @@ char	**split_dup(char **envp)
 	while (i < len)
 	{
 		new_split[i] = ft_strdup(envp[i]);
-		if (!new_split)
+		if (!new_split[i])
 		{
 			free_split(new_split, 0);
 			return (NULL);

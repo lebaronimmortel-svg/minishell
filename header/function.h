@@ -14,7 +14,7 @@
 # define FUNCTION_H
 
 t_token	*lexer(char *str, t_data *data);
-int		exists(char *str, t_data *data, int *i);
+int		exists(char *str, char **env, int *i);
 int		parser(t_token *lexer);
 int		add_var(char *str, t_data *data);
 char	**split_dup(char **envp);
@@ -62,6 +62,6 @@ char	*expand_code(char *str, t_data *data);
 void	echo(char *input);
 int		my_memlen(char **split);
 void	exec_built_in(char *input, t_data *data, char **split);
-void	print_split(char **split);
+int		print_split(char **split);
 
 #endif
