@@ -18,12 +18,7 @@
 - BASH : ls > a | < a cat --> a: No such file or directory
 - Minishell : ls > a | < a cat --> the result
 
--HEREDOC: Quoted Delimiter (Literal Mode)
-	Quoting the delimiter with single or double quotes disables all shell expansions:
-
-	enlever les parentheses exemple -> $(whoami) devient $whoami
-	regler undefined behavior quand $unknow example -> $5.00
-	checker les fd open car leaks
+- command : touch a | rm a | ls > out | < out cat	LEAK
 
 - Tab comme séparateur doit etre géré
 
@@ -32,5 +27,15 @@
 - Rajouter les exit_code aux built_in (comme fait pour pwd)
 
 - command 'cd' toute seule ne fait rien, devrait ramener au root (vrai behavior)
+
+# Signaux :
+
+- sleep 10 | echo a		puis Ctrl-C pendant le sleep renvoie exit status (130) au lieu de 0
+						duplique le '<' input de minishell
+- Ctrl-C devrait exit heredoc
+
+# Exit STATUS :
+
+- Segfault -> exit status (139)
 
 # + leaks + protections

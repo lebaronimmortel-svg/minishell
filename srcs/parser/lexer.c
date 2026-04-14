@@ -19,7 +19,12 @@ int	are_var_handled(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && is_valid_var(&str[i], 0) && is_ok_quote(str, i))
+		if (str[i] == '$' && str[i + 1] == '?')
+		{
+			i++;
+		}
+		else if (str[i] == '$' && is_valid_var(&str[i], 0)
+			&& is_ok_quote(str, i))
 			return (0);
 		i++;
 	}
@@ -58,7 +63,8 @@ static void	lex_convert(char **split, t_token *token, t_data *data)
 		while (!are_var_handled(token[i].value))
 			token[i].value = change_var(token[i].value, data->env);
 		token[i].value = expand_code(token[i].value, data);
-		remove_quotes(token[i].value);
+		if (i == 0 || token[i - 1].type != 'h')
+			remove_quotes(token[i].value);
 		i++;
 	}
 	token[i].type = 0;
@@ -84,15 +90,51 @@ static void	quote_clean(char **split)
 	}
 }
 
+static char	*preprocess_operators(const char *str)
+{
+	int		i;
+	int		j;
+	char	*result;
+
+	result = malloc(ft_strlen(str) * 3 + 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (str[i])
+	{
+		if (str[i] == '<' || str[i] == '>' || str[i] == '|')
+		{
+			if (j > 0 && result[j - 1] != ' ')
+				result[j++] = ' ';
+			result[j++] = str[i];
+			if ((str[i] == '<' || str[i] == '>') && str[i + 1] == str[i])
+				result[j++] = str[++i];
+			if (str[i + 1] && str[i + 1] != ' ')
+				result[j++] = ' ';
+		}
+		else
+			result[j++] = str[i];
+		i++;
+	}
+	result[j] = '\0';
+	return (result);
+}
+
 t_token	*lexer(char *str, t_data *data)
 {
 	char	**split;
 	t_token	*token;
+	char	*processed;
 
 	if (!str)
 		return (NULL);
-	check_quote(str);
-	split = ft_split(str, ' ');
+	processed = preprocess_operators(str);
+	if (!processed)
+		return (NULL);
+	check_quote(processed);
+	split = ft_split(processed, ' ');
+	free(processed);
 	if (!split)
 		return (NULL);
 	quote_clean(split);

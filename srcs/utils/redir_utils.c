@@ -26,27 +26,47 @@ int	space_pos(char *str)
 	return (-1);
 }
 
-int	handle_heredoc(char *delimiter, char **envp)
-	{
+int	handle_heredoc(char *delimiter, char **envp, int expand, int len)
+{
 	int		pipefd[2];
 	char	*line;
+	char	*delim;
 
-	if (pipe(pipefd) < 0)
+	if (delimiter[0] == 34 || delimiter[0] == 39)
+	{
+		len = ft_strlen(delimiter);
+		delim = ft_substr(delimiter, 1, len - 2);
+		if (!delim)
+			return (-1);
+		expand = 0;
+	}
+	else
+		delim = ft_strdup(delimiter);
+	if (!delim)
 		return (-1);
+	if (pipe(pipefd) < 0)
+	{
+		free(delim);
+		return (-1);
+	}
 	while (1)
 	{
 		line = readline("heredoc> ");
-		if (!line || ft_strcmp(line, delimiter) == 0)
+		if (!line || ft_strcmp(line, delim) == 0)
 		{
 			free(line);
 			break ;
 		}
-		while (!are_var_handled(line))
-			line = change_var(line, envp);
+		if (expand)
+		{
+			while (!are_var_handled(line))
+				line = change_var(line, envp);
+		}
 		write(pipefd[1], line, ft_strlen(line));
 		write(pipefd[1], "\n", 1);
 		free(line);
 	}
+	free(delim);
 	close(pipefd[1]);
 	return (pipefd[0]);
 }
