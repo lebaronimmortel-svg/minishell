@@ -12,10 +12,36 @@
 
 #include "../../header/header.h"
 
+void	free_data_split(t_exec *exec)
+{
+	int	i;
+
+	i = 0;
+	if (!exec->data)
+		return ;
+	while (exec->split && exec->split[i])
+	{
+		free(exec->split[i]);
+		exec->split[i] = NULL;
+		i++;
+	}
+	if (exec->data->env)
+	{
+		free_split(exec->data->env, 0);
+		exec->data->env = NULL;
+	}
+	if (exec->data->env_bis)
+	{
+		free_split(exec->data->env_bis, 0);
+		exec->data->env_bis = NULL;
+	}
+}
+
 void	fork_and_free_exec(t_exec *exec, int *cmd_index, int cmd_count)
 {
 	fork_created(exec, *cmd_index, cmd_count);
 	free_split_exec(exec);
+	free_data_split(exec);
 	(*cmd_index)++;
 }
 
@@ -36,19 +62,7 @@ void	free_redir(t_exec *exec)
 	}
 	free(exec->redir);
 	exec->redir = NULL;
-}
-
-void	close_fd(t_exec *exec, int cmd_count)
-{
-	int	j;
-
-	j = 0;
-	while (j < cmd_count - 1)
-	{
-		close(exec->fd[j][0]);
-		close(exec->fd[j][1]);
-		j++;
-	}
+	exec->redir_count = 0;
 }
 
 static void	free_var(t_exec *exec)
@@ -81,5 +95,6 @@ void	free_split_exec(t_exec *exec)
 		free(exec->command[i]);
 		i++;
 	}
+	free_data_split(exec);
 	free_var(exec);
 }

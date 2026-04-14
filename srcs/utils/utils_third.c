@@ -71,3 +71,16 @@ int	space_pos(char *str)
 	}
 	return (-1);
 }
+
+void	close_fd(t_exec *exec, int cmd_count)
+{
+	int	j;
+
+	j = 0;
+	while (j < cmd_count - 1)
+	{
+		close(exec->fd[j][0]);
+		close(exec->fd[j][1]);
+		j++;
+	}
+}

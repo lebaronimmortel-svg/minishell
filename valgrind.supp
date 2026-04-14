@@ -1,8 +1,17 @@
 {
-   name
+   readline_leak
    Memcheck:Leak
-   fun:*
+   match-leak-kinds: reachable
    ...
-   obj:*libreadline.so*
+   obj:*/libreadline.so*
+   ...
+}
+
+{
+   libtinfo_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   obj:*/libtinfo.so*
    ...
 }

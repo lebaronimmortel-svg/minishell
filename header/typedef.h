@@ -29,6 +29,13 @@ typedef struct s_redir
 
 }	t_redir;
 
+typedef struct s_data
+{
+	int		error_code;
+	char	**env;
+	char	**env_bis;
+}	t_data;
+
 typedef struct s_exec
 {
 	char	**all_path;
@@ -41,14 +48,9 @@ typedef struct s_exec
 	int		fd[1024][2];
 	t_redir	*redir;
 	int		redir_count;
+	char	**split;
+	t_data	*data;
 }	t_exec;
-
-typedef struct s_data
-{
-	int		error_code;
-	char	**env;
-	char	**env_bis;
-}	t_data;
 
 typedef struct s_exec_ctx
 {
