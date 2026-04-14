@@ -80,6 +80,12 @@ static char	*preprocess_operators(char *str, int i, int j)
 		return (NULL);
 	while (str[i])
 	{
+		if (str[i] == '\t')
+		{
+			result[j++] = ' ';
+			i++;
+			continue ;
+		}
 		if (str[i] == '<' || str[i] == '>' || str[i] == '|')
 		{
 			if (j > 0 && result[j - 1] != ' ')

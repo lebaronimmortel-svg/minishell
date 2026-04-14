@@ -95,12 +95,14 @@ void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 
 int	end_exec(t_exec *exec, int cmd_count, t_data *data)
 {
-	int	i;
-	int	status;
-	int	exit_code;
+	int		i;
+	int		status;
+	int		exit_code;
+	int		last_builtin;
 
 	exit_code = 0;
 	status = 0;
+	last_builtin = (exec->pid[cmd_count - 1] <= 0);
 	close_fd(exec, cmd_count);
 	i = 0;
 	while (i < cmd_count)
@@ -111,6 +113,8 @@ int	end_exec(t_exec *exec, int cmd_count, t_data *data)
 	}
 	if (exec->pid)
 		free(exec->pid);
+	if (last_builtin)
+		return (data->error_code);
 	if (WIFEXITED(status))
 		exit_code = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
