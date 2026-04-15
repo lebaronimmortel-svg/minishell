@@ -24,7 +24,11 @@
 
 # Parsing :
 
-HEREDOC :
+env -i :
+-BASH : clear -> TERM environment variable not set.
+-MINISHELL : clear -> clear: command not found
+
+HEREDOC << EOF:
 -BASH : '$PWD' -> '/home/lukrodri/Documents/MAIN/Cercle 3/MINISHELL'
 -MINISHELL : '$PWD' -> '$PWD'
 END HEREDOC
