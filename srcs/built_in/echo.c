@@ -54,8 +54,10 @@ static int	has_n_flag(char *input)
 void	echo(char *input)
 {
 	int	i;
+	int flag;
 
 	i = 0;
+	flag = 0;
 	while (1)
 	{
 		while (input[i] && input[i] != ' ')
@@ -65,8 +67,12 @@ void	echo(char *input)
 		i++;
 		if (!input[i])
 			return ;
+		if (flag)
+			break ;
 		if (input[i] != '-')
 			break ;
+		else 
+			flag = 1;
 	}
 	ft_putstr_fd(&input[i], 1);
 	if (!has_n_flag(input))
