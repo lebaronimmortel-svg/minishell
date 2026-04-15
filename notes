@@ -24,7 +24,11 @@
 
 # Parsing :
 
-MINISHELL : command | < Makefile cat -> first command but not the "< Makefile cat"
+command print ?????
+
+-BASH : printf a | < Makefile cat -> <display> Makefile
+-MINISHELL : printf a | < Makefile cat -> a
+		the redir isn't working
 
 env -i :
 -BASH : clear -> TERM environment variable not set.
@@ -42,11 +46,7 @@ END HEREDOC
 -BASH : < Makefile | printf 'You see me?' -> You see me?
 -MINISHELL : < Makefile | printf 'You see me?' -> Youprintf: warning: ignoring excess arguments, starting with ‘see’
 
--BASH : echo  Ichi Ni San Yon Go | cat -e -> Ichi Ni San Yon Go$
--MINISHELL : echo  Ichi Ni San Yon Go | cat -e -> Ichi Ni San Yon Go
-
--BASH : env | grep USER | md5sum -> 54e99a849d3e47596d69856d61cca7e3  -
--MINISHELL : env | grep USER | md5sum -> whole env and no end of prompt
+-MINISHELL : le lexer ne doit pas renvoye NULL si le parser est faux
 
 # Built_in : 
 
@@ -78,6 +78,9 @@ END HEREDOC
 - check Segfault pour tous les malloc -> exit status (139)
 - exit : 128: Invalid argument to exit.
 -Ctrl-C : 130: Script terminated by Control-C.
+
+-MINISHELL : redir afficher : syntax error near unexpected token 'x'
+			exit status(2)
 
 -BUILTIN : exit status(2): Misuse of shell builtins
 

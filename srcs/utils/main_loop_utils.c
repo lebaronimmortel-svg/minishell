@@ -27,27 +27,12 @@ static void	my_memmove(char *str)
 	str[i] = 0;
 }
 
-static void	print_token(char c)
-{
-	if (c == 'p')
-		printf("\n\nPipe to :\n\n");
-	else if (c == 'r')
-		printf("\n\nRedir out to :\n\n");
-	else if (c == 'a')
-		printf("\n\nAppend to :\n\n");
-	else if (c == 'h')
-		printf("\n\nHeredoc to :\n\n");
-	else if (c == 's')
-		printf("\n\nRedir in to :\n\n");
-}
-
 static void	join_symbol(char **split, int *j, t_token *lexer, int i)
 {
 	(*j)++;
 	split[*j] = ft_strdup(lexer[i].value);
 	(*j)++;
 	split[*j] = ft_strdup("");
-	print_token(lexer[i].type);
 }
 
 static void	join_cmd(char **split, t_token *lexer, int *i, int j)
@@ -64,7 +49,6 @@ static void	join_cmd(char **split, t_token *lexer, int *i, int j)
 		return ;
 	free(split[j]);
 	split[j] = tmp;
-	printf("	%s", lexer[*i].value);
 	(*i)++;
 }
 
