@@ -12,12 +12,12 @@
 
 #include "../../header/header.h"
 
-static char *get_user(t_data *data)
+static char	*get_user(t_data *data)
 {
-	int i;
-	char *result;
-	char **split;
-	
+	int		i;
+	char	*result;
+	char	**split;
+
 	i = 0;
 	while (data->env[i])
 	{
@@ -45,9 +45,6 @@ static int	cd(char *input, t_data *data)
 	char	buffer[1024];
 
 	(void)data;
-	
-	printf("entering cd, input : %s\n", input);
-	
 	path = &input[3];
 	if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
 	{
@@ -139,6 +136,8 @@ void	exec_built_in(char *input, t_data *data, char **cmd_split)
 		export_single(data);
 	else if ((!ft_strncmp(input, "export ", 7)))
 		ft_export(input, data);
-	else if (!ft_strncmp(input, "cd ", 3) || (!ft_strncmp(input, "cd", 2) && ft_strlen(input) == 2))
+	else if (!ft_strncmp(input, "cd ", 3)
+		|| (!ft_strncmp(input, "cd", 2)
+			&& ft_strlen(input) == 2))
 		cd(input, data);
 }
