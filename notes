@@ -22,17 +22,33 @@
 	   ...
 	}
 
-# Parsing : 
+# Parsing :
 
-- CAT :
-		"cat sad asd" ; 
-result ->	/usr/bin/cat: sad: No such file or directory
-			/usr/bin/cat: asd: No such file or directory
-should be ->
-			cat: sad: No such file or directory
-			cat: asd: No such file or directory
+-BASH : '$PWD' -> '/home/lukrodri/Documents/MAIN/Cercle 3/MINISHELL'
+-MINISHELL : '$PWD' -> '$PWD'
+
+-BASH : printf "$USER$USER'' = ' $L ANG '" '' -> lukrodrilukrodri'' = '  ANG '
+-MINISHELL :
+		printf "$USER$USER'' = ' $L ANG '" '' -> lukrodrilukrodri''printf: warning: ignoring excess arguments, starting with ‘=’
+
+-BASH : < Makefile | printf 'You see me?' -> You see me?
+-MINISHELL : < Makefile | printf 'You see me?' -> nothing
+
+-BASH : echo  Ichi Ni San Yon Go | cat -e -> Ichi Ni San Yon Go$
+-MINISHELL : echo  Ichi Ni San Yon Go | cat -e -> Ichi Ni San Yon Go
+
+-BASH : env | grep USER | md5sum -> 54e99a849d3e47596d69856d61cca7e3  -
+-MINISHELL : env | grep USER | md5sum -> whole env and no end of prompt
 
 # Built_in : 
+
+-ECHO :
+-BASH: echo $$$USER -> 2050647lukrodri
+-MINISHELL : echo $$$USER -> $
+
+-ECHO :
+-BASH : echo -nnnnnnnnnnnnnn -nns -n test -> -nns -n test
+-MINISHELL : echo -nnnnnnnnnnnnnn -nns -n test -> test
 
 - Rajouter les exit_code aux built_in (comme fait pour pwd)
 
@@ -50,5 +66,14 @@ should be ->
 # Exit STATUS :
 
 - check Segfault pour tous les malloc -> exit status (139)
+- exit : 128: Invalid argument to exit.
+-Ctrl-C : 130: Script terminated by Control-C.
+
+-BUILTIN : exit status(2): Misuse of shell builtins
+
+-BASH : prin"tf "$USER -> printf lukrodri: command not found
+		exit status(127)
+-MINISHELL : prin"tf "$USER -> lukrodri
+		exit status(0)
 
 # + leaks + protections
