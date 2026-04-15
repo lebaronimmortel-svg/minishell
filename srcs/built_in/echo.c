@@ -70,5 +70,5 @@ void	echo(char *input)
 	}
 	ft_putstr_fd(&input[i], 1);
 	if (!has_n_flag(input))
-		write(1, "\n", 1);
+		ft_putstr_fd("\n", 1);
 }
