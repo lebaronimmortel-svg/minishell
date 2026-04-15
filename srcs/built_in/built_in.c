@@ -12,14 +12,57 @@
 
 #include "../../header/header.h"
 
+static char *get_user(t_data *data)
+{
+	int i;
+	char *result;
+	char **split;
+	
+	i = 0;
+	while (data->env[i])
+	{
+		if (!ft_strncmp(data->env[i], "USER=", 5))
+		{
+			split = ft_split(data->env[i], '=');
+			if (!split)
+				return (NULL);
+			result = ft_strdup(split[1]);
+			if (!result)
+				return (NULL);
+			free_split(split, 0);
+			printf("%s\n", data->env[i]);
+			return (result);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
 static int	cd(char *input, t_data *data)
 {
 	char	*path;
+	char	*user;
 	char	buffer[1024];
 
 	(void)data;
+	
+	printf("entering cd, input : %s\n", input);
+	
 	path = &input[3];
-	if (!(*path) || !getcwd(buffer, sizeof(buffer)))
+	if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
+	{
+		user = get_user(data);
+		if (!user)
+			return (0);
+		path = ft_strjoin("cd /home/", user);
+		if (!path)
+			return (0);
+		free(user);
+		cd(path, data);
+		free(path);
+		return (1);
+	}
+	if (!getcwd(buffer, sizeof(buffer)))
 		return (0);
 	if (chdir(path))
 		return (0);
@@ -96,6 +139,6 @@ void	exec_built_in(char *input, t_data *data, char **cmd_split)
 		export_single(data);
 	else if ((!ft_strncmp(input, "export ", 7)))
 		ft_export(input, data);
-	else if ((!ft_strncmp(input, "cd ", 3)))
+	else if (!ft_strncmp(input, "cd ", 3) || (!ft_strncmp(input, "cd", 2) && ft_strlen(input) == 2))
 		cd(input, data);
 }
