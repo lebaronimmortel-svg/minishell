@@ -58,8 +58,13 @@ int	pipe_and_pid(t_exec *exec, int cmd_count, char **envp)
 	return (0);
 }
 
-int	exec_main_sequel(char **split, int *i, t_exec *exec, t_data *data)
+int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 {
+	t_exec	*exec;
+	t_data	*data;
+
+	exec = ctx->exec;
+	data = ctx->data;
 	exec->redir_count = 0;
 	exec->redir = NULL;
 	collect_redirs(exec, split, *i, exec->env);
@@ -68,7 +73,7 @@ int	exec_main_sequel(char **split, int *i, t_exec *exec, t_data *data)
 	exec->input = split[*i];
 	if (is_built_in(exec->input))
 	{
-		do_built_in_part(exec, data, split, i);
+		do_built_in_part(exec, data, split, i, ctx);
 		return (1);
 	}
 	if (exec_init(exec))

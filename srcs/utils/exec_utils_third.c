@@ -31,13 +31,18 @@ int	find_env_loop(t_exec *exec, int i)
 	return (1);
 }
 
-void	do_built_in_part(t_exec *exec, t_data *data, char **split, int *i)
+void	do_built_in_part(t_exec *exec, t_data *data, char **split, int *i,
+		t_exec_ctx *ctx)
 {
 	int	saved_stdin;
 	int	saved_stdout;
 
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
+	if (ctx->cmd_index > 0)
+		dup2(exec->fd[ctx->cmd_index - 1][0], STDIN_FILENO);
+	if (ctx->cmd_index < ctx->cmd_count - 1)
+		dup2(exec->fd[ctx->cmd_index][1], STDOUT_FILENO);
 	if (exec->redir_count > 0)
 		apply_redirs(exec);
 	exec_built_in(exec->input, data, split);
@@ -45,9 +50,11 @@ void	do_built_in_part(t_exec *exec, t_data *data, char **split, int *i)
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdin);
 	close(saved_stdout);
+	if (ctx->cmd_index > 0)
+		close(exec->fd[ctx->cmd_index - 1][0]);
+	if (ctx->cmd_index < ctx->cmd_count - 1)
+		close(exec->fd[ctx->cmd_index][1]);
 	free_redir(exec);
-	if (data->error_code == 0)
-		data->error_code = 0;
 	(*i)++;
 }
 
@@ -84,9 +91,12 @@ void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
 	{
 		if (should_skip_token(split, i))
 			continue ;
-		ret = exec_main_sequel(split, i, ctx->exec, ctx->data);
+		ret = exec_main_sequel(split, i, ctx);
 		if (ret == 1)
+		{
+			ctx->cmd_index++;
 			continue ;
+		}
 		if (ret == 2)
 		{
 			ctx->cmd_index++;
