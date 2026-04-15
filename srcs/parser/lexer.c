@@ -31,6 +31,24 @@ static char	convert_type(char *str)
 	return (c);
 }
 
+static void	expand_pid(char *str)
+{
+	int i;
+
+	if (!str)
+		return ;
+	i = 1;
+	while (str[i])
+	{
+		if (str[i] == '$' && str[i - 1] == '$' && is_ok_quote(str, i - 1))
+		{
+			str[i] = '>';
+			str[i - 1] = '<';
+		}
+		i++;
+	}
+}
+
 static void	lex_convert(char **split, t_token *token, t_data *data)
 {
 	int	i;
@@ -41,6 +59,7 @@ static void	lex_convert(char **split, t_token *token, t_data *data)
 		token[i].type = convert_type(split[i]);
 		token[i].value = ft_strdup(split[i]);
 		handle_single(token[i].value);
+		expand_pid(token[i].value);
 		while (!are_var_handled(token[i].value))
 			token[i].value = change_var(token[i].value, data->env);
 		token[i].value = expand_code(token[i].value, data);
