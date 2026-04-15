@@ -27,7 +27,7 @@ static int	assign_flag(int flag, char *input, int *i)
 
 static int	has_n_flag(char *input)
 {
-	int	i;
+	int	i;\
 	int	flag;
 
 	i = 0;
