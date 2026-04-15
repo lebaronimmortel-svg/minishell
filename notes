@@ -88,8 +88,5 @@ END HEREDOC
 		exit status(127)
 -MINISHELL : prin"tf "$USER -> lukrodri
 		exit status(0)
-- Rajouter les " " autour des valeurs quand on tape export 
-
-- Ne mettre le = dans export que s'il y en a un dANS LA VAr
 
 # + leaks + protections
