@@ -60,6 +60,7 @@ END HEREDOC
 -MINISHELL : echo $$$USER -> $
 
 	-> remplacer $$ par <PID> 
+		-> rajouter un parcours pour les $$ avant celui pour les var
 
 - Rajouter les exit_code aux built_in (comme fait pour pwd)
 
