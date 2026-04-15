@@ -54,7 +54,7 @@ static int	has_n_flag(char *input)
 void	echo(char *input)
 {
 	int	i;
-	int flag;
+	int	flag;
 
 	i = 0;
 	flag = 0;
@@ -71,7 +71,7 @@ void	echo(char *input)
 			break ;
 		if (input[i] != '-')
 			break ;
-		else 
+		else
 			flag = 1;
 	}
 	ft_putstr_fd(&input[i], 1);
