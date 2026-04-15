@@ -62,6 +62,7 @@ void	close_fd(t_exec *exec, int cmd_count);
 void	main_loop(char **envp, char **split, t_token *lex, t_data *data);
 void	loop(t_token *lexer, char **split);
 int		are_var_handled(char *str);
+int 	are_var_hd(char *str);
 void	remove_quotes(char *str);
 int		ft_strcmp(char *s1, char *s2);
 char	*change_var(char *str, char **envp);

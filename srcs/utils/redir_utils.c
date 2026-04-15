@@ -26,7 +26,7 @@ static void	handle_hdoc_bis(char *delim, int expand, char **envp, int *pipefd)
 		}
 		if (expand)
 		{
-			while (!are_var_handled(line))
+			while (!are_var_hd(line))
 				line = change_var(line, envp);
 		}
 		write(pipefd[1], line, ft_strlen(line));
