@@ -87,7 +87,11 @@ void	exec_built_in(char *input, t_data *data, char **cmd_split)
 		|| (!ft_strncmp(input, "exit ", 5)))
 		exit_cleanly(status_code(input, data), data, cmd_split);
 	else if ((!ft_strncmp(input, "echo ", 5)))
+	{
+		split = ft_split(input, ' ');
 		echo(input);
+		free_split(split, 0);
+	}
 	else if ((!ft_strncmp(input, "export", 6)) && ft_strlen(input) == 6)
 		export_single(data);
 	else if ((!ft_strncmp(input, "export ", 7)))

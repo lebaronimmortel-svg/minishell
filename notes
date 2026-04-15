@@ -46,17 +46,13 @@ END HEREDOC
 -BASH : < Makefile | printf 'You see me?' -> You see me?
 -MINISHELL : < Makefile | printf 'You see me?' -> Youprintf: warning: ignoring excess arguments, starting with ‘see’
 
--MINISHELL : le lexer ne doit pas renvoye NULL si le parser est faux
-
 # Built_in : 
 
 -ECHO :
 -BASH: echo $$$USER -> 2050647lukrodri
 -MINISHELL : echo $$$USER -> $
 
--ECHO :
--BASH : echo -nnnnnnnnnnnnnn -nns -n test -> -nns -n test
--MINISHELL : echo -nnnnnnnnnnnnnn -nns -n test -> test
+-ECHO : skip tous les flags
 
 - Rajouter les exit_code aux built_in (comme fait pour pwd)
 
@@ -64,6 +60,7 @@ END HEREDOC
 	(a voir)
 
 -EXPORT : export a = 0 -> env : =
+		  ajouter le +=
 
 # Signaux :
 
@@ -88,5 +85,6 @@ END HEREDOC
 		exit status(127)
 -MINISHELL : prin"tf "$USER -> lukrodri
 		exit status(0)
+
 
 # + leaks + protections
