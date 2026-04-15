@@ -24,6 +24,8 @@
 
 # Parsing :
 
+MINISHELL : command | < Makefile cat -> first command but not the "< Makefile cat"
+
 env -i :
 -BASH : clear -> TERM environment variable not set.
 -MINISHELL : clear -> clear: command not found
@@ -61,6 +63,8 @@ END HEREDOC
 - command 'cd' toute seule ne fait rien, devrait ramener au root (vrai behavior)
 	(a voir)
 
+-EXPORT : export a = 0 -> env : =
+
 # Signaux :
 
 - sleep 10 | echo a		puis Ctrl-C pendant le sleep renvoie exit status (130) au lieu de 0
@@ -81,5 +85,8 @@ END HEREDOC
 		exit status(127)
 -MINISHELL : prin"tf "$USER -> lukrodri
 		exit status(0)
+- Rajouter les " " autour des valeurs quand on tape export 
+
+- Ne mettre le = dans export que s'il y en a un dANS LA VAr
 
 # + leaks + protections

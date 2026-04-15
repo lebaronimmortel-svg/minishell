@@ -12,25 +12,19 @@
 
 #include "../../header/header.h"
 
-int	exists(char *str, t_data *data, int *i)
+int	exists(char *str, char **env, int *i)
 {
 	int	len;
 
 	len = 0;
-	while (str[len] != '=')
+	while (str[len] && str[len] != '=')
 		len++;
-	while (data->env[*i])
+	while (env[*i])
 	{
-		if (!ft_strncmp(str, data->env[*i], len) && data->env[*i][len] == '=')
+		if (!ft_strncmp(str, env[*i], len) && env[*i][len] == '=')
 			return (1);
-		(*i)++;
-	}
-	*i = 0;
-	while (data->env_bis[*i])
-	{
-		if (!ft_strncmp(str, data->env_bis[*i], len)
-			&& data->env_bis[*i][len] == '\0')
-			return (2);
+		if (!ft_strncmp(str, env[*i], len) && !env[*i][len])
+			return (1);
 		(*i)++;
 	}
 	return (0);
