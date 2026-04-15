@@ -32,47 +32,44 @@ static char	**my_realloc(char **split, int old_size)
 	return (new_split);
 }
 
-static int	replace(char *str, t_data *data, int flag, int *i)
+static int	replace(char *str, char **env, int i)
 {
-	int	j;
-
-	if (!flag)
+	free(env[i]);
+	env[i] = ft_strdup(str);
+	if (!env[i])
 		return (0);
-	if (flag == 1)
-	{
-		free(data->env[*i]);
-		data->env[*i] = ft_strdup(str);
-		if (!data->env[*i])
-			return (0);
-		return (1);
-	}
-	else
-	{
-		j = *i;
-		free(data->env_bis[j]);
-		while (data->env_bis[j + 1])
-		{
-			data->env_bis[j] = data->env_bis[j + 1];
-			j++;
-		}
-		data->env_bis[j] = data->env_bis[j + 1];
-		add_var(str, data);
-		return (1);
-	}
+	return (1);
 }
 
 int	add_var(char *str, t_data *data)
 {
 	int	i;
+	int	j;
 	int	len;
 
 	i = 0;
+	j = 0;
 	if (!is_valid_var(str, 1))
 		return (1);
 	if (ft_strchr(str, '='))
 	{
-		if (replace(str, data, exists(str, data, &i), &i))
+		if (exists(str, data->env_bis, &j))
+		{
+			(replace(str, data->env_bis, j));
+			if (exists(str, data->env, &i))
+				(replace(str, data->env, j));
+			else
+			{
+				len = my_memlen(data->env);
+				data->env = my_realloc(data->env, len);
+				if (!data->env)
+					return (1);
+				data->env[len] = ft_strdup(str);
+				if (!data->env[len])
+					return (1);
+			}
 			return (0);
+		}
 		else
 		{
 			len = my_memlen(data->env);
@@ -82,13 +79,29 @@ int	add_var(char *str, t_data *data)
 			data->env[len] = ft_strdup(str);
 			if (!data->env[len])
 				return (1);
+			len = my_memlen(data->env_bis);
+			data->env_bis = my_realloc(data->env_bis, len);
+			if (!data->env_bis)
+				return (1);
+			data->env_bis[len] = ft_strdup(str);
+			if (!data->env_bis[len])
+				return (1);
+			return (0);
 		}
 	}
-	len = my_memlen(data->env_bis);
-	data->env_bis = my_realloc(data->env_bis, len);
-	if (!data->env_bis)
-		return (1);
-	data->env_bis[len] = ft_strdup(str);
+	j = 0;
+	if (exists(str, data->env_bis, &j))
+		return (0);
+	else
+	{
+		len = my_memlen(data->env_bis);
+		data->env_bis = my_realloc(data->env_bis, len);
+		if (!data->env_bis)
+			return (1);
+		data->env_bis[len] = ft_strdup(str);
+		if (!data->env_bis[len])
+			return (1);
+	}
 	return (0);
 }
 

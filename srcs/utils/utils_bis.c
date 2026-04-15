@@ -22,20 +22,32 @@ int	ft_strcmp(char *s1, char *s2)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-void	print_split(char **split)
+int	print_split(char **split)
 {
-	int	i;
+	int		i;
+	char	**word_split;
 
 	if (!split || !(*split))
-		return ;
+		return (1);
 	i = 0;
 	while (split[i])
 	{
-		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(split[i], 1);
-		write(1, "\n", 1);
+		if (ft_strchr(split[i], '='))
+		{
+			word_split = ft_split(split[i], '=');
+			if (!word_split)
+				return (1);
+			if (word_split[1])
+				printf("declare -x %s=\"%s\"\n", word_split[0], word_split[1]);
+			else
+				printf("declare -x %s=\"\"\n", word_split[0]);
+			free_split(word_split, 0);
+		}
+		else
+			printf("declare -x %s\n", split[i]);
 		i++;
 	}
+	return (0);
 }
 
 char	**split_dup(char **envp)
