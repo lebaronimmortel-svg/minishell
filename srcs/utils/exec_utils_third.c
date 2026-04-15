@@ -78,12 +78,20 @@ int	should_skip_token(char **split, int *i)
 
 void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
 {
+	int	ret;
+
 	while (split && split[*i])
 	{
 		if (should_skip_token(split, i))
 			continue ;
-		if (exec_main_sequel(split, i, ctx->exec, ctx->data))
+		ret = exec_main_sequel(split, i, ctx->exec, ctx->data);
+		if (ret == 1)
 			continue ;
+		if (ret == 2)
+		{
+			ctx->cmd_index++;
+			continue ;
+		}
 		fork_and_free_exec(ctx->exec, &ctx->cmd_index, ctx->cmd_count);
 		(*i)++;
 	}

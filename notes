@@ -24,15 +24,17 @@
 
 # Parsing :
 
+HEREDOC :
 -BASH : '$PWD' -> '/home/lukrodri/Documents/MAIN/Cercle 3/MINISHELL'
 -MINISHELL : '$PWD' -> '$PWD'
+END HEREDOC
 
 -BASH : printf "$USER$USER'' = ' $L ANG '" '' -> lukrodrilukrodri'' = '  ANG '
 -MINISHELL :
 		printf "$USER$USER'' = ' $L ANG '" '' -> lukrodrilukrodri''printf: warning: ignoring excess arguments, starting with ‘=’
 
 -BASH : < Makefile | printf 'You see me?' -> You see me?
--MINISHELL : < Makefile | printf 'You see me?' -> nothing
+-MINISHELL : < Makefile | printf 'You see me?' -> Youprintf: warning: ignoring excess arguments, starting with ‘see’
 
 -BASH : echo  Ichi Ni San Yon Go | cat -e -> Ichi Ni San Yon Go$
 -MINISHELL : echo  Ichi Ni San Yon Go | cat -e -> Ichi Ni San Yon Go
