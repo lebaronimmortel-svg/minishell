@@ -48,5 +48,6 @@ void	fork_and_free_exec(t_exec *exec, int *cmd_index, int cmd_count)
 {
 	fork_created(exec, *cmd_index, cmd_count);
 	free_exec_cmd(exec);
+	free_redir(exec);
 	(*cmd_index)++;
 }

@@ -28,11 +28,6 @@
 
 # Parsing :
 
-command print ?????
-
--BASH : printf a | < Makefile cat -> <display> Makefile
--MINISHELL : printf a | < Makefile cat -> a
-		the redir isn't working
 -BASH : printf "$USER$USER'' = ' $L ANG '" '' -> lukrodrilukrodri'' = '  ANG '
 -MINISHELL :
 		printf "$USER$USER'' = ' $L ANG '" '' -> lukrodrilukrodri''printf: warning: ignoring excess arguments, starting with ‘=’
