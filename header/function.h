@@ -107,6 +107,7 @@ int		are_var_handled(char *str);
 int		space_pos(char *str);
 void	close_fd(t_exec *exec, int cmd_count);
 
+char	*my_get_pid(void);
 void	unmask_spaces(char *str);
 char	**quote_clean(char **split);
 char	*change_var_hd(char *str, char **envp);
