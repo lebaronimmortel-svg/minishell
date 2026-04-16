@@ -31,6 +31,38 @@ static char	convert_type(char *str)
 	return (c);
 }
 
+static char	*expand_double(char *str)
+{
+	int i;
+	char *tmp;
+	char *pid;
+	char *result;
+	char *tmp2;
+	
+	i = 1;
+	while (str[i])
+	{
+		if (str[i] == '$' && str[i - 1] == '$')
+		{
+			tmp2 = str;
+			tmp = &str[i + 1];
+			str[i - 1] = '\0';
+			pid = my_get_pid();
+			result = ft_strjoin(str, pid);
+			if (!result)
+				return (NULL);
+			str = ft_strjoin(result, tmp);
+			if (!str)
+				return (NULL);
+			free(result);
+			free(pid);
+			free(tmp2);
+		}
+		i++;
+	}
+	return (str);
+}
+
 static void	lex_convert(char **split, t_token *token, t_data *data)
 {
 	int	i;
@@ -41,6 +73,7 @@ static void	lex_convert(char **split, t_token *token, t_data *data)
 		token[i].type = convert_type(split[i]);
 		token[i].value = ft_strdup(split[i]);
 		handle_single(token[i].value);
+		token[i].value = expand_double(token[i].value);
 		while (!are_var_handled(token[i].value))
 			token[i].value = change_var(token[i].value, data->env);
 		token[i].value = expand_code(token[i].value, data);
