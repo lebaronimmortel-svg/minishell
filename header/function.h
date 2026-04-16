@@ -67,6 +67,7 @@ void	free_exec_cmd(t_exec *exec);
 void	fork_and_free_exec(t_exec *exec, int *cmd_index, int cmd_count);
 
 void	collect_redirs(t_exec *exec, char **split, int cmd_pos, char **envp);
+void	end_redir_sequel(t_exec *exec, char **split, int i, char type);
 
 int		handle_heredoc(char *delimiter, char **envp, int expand, int len);
 int		first_part_apply_redir(char type, t_exec *exec, int i, int fd);
@@ -81,6 +82,8 @@ void	end_collect_redir(t_exec *exec, char **envp);
 
 int		handle_input_redir(t_exec *exec, int i);
 int		handle_output_redir(t_exec *exec, int i);
+void	append_to_cmd(char **split, int cmd_pos, char *extra);
+void	handle_redir_sequel(t_exec *exec, char **split, int cmd_pos, int i);
 
 void	main_loop(char **split, t_token *lex, t_data *data);
 

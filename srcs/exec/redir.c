@@ -6,13 +6,13 @@
 /*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/25 09:53:50 by lukrodri          #+#    #+#             */
-/*   Updated: 2026/03/25 09:53:51 by lukrodri         ###   ########.fr       */
+/*   Updated: 2026/04/16 10:53:50 by lukrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/header.h"
 
-static void	end_redir_sequel(t_exec *exec, char **split, int i, char type)
+void	end_redir_sequel(t_exec *exec, char **split, int i, char type)
 {
 	exec->redir[exec->redir_count].type = type;
 	exec->redir[exec->redir_count].malloced = 0;
@@ -29,26 +29,15 @@ static void	end_pre_redir(t_exec *exec, char type)
 	exec->redir_count++;
 }
 
-void	collect_redirs_sequel(t_exec *exec, char **split, int cmd_pos, int i)
+void	collect_redirs_sequel(t_exec *exec, char **split,
+								int cmd_pos, int i)
 {
-	char	type;
-
 	i = cmd_pos + 1;
 	while (split[i] && split[i + 1])
 	{
 		if (split[i][0] == '|')
 			break ;
-		type = 0;
-		if (ft_strcmp(split[i], ">") == 0)
-			type = 'r';
-		else if (ft_strcmp(split[i], ">>") == 0)
-			type = 'a';
-		else if (ft_strcmp(split[i], "<") == 0)
-			type = 's';
-		else if (ft_strcmp(split[i], "<<") == 0)
-			type = 'h';
-		if (type)
-			end_redir_sequel(exec, split, i, type);
+		handle_redir_sequel(exec, split, cmd_pos, i);
 		i += 2;
 	}
 }
