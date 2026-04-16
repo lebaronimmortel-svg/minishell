@@ -97,7 +97,7 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 	return (0);
 }
 
-int	exec_main(char **envp, char **split, int i, t_data *data)
+int	exec_main(char **split, int i, t_data *data)
 {
 	t_exec		exec;
 	t_exec_ctx	ctx;
@@ -108,7 +108,7 @@ int	exec_main(char **envp, char **split, int i, t_data *data)
 	exec.data = data;
 	exec.split = split;
 	cmd_count = count_cmds(split, 0, 0);
-	if (pipe_and_pid(&exec, cmd_count, envp) == 1)
+	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)
 		return (1);
 	ctx.exec = &exec;
 	ctx.data = data;

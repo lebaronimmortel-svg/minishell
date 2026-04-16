@@ -25,11 +25,6 @@ void	free_data_split(t_exec *exec)
 		exec->split[i] = NULL;
 		i++;
 	}
-	if (exec->data->env)
-	{
-		free_split(exec->data->env, 0);
-		exec->data->env = NULL;
-	}
 	if (exec->data->env_bis)
 	{
 		free_split(exec->data->env_bis, 0);
@@ -86,6 +81,11 @@ void	free_split_exec(t_exec *exec)
 	{
 		free(exec->command[i]);
 		i++;
+	}
+	if (exec->data->env)
+	{
+		free_split(exec->data->env, 0);
+		exec->data->env = NULL;
 	}
 	free_data_split(exec);
 	free_var(exec);

@@ -58,6 +58,6 @@ int	main(int argc, char **argv, char **envp)
 		return (139);
 	lex = NULL;
 	split = NULL;
-	main_loop(envp, split, lex, data);
+	main_loop(split, lex, data);
 	return (0);
 }

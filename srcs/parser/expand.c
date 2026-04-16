@@ -88,7 +88,7 @@ static void	var_search(char *buffer, char **envp)
 		buffer[0] = '\0';
 }
 
-static char	*convert_var(char *str, int index, char **envp)
+char	*convert_var(char *str, int index, char **envp)
 {
 	int		i;
 	char	buffer[2048];
