@@ -77,14 +77,26 @@ static int	handle_special(char *str, char *res, int *i, int *j)
 static char	*preprocess_operators(char *str, int i, int j)
 {
 	char	*result;
+	int		in_sq;
+	int		in_dq;
 
+	in_sq = 0;
+	in_dq = 0;
 	result = malloc(ft_strlen(str) * 3 + 1);
 	if (!result)
 		return (NULL);
 	while (str[i])
 	{
-		if (!handle_special(str, result, &i, &j))
-			result[j++] = str[i];
+		if (str[i] == 39 && !in_dq)
+			in_sq = !in_sq;
+		else if (str[i] == 34 && !in_sq)
+			in_dq = !in_dq;
+		if (!in_sq && !in_dq && handle_special(str, result, &i, &j))
+		{
+			i++;
+			continue ;
+		}
+		result[j++] = str[i];
 		i++;
 	}
 	result[j] = '\0';
