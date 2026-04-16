@@ -28,21 +28,30 @@
 
 # Parsing :
 
+-BASH :	touch test
+		chmod 000 test
+		./test 
+result : ./ok: Permission denied
+-MINISHELL :	touch test
+				chmod 000 test
+				./test 
+result : ./ok: No such file or directory
+
+
+-BASH : touch test | chmod 000 test | ./test
+result :	./test: No such file or directory
+			chmod: cannot access 'test': No such file or directory
+-MINISHELL :
+
+
 -BASH : printf "$USER$USER'' = ' $L ANG '" '' -> lukrodrilukrodri'' = '  ANG '
 -MINISHELL :
-		printf "$USER$USER'' = ' $L ANG '" '' -> lukrodrilukrodri''printf: warning: ignoring excess arguments, starting with ‘=’
--BASH : < Makefile | printf 'You see me?' -> You see me?
--MINISHELL : < Makefile | printf 'You see me?' -> Youprintf: warning: ignoring excess arguments, starting with ‘see’
+		printf "$USER$USER'' = ' $L ANG '" '' -> '' = ' $L ANG '
+
 
 env -i :
 -BASH : clear -> TERM environment variable not set.
 -MINISHELL : clear -> clear: command not found
-
-HEREDOC << EOF:
--BASH : '$PWD' -> '/home/lukrodri/Documents/MAIN/Cercle 3/MINISHELL'
--MINISHELL : '$PWD' -> '$PWD'
-END HEREDOC
-
 -ADD env if getenv NULL
 
 
@@ -53,6 +62,10 @@ END HEREDOC
 -ECHO :
 -BASH: echo $$$USER -> 2050647lukrodri
 -MINISHELL : echo $$$USER -> $
+
+-ECHO : echo -nnnnnnnnnnnnnn1 salut  nvobwriov wr gow v '$USER>eef>$USER'
+-BASH: -nnnnnnnnnnnnnn1 salut nvobwriov wr gow v $USER>eef>$USER
+-MINISHELL : salut nvobwriov wr gow v $USER > eef > $USER
 
 	-> remplacer $$ par <PID> 
 		-> rajouter un parcours pour les $$ avant celui pour les var

@@ -46,7 +46,7 @@ int	are_var_hd(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '$' && is_valid_var(&str[i], 0) && is_ok_quote(str, i))
+		if (str[i] == '$' && is_valid_var(&str[i], 0))
 			return (0);
 		i++;
 	}

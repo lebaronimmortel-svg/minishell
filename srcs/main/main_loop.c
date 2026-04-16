@@ -52,21 +52,21 @@ static void	free_lexer(t_token *lex)
 	free(lex);
 }
 
-static void	execute_prompt(char **envp, char **split, t_token *lex,
+static void	execute_prompt(char **split, t_token *lex,
 	t_data *data)
 {
 	if (parser(lex))
 	{
 		split = print_order(lex);
 		free_lexer(lex);
-		data->error_code = exec_main(envp, split, 0, data);
+		data->error_code = exec_main(split, 0, data);
 		free_split(split, 0);
 	}
 	else
 		printf("parsing error\n");
 }
 
-void	main_loop(char **envp, char **split, t_token *lex, t_data *data)
+void	main_loop(char **split, t_token *lex, t_data *data)
 {
 	char	*str;
 
@@ -79,6 +79,6 @@ void	main_loop(char **envp, char **split, t_token *lex, t_data *data)
 		lex = lexer(str, data);
 		free(str);
 		if (lex)
-			execute_prompt(envp, split, lex, data);
+			execute_prompt(split, lex, data);
 	}
 }

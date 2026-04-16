@@ -46,3 +46,16 @@ char	**quote_clean(char **split)
 	}
 	return (split);
 }
+
+char	*change_var_hd(char *str, char **envp)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	while (!(str[i] == '$' && is_valid_var(&str[i], 0)))
+		i++;
+	tmp = convert_var(str, i, envp);
+	free(str);
+	return (tmp);
+}

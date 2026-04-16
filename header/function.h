@@ -25,6 +25,7 @@ int		is_ok_quote(char *str, int index);
 /* =============================== expand.c ============================== */
 char	*expand_code(char *str, t_data *data);
 char	*change_var(char *str, char **envp);
+char	*convert_var(char *str, int index, char **envp);
 
 /* ============================ expand_utils.c =========================== */
 int		is_valid_var(char *str, int flag);
@@ -47,7 +48,7 @@ int		add_var(char *str, t_data *data);
 int		change_path(int flag, char *path, t_data *data);
 
 /* ================================ exec.c =============================== */
-int		exec_main(char **envp, char **split, int i, t_data *data);
+int		exec_main(char **split, int i, t_data *data);
 int		exec_main_sequel(char **split, int *i, t_exec_ctx *ctx);
 
 /* ============================= exec_error.c ============================ */
@@ -101,7 +102,7 @@ int		handle_input_redir(t_exec *exec, int i);
 int		handle_output_redir(t_exec *exec, int i);
 
 /* ================================ main.c =============================== */
-void	main_loop(char **envp, char **split, t_token *lex, t_data *data);
+void	main_loop(char **split, t_token *lex, t_data *data);
 
 /* =========================== main_loop_utils.c ========================= */
 void	loop(t_token *lexer, char **split);
@@ -130,6 +131,7 @@ void	close_fd(t_exec *exec, int cmd_count);
 /* ================================ utils_third_bis.c ==================== */
 void	unmask_spaces(char *str);
 char	**quote_clean(char **split);
+char	*change_var_hd(char *str, char **envp);
 
 /* ================================ free.c =============================== */
 void	exit_cleanly(int code, t_data *data, char **split);
