@@ -101,6 +101,7 @@ void	end_collect_redir(t_exec *exec, char **envp)
 		if (exec->redir[k].type == 'h' && exec->redir[k].fd == -1)
 			exec->redir[k].fd = handle_heredoc(exec->redir[k].file,
 					envp, 1, 0);
+		/*
 		else if (exec->redir[k].type == 's' && exec->redir[k].fd == -1)
 		{
 			exec->redir[k].fd = open(exec->redir[k].file, O_RDONLY);
@@ -110,6 +111,7 @@ void	end_collect_redir(t_exec *exec, char **envp)
 				exec->redir[k].fd = -2;
 			}
 		}
+		*/
 		k++;
 	}
 }
