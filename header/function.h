@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   function.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexfuen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/08 13:34:14 by alexfuen          #+#    #+#             */
-/*   Updated: 2026/03/08 13:34:16 by alexfuen         ###   ########.fr       */
+/*   Created: 2026/04/16 09:37:38 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/04/16 09:37:39 by lukrodri         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,68 +14,99 @@
 # define FUNCTION_H
 
 t_token	*lexer(char *str, t_data *data);
-int		exists(char *str, char **env, int *i);
+
 int		parser(t_token *lexer);
-int		add_var(char *str, t_data *data);
-char	**split_dup(char **envp);
-int		is_alphanum(char c);
-void	unset(char **split, t_data *data);
-void	ft_export(char *input, t_data *data);
+void	handle_single(char *str);
 void	check_quote(char *str);
+int		is_ok_quote(char *str, int index);
+
+char	*expand_code(char *str, t_data *data);
+char	*change_var(char *str, char **envp);
+
+int		is_valid_var(char *str, int flag);
+int		is_ok_quote(char *str, int index);
+
+void	exec_built_in(char *input, t_data *data, char **split);
+void	echo(char *input, int k);
+
+void	unset(char **split, t_data *data);
+
+int		exists(char *str, char **env, int *i);
+void	ft_export(char *input, t_data *data, int j, int i);
 void	export_single(t_data *data);
-void	free_split(char **split, int flag);
-void	free_data_split(t_exec *exec);
-void	free_exec_failed(t_exec *exec);
-void	free_exec_cmd(t_exec *exec);
-int		split_len(char **split);
+
+int		add_var(char *str, t_data *data);
+int		change_path(int flag, char *path, t_data *data);
+
 int		exec_main(char **envp, char **split, int i, t_data *data);
 int		exec_main_sequel(char **split, int *i, t_exec_ctx *ctx);
+
+void	execve_error(char *str, char *command);
+
 int		is_pipe(char *s);
 int		skip_redirection(char **split, int i);
 int		should_skip_empty(char **split, int i);
 int		is_redir_argument(char **split, int i);
-int		pipe_and_pid_init(t_exec *exec, int cmd_count);
 int		count_cmds(char **split, int i, int count);
+
+int		find_env_loop(t_exec *exec, int i);
+void	do_built_in_part( char **split, int *i, t_exec_ctx *ctx);
 int		should_skip_token(char **split, int *i);
 void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx);
-int		find_env_loop(t_exec *exec, int i);
-void	do_built_in_part(t_exec *exec, t_data *data, char **split, int *i, t_exec_ctx *ctx);
+int		end_exec(t_exec_ctx *ctx, int exit_code, int status);
+
+void	fork_created(t_exec *exec, int cmd_index, int cmd_count);
+
+void	free_data_split(t_exec *exec);
+void	free_split_exec(t_exec *exec);
+void	free_redir(t_exec *exec);
+
+void	free_exec_failed(t_exec *exec);
+void	free_exec_cmd(t_exec *exec);
+void	fork_and_free_exec(t_exec *exec, int *cmd_index, int cmd_count);
+
+void	collect_redirs(t_exec *exec, char **split, int cmd_pos, char **envp);
+
+int		handle_heredoc(char *delimiter, char **envp, int expand, int len);
+int		first_part_apply_redir(char type, t_exec *exec, int i, int fd);
+int		second_part_apply_redir(char type, t_exec *exec, int i);
+int		apply_redirs(t_exec *exec);
+
+int		pipe_and_pid_init(t_exec *exec, int cmd_count);
 int		count_redirs(char **split, int cmd_pos);
 int		init_redirs(t_exec *exec, int count);
 void	infile_redir(char **split, int *i, int check);
-void	free_split_exec(t_exec *exec);
-void	fork_and_free_exec(t_exec *exec, int *cmd_index, int cmd_count);
-void	collect_redirs(t_exec *exec, char **split, int cmd_pos, char **envp);
 void	end_collect_redir(t_exec *exec, char **envp);
-int		space_pos(char *str);
-int		second_part_apply_redir(char type, t_exec *exec, int i);
-int		first_part_apply_redir(char type, t_exec *exec, int i, int fd);
-int		apply_redirs(t_exec *exec);
-int		handle_heredoc(char *delimiter, char **envp, int expand, int len);
-void	fork_created(t_exec *exec, int cmd_index, int cmd_count);
-void	execve_error(char *str, char *command);
-void	exit_cleanly(int code, t_data *data, char **split);
-int		change_path(int flag, char *path, t_data *data);
-int		end_exec(t_exec *exec, int cmd_count, t_data *data);
-void	free_redir(t_exec *exec);
-void	close_fd(t_exec *exec, int cmd_count);
+
+int		handle_input_redir(t_exec *exec, int i);
+int		handle_output_redir(t_exec *exec, int i);
+
 void	main_loop(char **envp, char **split, t_token *lex, t_data *data);
+
 void	loop(t_token *lexer, char **split);
-int		are_var_handled(char *str);
-int 	are_var_hd(char *str);
-void	remove_quotes(char *str);
-int		ft_strcmp(char *s1, char *s2);
-char	*change_var(char *str, char **envp);
+
+int		split_len(char **split);
 int		update_flag(int flag);
-int		is_valid_var(char *str, int flag);
-int		is_ok_quote(char *str, int index);
 void	move_one(char *str);
-void	handle_single(char *str);
-char	*expand_code(char *str, t_data *data);
-void	echo(char *input);
-int		my_memlen(char **split);
-void	exec_built_in(char *input, t_data *data, char **split);
+void	remove_quotes(char *str);
+void	free_split(char **split, int flag);
+
+int		ft_strcmp(char *s1, char *s2);
 int		print_split(char **split);
+char	**split_dup(char **envp);
+int		my_memlen(char **split);
+int		is_alphanum(char c);
+
 int		is_built_in(char *input);
+int		are_var_hd(char *str);
+int		are_var_handled(char *str);
+int		space_pos(char *str);
+void	close_fd(t_exec *exec, int cmd_count);
+
+void	unmask_spaces(char *str);
+char	**quote_clean(char **split);
+
+void	exit_cleanly(int code, t_data *data, char **split);
+
 
 #endif

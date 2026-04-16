@@ -46,6 +46,7 @@ static int	cd(char *input, t_data *data)
 
 	(void)data;
 	path = &input[3];
+	unmask_spaces(path);
 	if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
 	{
 		user = get_user(data);
@@ -117,6 +118,7 @@ void	exec_built_in(char *input, t_data *data, char **cmd_split)
 	else if (!ft_strncmp(input, "unset ", 6))
 	{
 		split = ft_split(input, ' ');
+		split = quote_clean(split);
 		unset(&split[1], data);
 		free_split(split, 0);
 	}
@@ -129,13 +131,13 @@ void	exec_built_in(char *input, t_data *data, char **cmd_split)
 	else if ((!ft_strncmp(input, "echo ", 5)))
 	{
 		split = ft_split(input, ' ');
-		echo(input);
+		echo(input, 0);
 		free_split(split, 0);
 	}
 	else if ((!ft_strncmp(input, "export", 6)) && ft_strlen(input) == 6)
 		export_single(data);
 	else if ((!ft_strncmp(input, "export ", 7)))
-		ft_export(input, data);
+		ft_export(input, data, 0, 0);
 	else if (!ft_strncmp(input, "cd ", 3)
 		|| (!ft_strncmp(input, "cd", 2)
 			&& ft_strlen(input) == 2))

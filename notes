@@ -43,7 +43,7 @@ HEREDOC << EOF:
 -MINISHELL : '$PWD' -> '$PWD'
 END HEREDOC
 
-
+-ADD env if getenv NULL
 
 
 
