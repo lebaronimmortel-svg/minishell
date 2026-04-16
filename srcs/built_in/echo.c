@@ -51,7 +51,7 @@ static int	has_n_flag(char *input)
 		return (0);
 }
 
-void	echo(char *input)
+void	echo(char *input, int k)
 {
 	int	i;
 	int	flag;
@@ -73,6 +73,13 @@ void	echo(char *input)
 			break ;
 		else
 			flag = 1;
+	}
+	k = i;
+	while (input[k])
+	{
+		if (input[k] == '\1')
+			input[k] = ' ';
+		k++;
 	}
 	ft_putstr_fd(&input[i], 1);
 	if (!has_n_flag(input))

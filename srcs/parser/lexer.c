@@ -52,23 +52,26 @@ static void	lex_convert(char **split, t_token *token, t_data *data)
 	token[i].value = NULL;
 }
 
-static void	quote_clean(char **split)
+static int	handle_special(char *str, char *res, int *i, int *j)
 {
-	int	i;
-	int	j;
-
-	i = 0;
-	while (split[i])
+	if (str[*i] == '\t')
 	{
-		j = 0;
-		while (split[i][j])
-		{
-			if (split[i][j] == '@')
-				split[i][j] = ' ';
-			j++;
-		}
-		i++;
+		res[(*j)++] = ' ';
+		return (1);
 	}
+	if (str[*i] == '<' || str[*i] == '>' || str[*i] == '|')
+	{
+		if (*j > 0 && res[*j - 1] != ' ')
+			res[(*j)++] = ' ';
+		res[(*j)++] = str[*i];
+		if ((str[*i] == '<' || str[*i] == '>')
+			&& str[*i + 1] == str[*i])
+			res[(*j)++] = str[++(*i)];
+		if (str[*i + 1] && str[*i + 1] != ' ')
+			res[(*j)++] = ' ';
+		return (1);
+	}
+	return (0);
 }
 
 static char	*preprocess_operators(char *str, int i, int j)
@@ -80,23 +83,7 @@ static char	*preprocess_operators(char *str, int i, int j)
 		return (NULL);
 	while (str[i])
 	{
-		if (str[i] == '\t')
-		{
-			result[j++] = ' ';
-			i++;
-			continue ;
-		}
-		if (str[i] == '<' || str[i] == '>' || str[i] == '|')
-		{
-			if (j > 0 && result[j - 1] != ' ')
-				result[j++] = ' ';
-			result[j++] = str[i];
-			if ((str[i] == '<' || str[i] == '>') && str[i + 1] == str[i])
-				result[j++] = str[++i];
-			if (str[i + 1] && str[i + 1] != ' ')
-				result[j++] = ' ';
-		}
-		else
+		if (!handle_special(str, result, &i, &j))
 			result[j++] = str[i];
 		i++;
 	}
@@ -120,7 +107,6 @@ t_token	*lexer(char *str, t_data *data)
 	free(processed);
 	if (!split)
 		return (NULL);
-	quote_clean(split);
 	token = malloc((split_len(split) + 1) * sizeof(t_token));
 	if (!token)
 	{

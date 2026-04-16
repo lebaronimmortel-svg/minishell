@@ -22,6 +22,8 @@ void	free_exec_failed(t_exec *exec)
 	if (exec->pid)
 		free(exec->pid);
 	exec->pid = NULL;
+	exec->data = NULL;
+	exec->split = NULL;
 }
 
 void	free_exec_cmd(t_exec *exec)

@@ -65,40 +65,11 @@ int	handle_heredoc(char *delimiter, char **envp, int expand, int len)
 
 int	first_part_apply_redir(char type, t_exec *exec, int i, int fd)
 {
+	(void)fd;
 	if (type == 's')
-	{
-		if (exec->redir[i].fd == -2)
-			return (1);
-		else if (exec->redir[i].fd >= 0)
-		{
-			fd = exec->redir[i].fd;
-			exec->redir[i].fd = -1;
-		}
-		else
-		{
-			fd = open(exec->redir[i].file, O_RDONLY);
-			if (fd < 0)
-			{
-				perror(exec->redir[i].file);
-				return (1);
-			}
-		}
-		dup2(fd, STDIN_FILENO);
-		close(fd);
-		return (2);
-	}
-	else if (type == 'r')
-	{
-		fd = open(exec->redir[i].file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd < 0)
-		{
-			perror(exec->redir[i].file);
-			return (1);
-		}
-		dup2(fd, STDOUT_FILENO);
-		close(fd);
-		return (2);
-	}
+		return (handle_input_redir(exec, i));
+	if (type == 'r')
+		return (handle_output_redir(exec, i));
 	return (0);
 }
 

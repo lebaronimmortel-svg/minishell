@@ -58,13 +58,23 @@ void	export_single(t_data *data)
 	print_split(data->env_bis);
 }
 
-void	ft_export(char *input, t_data *data)
+void	ft_export(char *input, t_data *data, int j, int i)
 {
 	char	**split;
 	int		len;
-	int		i;
 
 	split = ft_split(input, ' ');
+	while (split && split[i])
+	{
+		j = 0;
+		while (split[i][j])
+		{
+			if (split[i][j] == '\1')
+				split[i][j] = ' ';
+			j++;
+		}
+		i++;
+	}
 	len = my_memlen(split);
 	if (len < 2)
 	{
@@ -75,5 +85,4 @@ void	ft_export(char *input, t_data *data)
 	while (split[i])
 		add_var(split[i++], data);
 	free_split(split, 0);
-	return ;
 }

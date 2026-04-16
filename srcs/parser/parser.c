@@ -66,7 +66,7 @@ static void	fill_space(char *str, int *i, char c)
 	while (str[*i] != c)
 	{
 		if (str[*i] == ' ')
-			str[*i] = '@';
+			str[*i] = '\1';
 		(*i)++;
 	}
 	(*i)++;

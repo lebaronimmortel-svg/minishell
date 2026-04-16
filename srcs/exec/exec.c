@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-static int	exec_init(t_exec *exec)
+static int	exec_init(t_exec *exec, int i, int j)
 {
 	size_t	len;
 
@@ -27,6 +27,17 @@ static int	exec_init(t_exec *exec)
 	exec->all_path = ft_split(exec->path, ':');
 	if (!exec->command || !exec->all_path || !exec->command[0])
 		return (1);
+	while (exec->command && exec->command[i])
+	{
+		j = 0;
+		while (exec->command[i][j])
+		{
+			if (exec->command[i][j] == '\1')
+				exec->command[i][j] = ' ';
+			j++;
+		}
+		i++;
+	}
 	return (0);
 }
 
@@ -73,10 +84,10 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 	exec->input = split[*i];
 	if (is_built_in(exec->input))
 	{
-		do_built_in_part(exec, data, split, i, ctx);
+		do_built_in_part(split, i, ctx);
 		return (1);
 	}
-	if (exec_init(exec))
+	if (exec_init(exec, 0, 0))
 	{
 		free_redir(exec);
 		free_exec_cmd(exec);
@@ -104,7 +115,7 @@ int	exec_main(char **envp, char **split, int i, t_data *data)
 	ctx.cmd_index = 0;
 	ctx.cmd_count = cmd_count;
 	process_exec_loop(split, &i, &ctx);
-	exit_code = end_exec(&exec, cmd_count, data);
+	exit_code = end_exec(&ctx, 0, 0);
 	free_redir(&exec);
 	return (exit_code);
 }
