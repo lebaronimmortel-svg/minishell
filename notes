@@ -28,6 +28,8 @@
 
 # Parsing :
 
+executable ls should not execute it but the real one
+
 -BASH :	touch test
 		chmod 000 test
 		./test 
