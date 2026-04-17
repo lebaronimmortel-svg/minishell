@@ -48,11 +48,6 @@ result :	./test: No such file or directory
 -MINISHELL :
 
 
--env -i BASH : clear -> TERM environment variable not set.
--env -i MINISHELL : clear -> clear: command not found
--ADD basic env path if getenv NULL : PWD ; PATH ;
-
-
 
 ___________________________________________________________________
 
@@ -81,7 +76,6 @@ ___________________________________________________________________
 						n'affiche pas a
 - Ctrl-C devrait exit heredoc
 - Ctrl-D devrait afficher heredoc :warning: here-document at line 2 delimited by end-of-file (wanted `named of delimiter')
-
 
 
 

@@ -20,6 +20,8 @@ static int	exec_init(t_exec *exec, int i, int j)
 	exec->command = NULL;
 	exec->w_path = NULL;
 	exec->path = getenv("PATH");
+	if (!exec->path)
+		exec->path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 	len = ft_strlen(exec->input);
 	if (len > 0 && exec->input[len - 1] == '\n')
 		exec->input[len - 1] = '\0';
