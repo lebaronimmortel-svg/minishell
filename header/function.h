@@ -29,6 +29,7 @@ int		is_ok_quote(char *str, int index);
 
 void	exec_built_in(char *input, t_data *data, char **split);
 void	echo(char *input, int k);
+int     cd(char *input, t_data *data);
 
 void	unset(char **split, t_data *data);
 

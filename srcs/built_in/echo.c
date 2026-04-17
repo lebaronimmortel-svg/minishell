@@ -28,22 +28,29 @@ static int	assign_flag(int flag, char *input, int *i)
 static int	has_n_flag(char *input)
 {
 	int	i;
+	int flag2;
 	int	flag;
 
 	i = 0;
 	flag = 1;
+	flag2 = 0;
 	while (1)
 	{
 		while (input[i] && !(input[i] == '-' && input[i - 1] == ' '))
 		{
 			if (i && input[i] != ' ' && input[i] != '-' && input[i - 1] == ' ')
+			{
+				flag2 = 1;
 				break ;
+			}
 			i++;
 		}
-		if (!input[i])
+		if (!input[i] || flag2)
 			break ;
 		i++;
 		flag = assign_flag(flag, input, &i);
+		if (flag == 2)
+			break ;
 	}
 	if (flag == 2)
 		return (1);

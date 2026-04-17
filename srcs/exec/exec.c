@@ -12,7 +12,21 @@
 
 #include "../../header/header.h"
 
-static int	exec_init(t_exec *exec, int i, int j)
+static void	fill_input(char **command, int *i)
+{
+	int	j;
+
+	j = 0;
+	while (command[*i][j])
+	{
+		if (command[*i][j] == '\1')
+			command[*i][j] = ' ';
+		j++;
+	}
+	(*i)++;
+}
+
+static int	exec_init(t_exec *exec, int i)
 {
 	size_t	len;
 
@@ -21,7 +35,8 @@ static int	exec_init(t_exec *exec, int i, int j)
 	exec->w_path = NULL;
 	exec->path = getenv("PATH");
 	if (!exec->path)
-		exec->path = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+		exec->path
+			= "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 	len = ft_strlen(exec->input);
 	if (len > 0 && exec->input[len - 1] == '\n')
 		exec->input[len - 1] = '\0';
@@ -30,16 +45,7 @@ static int	exec_init(t_exec *exec, int i, int j)
 	if (!exec->command || !exec->all_path || !exec->command[0])
 		return (1);
 	while (exec->command && exec->command[i])
-	{
-		j = 0;
-		while (exec->command[i][j])
-		{
-			if (exec->command[i][j] == '\1')
-				exec->command[i][j] = ' ';
-			j++;
-		}
-		i++;
-	}
+		fill_input(exec->command, &i);
 	return (0);
 }
 
@@ -89,7 +95,7 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 		do_built_in_part(split, i, ctx);
 		return (1);
 	}
-	if (exec_init(exec, 0, 0))
+	if (exec_init(exec, 0))
 	{
 		free_redir(exec);
 		free_exec_cmd(exec);
