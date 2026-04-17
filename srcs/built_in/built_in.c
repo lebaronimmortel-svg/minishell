@@ -38,28 +38,32 @@ static char	*get_user(t_data *data)
 	return (NULL);
 }
 
-static int	cd(char *input, t_data *data)
+int	get_home_path(char *path, t_data *data)
+{
+	char	*user;
+
+	user = get_user(data);
+	if (!user)
+		return (0);
+	path = ft_strjoin("cd /home/", user);
+	if (!path)
+		return (0);
+	free(user);
+	cd(path, data);
+	free(path);
+	return (1);
+}
+
+int	cd(char *input, t_data *data)
 {
 	char	*path;
-	char	*user;
 	char	buffer[1024];
 
 	(void)data;
 	path = &input[3];
 	unmask_spaces(path);
 	if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
-	{
-		user = get_user(data);
-		if (!user)
-			return (0);
-		path = ft_strjoin("cd /home/", user);
-		if (!path)
-			return (0);
-		free(user);
-		cd(path, data);
-		free(path);
-		return (1);
-	}
+		return (get_home_path(path, data));
 	if (!getcwd(buffer, sizeof(buffer)))
 		return (0);
 	if (chdir(path))
