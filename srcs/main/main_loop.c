@@ -52,8 +52,7 @@ static void	free_lexer(t_token *lex)
 	free(lex);
 }
 
-static void	execute_prompt(char **split, t_token *lex,
-	t_data *data)
+static int	execute_prompt(char **split, t_token *lex, t_data *data)
 {
 	if (parser(lex))
 	{
@@ -63,22 +62,29 @@ static void	execute_prompt(char **split, t_token *lex,
 		free_split(split, 0);
 	}
 	else
-		printf("parsing error\n");
+	{
+		free_lexer(lex);
+		data->error_code = 2;
+		ft_putstr_fd("minishell: syntax error\n", 2);
+	}
+	return (data->error_code);
 }
 
 void	main_loop(char **split, t_token *lex, t_data *data)
 {
 	char	*str;
+	int		status;
 
+	status = 0;
 	while (1)
 	{
 		str = readline("$> ");
 		if (str == NULL)
-			exit_cleanly(0, data, split);
+			exit_cleanly(status, data, split);
 		add_history(str);
 		lex = lexer(str, data);
 		free(str);
 		if (lex)
-			execute_prompt(split, lex, data);
+			status = execute_prompt(split, lex, data);
 	}
 }
