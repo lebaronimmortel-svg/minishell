@@ -14,22 +14,22 @@
 
 void	free_data_split(t_exec *exec)
 {
-	int	i;
-
-	i = 0;
-	if (!exec->data)
-		return ;
-	while (exec->split && exec->split[i])
-	{
-		free(exec->split[i]);
-		exec->split[i] = NULL;
-		i++;
-	}
-	if (exec->data->env_bis)
-	{
-		free_split(exec->data->env_bis, 0);
-		exec->data->env_bis = NULL;
-	}
+    int i = 0;
+    if (!exec->data)
+        return ;
+    while (exec->split && exec->split[i])
+    {
+        free(exec->split[i]);
+        exec->split[i] = NULL;
+        i++;
+    }
+    free(exec->split);
+    exec->split = NULL;
+    if (exec->data->env_bis)
+    {
+        free_split(exec->data->env_bis, 0);
+        exec->data->env_bis = NULL;
+    }
 }
 
 void	free_redir(t_exec *exec)

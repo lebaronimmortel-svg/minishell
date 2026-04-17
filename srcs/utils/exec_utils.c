@@ -33,7 +33,7 @@ static int	find_env(t_exec *exec, int i)
 	return (1);
 }
 
-static int	exec_command(t_exec *exec)
+static void	exec_command(t_exec *exec)
 {
 	if (!exec->command || !exec->command[0] || exec->command[0][0] == '\0')
 		exit(0);
@@ -51,11 +51,13 @@ static int	exec_command(t_exec *exec)
 		execve(exec->w_path, exec->command, exec->env);
 		perror(exec->command[0]);
 		free_split_exec(exec);
+		if (exec->data)
+			free(exec->data);
 		if (exec->pid)
 			free(exec->pid);
 		exit(126);
 	}
-	exit(127);
+	free_exec_failed(exec, 127);
 }
 
 static void	end_fork_created(t_exec *exec, int cmd_index, int cmd_count)
