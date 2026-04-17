@@ -14,12 +14,12 @@
 
 char	*my_get_pid(void)
 {
-	char **split;
-	char *result;
-	int fd;
-	char buf[1024];
-	int bytes;
-	
+	char	**split;
+	char	*result;
+	int		fd;
+	char	buf[1024];
+	int		bytes;
+
 	fd = open("/proc/self/stat", O_RDONLY);
 	bytes = read(fd, buf, sizeof(buf));
 	close(fd);

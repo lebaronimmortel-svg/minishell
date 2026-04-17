@@ -43,8 +43,7 @@ static int	exec_command(t_exec *exec)
 			execve_error(exec->command[0], ": No such file or directory");
 		else
 			execve_error(exec->command[0], ": command not found");
-		free_exec_failed(exec);
-		exit(127);
+		free_exec_failed(exec, 127);
 	}
 	if (exec->w_path)
 	{
@@ -84,7 +83,10 @@ void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 			dup2(exec->fd[cmd_index][1], STDOUT_FILENO);
 		close_fd(exec, cmd_count);
 		if (apply_redirs(exec) != 0)
-			exit(1);
+		{
+			free_redir(exec);
+			free_exec_failed(exec, 1);
+		}
 		exec_command(exec);
 		free_split_exec(exec);
 		exit(1);
