@@ -77,7 +77,7 @@ void	free_split_exec(t_exec *exec);
 void	free_redir(t_exec *exec);
 
 /* =========================== free_exec_utils.c ========================= */
-void	free_exec_failed(t_exec *exec);
+void	free_exec_failed(t_exec *exec, int exit_code);
 void	free_exec_cmd(t_exec *exec);
 void	fork_and_free_exec(t_exec *exec, int *cmd_index, int cmd_count);
 

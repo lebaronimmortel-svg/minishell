@@ -33,12 +33,12 @@ static char	convert_type(char *str)
 
 static char	*expand_double(char *str)
 {
-	int i;
-	char *tmp;
-	char *pid;
-	char *result;
-	char *tmp2;
-	
+	int		i;
+	char	*tmp;
+	char	*pid;
+	char	*result;
+	char	*tmp2;
+
 	i = 1;
 	while (str[i])
 	{

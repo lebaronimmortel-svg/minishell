@@ -24,6 +24,10 @@
 
 # Parsing :
 
+COMMAND : > file
+-BASH : create file
+-MINISHELL : nothing
+
 executable ls should not execute it but the real one
 
 -BASH :	touch test
@@ -58,10 +62,6 @@ ___________________________________________________________________
 
 # Built_in : 
 
--ECHO :
--BASH: echo $$$USER -> 2050647lukrodri
--MINISHELL : echo $$$USER -> $
-
 -> j'ai rajouté la fonction expand_double dans lex_convert.
 Elle remplace $$ par <PID>
 Si elle pose problème, la commenter et non la supprimer.
@@ -95,7 +95,7 @@ ___________________________________________________________________
 						duplique le '<' input de minishell
 						n'affiche pas a
 - Ctrl-C devrait exit heredoc
-- Ctrl-D devrait afficher heredoc :warning: here-document at line 2 delimited by end-of-file (wanted `EOF')
+- Ctrl-D devrait afficher heredoc :warning: here-document at line 2 delimited by end-of-file (wanted `named of delimiter')
 
 
 
@@ -112,11 +112,5 @@ ___________________________________________________________________
 			exit status(2)
 
 -BUILTIN : exit status(2): Misuse of shell builtins
-
--BASH : prin"tf "$USER -> printf lukrodri: command not found
-		exit status(127)
--MINISHELL : prin"tf "$USER -> lukrodri
-		exit status(0)
-
 
 # + leaks + protections

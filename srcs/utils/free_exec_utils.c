@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-void	free_exec_failed(t_exec *exec)
+void	free_exec_failed(t_exec *exec, int exit_code)
 {
 	free_split_exec(exec);
 	if (exec->split)
@@ -24,6 +24,7 @@ void	free_exec_failed(t_exec *exec)
 	exec->pid = NULL;
 	exec->data = NULL;
 	exec->split = NULL;
+	exit(exit_code);
 }
 
 void	free_exec_cmd(t_exec *exec)
