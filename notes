@@ -24,6 +24,10 @@
 
 # Parsing :
 
+COMMAND : ..
+-BASH : ..: command not found
+-MINISHELL : ..: Permission denied
+
 COMMAND : > file
 -BASH : create file
 -MINISHELL : nothing
