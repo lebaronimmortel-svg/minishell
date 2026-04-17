@@ -108,6 +108,8 @@ int	exec_main(char **split, int i, t_data *data)
 	exec.data = data;
 	exec.split = split;
 	cmd_count = count_cmds(split, 0, 0);
+	if (cmd_count == 0)
+		return (0);
 	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)
 		return (1);
 	ctx.exec = &exec;
