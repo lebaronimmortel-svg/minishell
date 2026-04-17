@@ -24,6 +24,10 @@
 
 # Parsing :
 
+COMMAND : $
+-BASH : $: command not found
+-MINISHELL : nothing
+
 COMMAND : > file
 -BASH : create file
 -MINISHELL : nothing
