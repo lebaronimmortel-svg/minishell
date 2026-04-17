@@ -24,10 +24,6 @@
 
 # Parsing :
 
-COMMAND : $
--BASH : $: command not found
--MINISHELL : nothing
-
 COMMAND : > file
 -BASH : create file
 -MINISHELL : nothing
@@ -50,11 +46,6 @@ result :	./test: No such file or directory
 -MINISHELL :
 
 
--BASH : printf "$USER$USER'' = ' $L ANG '" '' -> lukrodrilukrodri'' = '  ANG '
--MINISHELL :
-		printf "$USER$USER'' = ' $L ANG '" '' -> '' = ' $L ANG '
-
-
 env -i :
 -BASH : clear -> TERM environment variable not set.
 -MINISHELL : clear -> clear: command not found
@@ -69,13 +60,6 @@ ___________________________________________________________________
 -> j'ai rajouté la fonction expand_double dans lex_convert.
 Elle remplace $$ par <PID>
 Si elle pose problème, la commenter et non la supprimer.
-
-- MINISHELL :
-$> echo $$ $$$ $$$USER
-552924 552924 552924alexfuen
-- BASH :
-$> echo $$ $$$ $$$USER
-552951 552951$ 552951alexfuen
 
 ___________________________________________________________________
 
