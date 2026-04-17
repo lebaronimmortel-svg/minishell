@@ -32,8 +32,6 @@ COMMAND : > file
 -BASH : create file
 -MINISHELL : nothing
 
-handle if path is directory
-
 -BASH :	touch test
 		chmod 000 test
 		./test 
@@ -50,10 +48,9 @@ result :	./test: No such file or directory
 -MINISHELL :
 
 
-env -i :
--BASH : clear -> TERM environment variable not set.
--MINISHELL : clear -> clear: command not found
--ADD env if getenv NULL
+-env -i BASH : clear -> TERM environment variable not set.
+-env -i MINISHELL : clear -> clear: command not found
+-ADD basic env path if getenv NULL : PWD ; PATH ;
 
 
 

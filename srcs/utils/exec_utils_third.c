@@ -12,6 +12,19 @@
 
 #include "../../header/header.h"
 
+void	check_dir(t_exec *exec)
+{
+	struct stat	info;
+
+	stat(exec->command[0], &info);
+	if (S_ISDIR(info.st_mode))
+	{
+		ft_putstr_fd(exec->command[0], 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		free_exec_failed(exec, 126);
+	}
+}
+
 int	find_env_loop(t_exec *exec, int i)
 {
 	char	*tmp;

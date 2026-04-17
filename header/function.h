@@ -44,19 +44,20 @@ int		exec_main_sequel(char **split, int *i, t_exec_ctx *ctx);
 
 void	execve_error(char *str, char *command);
 
+void	fork_created(t_exec *exec, int cmd_index, int cmd_count);
+int		end_exec(t_exec_ctx *ctx, int exit_code, int status);
+
 int		is_pipe(char *s);
 int		skip_redirection(char **split, int i);
 int		should_skip_empty(char **split, int i);
 int		is_redir_argument(char **split, int i);
 int		count_cmds(char **split, int i, int count);
 
+void	check_dir(t_exec *exec);
 int		find_env_loop(t_exec *exec, int i);
 void	do_built_in_part( char **split, int *i, t_exec_ctx *ctx);
 int		should_skip_token(char **split, int *i);
 void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx);
-int		end_exec(t_exec_ctx *ctx, int exit_code, int status);
-
-void	fork_created(t_exec *exec, int cmd_index, int cmd_count);
 
 void	free_data_split(t_exec *exec);
 void	free_split_exec(t_exec *exec);
