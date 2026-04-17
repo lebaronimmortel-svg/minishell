@@ -32,7 +32,7 @@ COMMAND : > file
 -BASH : create file
 -MINISHELL : nothing
 
-executable ls should not execute it but the real one
+handle if path is directory
 
 -BASH :	touch test
 		chmod 000 test
@@ -60,10 +60,6 @@ env -i :
 ___________________________________________________________________
 
 # Built_in : 
-
--> j'ai rajouté la fonction expand_double dans lex_convert.
-Elle remplace $$ par <PID>
-Si elle pose problème, la commenter et non la supprimer.
 
 ___________________________________________________________________
 
