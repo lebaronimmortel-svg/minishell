@@ -12,9 +12,19 @@
 
 #include "../../header/header.h"
 
+
+static int	is_alpha(char c)
+{
+	if (c >= 'a' && c <= 'z')
+		return (1);
+	if (c >= 'A' && c <= 'Z')
+		return (1);
+	return (0);
+}
+
 static int	assign_flag(int flag, char *input, int *i)
 {
-	while (input[*i] && ft_isalpha((int)input[*i]))
+	while (input[*i] && is_alphanum((int)input[*i]))
 	{
 		if (input[*i] == 'n' && flag)
 			flag = 2;
@@ -58,6 +68,20 @@ static int	has_n_flag(char *input)
 		return (0);
 }
 
+static int	is_alpha_flag(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] && str[i] != ' ')
+	{
+		if (!(is_alpha(str[i])))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 void	echo(char *input, int k)
 {
 	int	i;
@@ -76,7 +100,7 @@ void	echo(char *input, int k)
 			return ;
 		if (flag)
 			break ;
-		if (input[i] != '-')
+		if (input[i] != '-' || !is_alpha_flag(&input[i + 1]))
 			break ;
 		else
 			flag = 1;
