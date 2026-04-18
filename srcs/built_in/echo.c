@@ -12,7 +12,6 @@
 
 #include "../../header/header.h"
 
-
 static int	is_alpha(char c)
 {
 	if (c >= 'a' && c <= 'z')
@@ -38,8 +37,8 @@ static int	assign_flag(int flag, char *input, int *i)
 static int	has_n_flag(char *input)
 {
 	int	i;
-	int flag2;
 	int	flag;
+	int	flag2;
 
 	i = 0;
 	flag = 1;
@@ -70,7 +69,7 @@ static int	has_n_flag(char *input)
 
 static int	is_alpha_flag(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] && str[i] != ' ')
@@ -84,8 +83,8 @@ static int	is_alpha_flag(char *str)
 
 static int	has_more_n_flag(char *str)
 {
-	int i;
-	int flag;
+	int	i;
+	int	flag;
 
 	i = 0;
 	flag = 0;
