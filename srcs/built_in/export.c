@@ -58,10 +58,85 @@ void	export_single(t_data *data)
 	print_split(data->env_bis);
 }
 
+void	export_plus(char **split, t_data *data)
+{
+	int 	i;
+	int		flag;
+	char 	*tmp;
+	char	*tmp2;
+	char	*tmp3;
+
+	flag = 0;
+	i = 0;
+	while (data->env_bis[i])
+	{
+		if (!ft_strncmp(split[0], data->env_bis[i], ft_strlen(split[0])) && (data->env_bis[i][ft_strlen(split[0])] == '=' || data->env_bis[i][ft_strlen(split[0])] == '\0'))
+		{
+			tmp = data->env_bis[i];
+			if (ft_strchr(data->env_bis[i], '='))
+			{
+				data->env_bis[i] = ft_strjoin(data->env_bis[i], &split[1][1]);
+				
+			}
+			else
+			{
+				if (my_memlen(split) >= 2)
+				{
+					tmp = ft_strjoin("export ", split[0]);
+					tmp2 = ft_strjoin("=", &split[1][1]);
+					tmp3 = ft_strjoin(tmp, tmp2);
+					ft_export(tmp3, data, 0, 0);
+					free(tmp);
+					free(tmp2);
+					free(tmp3);
+				}
+				else if (*split[0] == '=') 
+					return ;
+				else
+				{
+					tmp = ft_strjoin("export ", split[0]);
+					tmp2 = ft_strjoin(tmp, "=");
+					ft_export(tmp2, data, 0, 0);
+					free(tmp);
+					free(tmp2);
+				}
+			}
+			flag = 1;
+			break ;
+		}
+		i++;
+	}
+	if (!flag)
+	{
+		if (my_memlen(split) >= 2)
+		{
+			tmp = ft_strjoin("export ", split[0]);
+			tmp2 = ft_strjoin("=", &split[1][1]);
+			tmp3 = ft_strjoin(tmp, tmp2);
+			ft_export(tmp3, data, 0, 0);
+			free(tmp);
+			free(tmp2);
+			free(tmp3);
+		}
+		else if (*split[0] == '=')
+			return ;
+		else
+		{
+			tmp = ft_strjoin("export ", split[0]);
+			tmp2 = ft_strjoin(tmp, "=");
+			ft_export(tmp2, data, 0, 0);
+			free(tmp);
+			free(tmp2);
+		}
+	}
+}
+
 void	ft_export(char *input, t_data *data, int j, int i)
 {
 	char	**split;
+	char 	**split_plus;
 	int		len;
+	char	*chr;
 
 	split = ft_split(input, ' ');
 	while (split && split[i])
@@ -72,6 +147,21 @@ void	ft_export(char *input, t_data *data, int j, int i)
 			if (split[i][j] == '\1')
 				split[i][j] = ' ';
 			j++;
+		}
+		i++;
+	}
+	i = 0;
+	while (split && split[i])
+	{
+		chr = ft_strchr(split[i], '+');
+		if (chr && chr[1] && chr[1] == '=')
+		{
+			split_plus = ft_split(split[i], '+');
+			chr = 0;
+			export_plus(split_plus, data);
+			free_split(split, 0);
+			free(chr);
+			return ;
 		}
 		i++;
 	}

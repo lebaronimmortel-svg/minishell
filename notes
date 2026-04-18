@@ -48,25 +48,12 @@ result :	./test: No such file or directory
 -MINISHELL :
 
 
-
-___________________________________________________________________
-
 # Built_in : 
-
-___________________________________________________________________
-
-
--ECHO : echo -nnnnnnnnnnnnnn1 salut  nvobwriov wr gow v '$USER>eef>$USER'
--BASH: -nnnnnnnnnnnnnn1 salut nvobwriov wr gow v $USER>eef>$USER
--MINISHELL : salut nvobwriov wr gow v $USER > eef > $USER
-___________________________________________________________________
 
 
 - Rajouter les exit_code aux built_in (comme fait pour pwd)
 
 -EXPORT : 
-		  - export a = 0
-
 		  - ajouter le +=
 
 # Signaux :
@@ -94,43 +81,7 @@ ___________________________________________________________________
 
 # + leaks + protections
 
-_________________________________________________________________
 
-
-Test [echo $EMPYT abc   $EMPTY][KO]
-Output mismatch:
-  Minishell: [ abc 
-]
-  Bash: [abc
-]
-
-Test [echo $EMPYT    abc][KO]
-Output mismatch:
-  Minishell: [ abc
-]
-  Bash: [abc
-]
-
-Test [echo $EMPYT abc][KO]
-Output mismatch:
-  Minishell: [ abc
-]
-  Bash: [abc
-]
-
-Test [echo $EMPYT abc $EMPTY][KO]
-Output mismatch:
-  Minishell: [ abc 
-]
-  Bash: [abc
-]
-
-__________________________________________________________________
-
-Test [ echo -nnnnnnnnnnnnnn -nnn -n test ][KO]
-Output mismatch:
-  Minishell: [-nnn -n test]
-  Bash: [test]
 
 
 
