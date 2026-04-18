@@ -93,3 +93,42 @@ ___________________________________________________________________
 -BUILTIN : exit status(2): Misuse of shell builtins
 
 # + leaks + protections
+
+_________________________________________________________________
+
+
+Test [echo $EMPYT abc   $EMPTY][KO]
+Output mismatch:
+  Minishell: [ abc 
+]
+  Bash: [abc
+]
+
+Test [echo $EMPYT    abc][KO]
+Output mismatch:
+  Minishell: [ abc
+]
+  Bash: [abc
+]
+
+Test [echo $EMPYT abc][KO]
+Output mismatch:
+  Minishell: [ abc
+]
+  Bash: [abc
+]
+
+Test [echo $EMPYT abc $EMPTY][KO]
+Output mismatch:
+  Minishell: [ abc 
+]
+  Bash: [abc
+]
+
+
+
+
+
+
+
+
