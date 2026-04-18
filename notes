@@ -125,6 +125,14 @@ Output mismatch:
   Bash: [abc
 ]
 
+__________________________________________________________________
+
+Test [ echo -nnnnnnnnnnnnnn -nnn -n test ][KO]
+Output mismatch:
+  Minishell: [-nnn -n test]
+  Bash: [test]
+
+
 
 
 
