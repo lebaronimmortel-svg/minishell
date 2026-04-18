@@ -82,6 +82,31 @@ static int	is_alpha_flag(char *str)
 	return (1);
 }
 
+static int	has_more_n_flag(char *str)
+{
+	int i;
+	int flag;
+
+	i = 0;
+	flag = 0;
+	while (str[i])
+	{
+		while (str[i] == ' ')
+			i++;
+		if (!str[i] || str[i] != '-')
+			break ;
+		i++;
+		while (str[i] && str[i] != ' ')
+		{
+			if (str[i] != 'n')
+				return (0);
+			i++;
+		}
+		flag = 1;
+	}
+	return (flag);
+}
+
 void	echo(char *input, int k)
 {
 	int	i;
@@ -98,7 +123,7 @@ void	echo(char *input, int k)
 		i++;
 		if (!input[i])
 			return ;
-		if (flag)
+		if (flag && !has_more_n_flag(&input[i]))
 			break ;
 		if (input[i] != '-' || !is_alpha_flag(&input[i + 1]))
 			break ;
