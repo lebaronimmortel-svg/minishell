@@ -61,6 +61,7 @@ void	export_single(t_data *data)
 void	export_plus(char **split, t_data *data)
 {
 	int 	i;
+	int		j;
 	int		flag;
 	char 	*tmp;
 	char	*tmp2;
@@ -76,7 +77,13 @@ void	export_plus(char **split, t_data *data)
 			if (ft_strchr(data->env_bis[i], '='))
 			{
 				data->env_bis[i] = ft_strjoin(data->env_bis[i], &split[1][1]);
-				
+				j = 0;
+				while (data->env[j])
+				{
+					if (!ft_strncmp(split[0], data->env[j], ft_strlen(split[0])) && (data->env[j][ft_strlen(split[0])] == '='))
+						data->env[j] = ft_strjoin(data->env[j], &split[1][1]);
+					j++;
+				}
 			}
 			else
 			{
