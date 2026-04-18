@@ -34,7 +34,7 @@ int		is_ok_quote(char *str, int index);
 /* =============================== built_in.c ============================ */
 void	exec_built_in(char *input, t_data *data, char **split);
 void	echo(char *input, int k);
-int     cd(char *input, t_data *data);
+int		cd(char *input, t_data *data);
 
 /* ============================ built_in_bis.c =========================== */
 void	unset(char **split, t_data *data);
