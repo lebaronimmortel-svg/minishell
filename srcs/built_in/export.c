@@ -171,7 +171,7 @@ void	ft_export(char *input, t_data *data, int j, int i)
 			chr = 0;
 			export_plus(split_plus, data);
 			free_split(split, 0);
-			free_split(split_plus, 0); 
+			free_split(split_plus, 0);
 			free(chr);
 			return ;
 		}

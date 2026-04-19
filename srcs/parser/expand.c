@@ -85,7 +85,10 @@ static void	var_search(char *buffer, char **envp)
 		i++;
 	}
 	if (!flag)
-		buffer[0] = '\0';
+	{
+		buffer[0] = '\2';
+		buffer[1] = '\0';
+	}
 }
 
 char	*convert_var(char *str, int index, char **envp)
