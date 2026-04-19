@@ -81,18 +81,22 @@ static void	lex_convert(char **split, t_token *token, t_data *data)
 			token[i].value = change_var(token[i].value, data->env);
 		token[i].value = expand_code(token[i].value, data);
 		if (i == 0 || token[i - 1].type != 'h')
-			remove_quotes(token[i].value);
-
-		// Résultat : 2 espaces au début, 1 requis 
+			remove_quotes(token[i].value); 
 		
 		if (token[i].value[0] == '\0')
 		{
+			// quand j'ai une chaine vide, je la remplace par un espace.
+			// mais elle n'est pas consideree comme un mot, ce qui signifie
+			// que je ne mets pas d'espace après.
+			// mot - vide - mot -> mot_espace-espace-mot_espace
+			// mot - vide - vide - mot ->mot_espace-espace-espace-mot_espace
+
+			//if (split[j] blablabla) -> je ne transforme vide en espace que si ...
+			//{
 			token[i].value[0] = ' ';
 			token[i].value[1] = '\0';
+			//}
 		}
-		
-		// Sinon 0 espaces au début, 1 requis
-
 		k = 0;
 		while (token[i].value[k])
 		{

@@ -81,6 +81,87 @@ result :	./test: No such file or directory
 
 # + leaks + protections
 
+_________________________________________
+
+# TOUS LES OUTPUT MISMATCH DU TESTER NDA-CUHN :
+__________________________________________
+
+
+Test [ echo str1  "" str3"  not finished yet ........ done." ][KO]
+
+Output mismatch:
+
+  Minishell: [str1   str3  not finished yet ........ done.
+]
+  Bash: [str1  str3  not finished yet ........ done.
+]
+
+_____________________________________________
+
+
+Test [printf 'A' >trash/$WHOAMI.l.test] [echo 'B' >trash/>>trash/$WHOAMI.l.test] [echo 'C' >trash/>trash/$WHOAMI.l.test] [cat trash/$WHOAMI.l.test -e] [cat trash/>trash/$WHOAMI.l.test -e][KO]
+
+Output mismatch:
+
+  Minishell: [B
+C
+A]
+  Bash: [A]
+
+_____________________________________________
+
+Test [unset PATH] [export PATH='/home/alexfuen/cadet/minish/MINISHELL/minishell_tester'] [ls][KO]
+
+Output mismatch:
+
+  Minishell: [core.vala
+dlopen.vapi
+fake_readline.so
+fake_readline.vala
+file_out
+LICENSE
+ls
+main.vala
+Makefile
+minishell_tester
+readline.vapi
+README.md
+tester
+trash
+x
+]
+
+  Bash: [OOOOOOOH im not a ls]
+
+_____________________________________________
+
+Test [unset PATH] [ls][KO]
+
+Output mismatch:
+
+  Minishell: [core.vala
+dlopen.vapi
+fake_readline.so
+fake_readline.vala
+file_out
+LICENSE
+ls
+main.vala
+Makefile
+minishell_tester
+readline.vapi
+README.md
+tester
+trash
+x
+]
+
+  Bash: [OOOOOOOH im not a ls]
+
+
+
+
+
 
 
 
