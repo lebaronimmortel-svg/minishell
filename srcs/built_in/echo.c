@@ -127,7 +127,10 @@ void	echo(char *input, int k)
 		while (input[i] && input[i] == ' ')
 			i++;
 		if (!input[i])
-			return ;	
+		{
+			ft_putstr_fd("\n", 1);
+			return ;
+		}
 		if (flag && !has_more_n_flag(&input[i]))
 			break ;
 		if (input[i] != '-' || !is_alpha_flag(&input[i + 1]))
