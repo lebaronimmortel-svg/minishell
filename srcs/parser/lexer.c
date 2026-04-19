@@ -82,11 +82,17 @@ static void	lex_convert(char **split, t_token *token, t_data *data)
 		token[i].value = expand_code(token[i].value, data);
 		if (i == 0 || token[i - 1].type != 'h')
 			remove_quotes(token[i].value);
+
+		// Résultat : 2 espaces au début, 1 requis 
+		
 		if (token[i].value[0] == '\0')
 		{
 			token[i].value[0] = ' ';
 			token[i].value[1] = '\0';
 		}
+		
+		// Sinon 0 espaces au début, 1 requis
+
 		k = 0;
 		while (token[i].value[k])
 		{
