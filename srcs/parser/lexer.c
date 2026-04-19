@@ -66,7 +66,8 @@ static char	*expand_double(char *str)
 static void	lex_convert(char **split, t_token *token, t_data *data)
 {
 	int	i;
-	int	j;
+	int j;
+	int k;
 
 	i = 0;
 	j = 0;
@@ -81,7 +82,19 @@ static void	lex_convert(char **split, t_token *token, t_data *data)
 		token[i].value = expand_code(token[i].value, data);
 		if (i == 0 || token[i - 1].type != 'h')
 			remove_quotes(token[i].value);
-		if (token[i].value[0])
+		if (token[i].value[0] == '\0')
+		{
+			token[i].value[0] = ' ';
+			token[i].value[1] = '\0';
+		}
+		k = 0;
+		while (token[i].value[k])
+		{
+			if (token[i].value[k] == '\2')
+				move_one(&token[i].value[k]);
+			k++;
+		}
+		if (*(token[i].value))
 			i++;
 		else
 			free(token[i].value);
