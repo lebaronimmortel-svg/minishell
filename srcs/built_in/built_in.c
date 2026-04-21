@@ -44,14 +44,14 @@ int	get_home_path(char *path, t_data *data)
 
 	user = get_user(data);
 	if (!user)
-		return (0);
+		return (1);
 	path = ft_strjoin("cd /home/", user);
 	if (!path)
-		return (0);
+		return (1);
 	free(user);
 	cd(path, data);
 	free(path);
-	return (1);
+	return (0);
 }
 
 int	cd(char *input, t_data *data)
@@ -65,17 +65,17 @@ int	cd(char *input, t_data *data)
 	if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
 		return (get_home_path(path, data));
 	if (!getcwd(buffer, sizeof(buffer)))
-		return (0);
+		return (1);
 	if (chdir(path))
-		return (0);
+		return (1);
 	change_path(0, buffer, data);
 	if (!getcwd(buffer, sizeof(buffer)))
-		return (0);
+		return (1);
 	change_path(1, buffer, data);
-	return (1);
+	return (0);
 }
 
-static void	pwd(void)
+static int	pwd(void)
 {
 	char	buffer[1024];
 
@@ -83,12 +83,16 @@ static void	pwd(void)
 	{
 		ft_putstr_fd(buffer, 1);
 		write(1, "\n", 1);
+		return (0);
 	}
 	else
+	{
 		perror("getcwd");
+		return (1);
+	}
 }
 
-static void	env(char **envp)
+static int	env(char **envp)
 {
 	int	i;
 
@@ -99,6 +103,7 @@ static void	env(char **envp)
 		write(1, "\n", 1);
 		i++;
 	}
+	return (0);
 }
 
 static int	status_code(char *input, t_data *data)
@@ -113,21 +118,23 @@ static int	status_code(char *input, t_data *data)
 	return (ft_atoi(&input[i]));
 }
 
-void	exec_built_in(char *input, t_data *data, char **cmd_split)
+int	exec_built_in(char *input, t_data *data, char **cmd_split)
 {
 	char	**split;
+	int		status;
 
+	status = 0;
 	if (!ft_strncmp(input, "pwd", 3) && ft_strlen(input) == 3)
-		pwd();
+		status = pwd();
 	else if (!ft_strncmp(input, "unset ", 6))
 	{
 		split = ft_split(input, ' ');
 		split = quote_clean(split);
-		unset(&split[1], data);
+		status = unset(&split[1], data);
 		free_split(split, 0);
 	}
 	else if (!ft_strncmp(input, "env", 3) && ft_strlen(input) == 3)
-		env(data->env);
+		status = env(data->env);
 	else if ((!ft_strncmp(input, "exit", 4)
 			&& ft_strlen(input) == 4)
 		|| (!ft_strncmp(input, "exit ", 5)))
@@ -135,15 +142,16 @@ void	exec_built_in(char *input, t_data *data, char **cmd_split)
 	else if ((!ft_strncmp(input, "echo ", 5)))
 	{
 		split = ft_split(input, ' ');
-		echo(input, 0);
+		status = echo(input, 0);
 		free_split(split, 0);
 	}
 	else if ((!ft_strncmp(input, "export", 6)) && ft_strlen(input) == 6)
-		export_single(data);
+		status = export_single(data);
 	else if ((!ft_strncmp(input, "export ", 7)))
-		ft_export(input, data, 0, 0);
+		status = ft_export(input, data, 0, 0);
 	else if (!ft_strncmp(input, "cd ", 3)
 		|| (!ft_strncmp(input, "cd", 2)
 			&& ft_strlen(input) == 2))
-		cd(input, data);
+		status = cd(input, data);
+	return (status);
 }

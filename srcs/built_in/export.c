@@ -58,7 +58,7 @@ void	export_single(t_data *data)
 	print_split(data->env_bis);
 }
 
-void	export_plus(char **split, t_data *data)
+int	export_plus(char **split, t_data *data)
 {
 	int		i;
 	int		j;
@@ -66,9 +66,11 @@ void	export_plus(char **split, t_data *data)
 	char	*tmp;
 	char	*tmp2;
 	char	*tmp3;
+	int		status;
 
 	flag = 0;
 	i = 0;
+	status = 0;
 	while (data->env_bis[i])
 	{
 		if (!ft_strncmp(split[0], data->env_bis[i], ft_strlen(split[0]))
@@ -79,13 +81,18 @@ void	export_plus(char **split, t_data *data)
 			if (ft_strchr(data->env_bis[i], '='))
 			{
 				data->env_bis[i] = ft_strjoin(data->env_bis[i], &split[1][1]);
+				if (!data->env_bis[i])
+					return (1);
 				j = 0;
 				while (data->env[j])
 				{
 					if (!ft_strncmp(split[0], data->env[j],
-							ft_strlen(split[0]))
-						&& (data->env[j][ft_strlen(split[0])] == '='))
+							ft_strlen(split[0])))
+					{		
 						data->env[j] = ft_strjoin(data->env[j], &split[1][1]);
+						if (!data->env[j])
+							return (1);
+					}
 					j++;
 				}
 			}
@@ -94,20 +101,30 @@ void	export_plus(char **split, t_data *data)
 				if (my_memlen(split) >= 2)
 				{
 					tmp = ft_strjoin("export ", split[0]);
+					if (!tmp)
+						return (1);
 					tmp2 = ft_strjoin("=", &split[1][1]);
+					if (!tmp2)
+						return (1);
 					tmp3 = ft_strjoin(tmp, tmp2);
-					ft_export(tmp3, data, 0, 0);
+					if (!tmp3)
+						return (1);
+					status = ft_export(tmp3, data, 0, 0);
 					free(tmp);
 					free(tmp2);
 					free(tmp3);
 				}
 				else if (*split[0] == '=')
-					return ;
+					return (status);
 				else
 				{
 					tmp = ft_strjoin("export ", split[0]);
+					if (!tmp)
+						return (1);
 					tmp2 = ft_strjoin(tmp, "=");
-					ft_export(tmp2, data, 0, 0);
+					if (!tmp2)
+						return (1);
+					status = ft_export(tmp2, data, 0, 0);
 					free(tmp);
 					free(tmp2);
 				}
@@ -122,34 +139,48 @@ void	export_plus(char **split, t_data *data)
 		if (my_memlen(split) >= 2)
 		{
 			tmp = ft_strjoin("export ", split[0]);
+			if (!tmp)
+				return (1);
 			tmp2 = ft_strjoin("=", &split[1][1]);
+			if (!tmp2)
+				return (1);
 			tmp3 = ft_strjoin(tmp, tmp2);
-			ft_export(tmp3, data, 0, 0);
+			if (!tmp3)
+				return (1);
+			status = ft_export(tmp3, data, 0, 0);
 			free(tmp);
 			free(tmp2);
 			free(tmp3);
 		}
 		else if (*split[0] == '=')
-			return ;
+			return (0);
 		else
 		{
 			tmp = ft_strjoin("export ", split[0]);
+			if (!tmp)
+				return (1);
 			tmp2 = ft_strjoin(tmp, "=");
-			ft_export(tmp2, data, 0, 0);
+			if (!tmp2)
+				return (1);
+			status = ft_export(tmp2, data, 0, 0);
 			free(tmp);
 			free(tmp2);
 		}
 	}
+	return (status);
 }
 
-void	ft_export(char *input, t_data *data, int j, int i)
+int	ft_export(char *input, t_data *data, int j, int i)
 {
 	char	**split;
 	char	**split_plus;
 	int		len;
 	char	*chr;
+	int		status;
 
 	split = ft_split(input, ' ');
+	if (!split)
+		return (1);
 	while (split && split[i])
 	{
 		j = 0;
@@ -168,12 +199,17 @@ void	ft_export(char *input, t_data *data, int j, int i)
 		if (chr && chr[1] && chr[1] == '=')
 		{
 			split_plus = ft_split(split[i], '+');
+			if (!split_plus)
+			{
+				free_split(split, 0);
+				return (1);
+			}
 			chr = 0;
-			export_plus(split_plus, data);
+			status = export_plus(split_plus, data);
 			free_split(split, 0);
 			free_split(split_plus, 0);
 			free(chr);
-			return ;
+			return (status);
 		}
 		i++;
 	}
@@ -181,10 +217,14 @@ void	ft_export(char *input, t_data *data, int j, int i)
 	if (len < 2)
 	{
 		free_split(split, 0);
-		return ;
+		return (1);
 	}
 	i = 1;
 	while (split[i])
-		add_var(split[i++], data);
+	{
+		if (add_var(split[i++], data))
+			return (1);
+	}
 	free_split(split, 0);
+	return (0);
 }

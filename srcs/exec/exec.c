@@ -81,6 +81,7 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 {
 	t_exec	*exec;
 	t_data	*data;
+	int		status;
 
 	exec = ctx->exec;
 	data = ctx->data;
@@ -92,8 +93,8 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 	exec->input = split[*i];
 	if (is_built_in(exec->input))
 	{
-		do_built_in_part(split, i, ctx);
-		return (1);
+		status = do_built_in_part(split, i, ctx);
+		return (status);
 	}
 	if (exec_init(exec, 0))
 	{
