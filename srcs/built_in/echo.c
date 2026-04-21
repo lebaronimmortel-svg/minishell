@@ -106,7 +106,7 @@ static int	has_more_n_flag(char *str)
 	return (flag);
 }
 
-void	echo(char *input, int k)
+int	echo(char *input, int k)
 {
 	int	i;
 	int	flag;
@@ -118,10 +118,10 @@ void	echo(char *input, int k)
 		while (input[i] && input[i] != ' ')
 			i++;
 		if (!input[i])
-			return ;
+			return (0);
 		i++;
 		if (!input[i])
-			return ;
+			return (0);
 		if (input[i] == ' ')
 			ft_putstr_fd(" ", 1);
 		while (input[i] && input[i] == ' ')
@@ -129,7 +129,7 @@ void	echo(char *input, int k)
 		if (!input[i])
 		{
 			ft_putstr_fd("\n", 1);
-			return ;
+			return (0);
 		}
 		if (flag && !has_more_n_flag(&input[i]))
 			break ;
@@ -148,4 +148,5 @@ void	echo(char *input, int k)
 	ft_putstr_fd(&input[i], 1);
 	if (!has_n_flag(input))
 		ft_putstr_fd("\n", 1);
+	return (0);
 }

@@ -51,7 +51,7 @@ static void	free_line(char **envp, char **split, int i)
 	envp[j] = envp[j + 1];
 }
 
-void	unset(char **split, t_data *data)
+int	unset(char **split, t_data *data)
 {
 	int		i;
 
@@ -65,4 +65,5 @@ void	unset(char **split, t_data *data)
 		}
 		i++;
 	}
+	return (0);
 }
