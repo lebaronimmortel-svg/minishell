@@ -24,33 +24,38 @@ static int	check_space(const char *str, int i)
 	return (0);
 }
 
-static long long	calcul(const char *str, int i, int signe, long long result)
+static int	calcul(const char *str, int i, int signe, long long *result)
 {
 	int digit;
 
 	while (str[i])
 	{
 		digit = str[i] - '0';
-
-		if (result > (LLONG_MAX - digit) / 10)
-			return (0);
+		if (signe == 1)
+		{
+			if (*result > (LLONG_MAX - digit) / 10)
+				return (0);
+		}
+		if (signe == -1)
+		{
+			if (*result * (-1) < (LLONG_MIN + digit) / 10)
+				return (0);
+		}
 		if (str[i] >= '0' && str[i] <= '9')
-			result = result * 10 + str[i] - '0';
+			*result = *result * 10 + str[i] - '0';
 		else
-			return (result * signe);
+			return (1);
 		i++;
 	}
-	return (result * signe);
+	return (1);
 }
 
-long long	ft_atoll(const char *nptr)
+long long	ft_atoll(const char *nptr, long long *result)
 {
-	long long	result;
 	int	i;
 	int	signe;
 
 	i = 0;
-	result = 0;
 	signe = 1;
 	while (check_space(nptr, i))
 		i++;
@@ -60,8 +65,10 @@ long long	ft_atoll(const char *nptr)
 			signe = -1;
 		i++;
 	}
-	result = calcul(nptr, i, signe, result);
-	return (result);
+	if (!calcul(nptr, i, signe, result))
+		return (0);
+	*result = *result * signe;
+	return (1);
 }
 
 static char	*get_user(t_data *data)
@@ -164,12 +171,12 @@ static int	status_code(char *input, t_data *data)
 	long long	code;
 
 	i = 0;
+	code = 0;
 	while (input[i] && input[i] != ' ')
 		i++;
 	if (!input[i])
 		return (data->error_code);
-	code = ft_atoll(&input[i]);
-	if (!code)
+	if (!ft_atoll(&input[i], &code))
 		return (2);
 	return (code % 256);
 }
