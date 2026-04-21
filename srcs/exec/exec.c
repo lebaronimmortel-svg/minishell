@@ -113,7 +113,7 @@ int	exec_main(char **split, int i, t_data *data)
 	int			cmd_count;
 	int			exit_code;
 
-	exec.redir = NULL;
+	ft_memset(&exec, 0, sizeof(t_exec));
 	exec.data = data;
 	exec.split = split;
 	cmd_count = count_cmds(split, 0, 0);

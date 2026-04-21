@@ -54,20 +54,22 @@ static void	free_lexer(t_token *lex)
 
 static int	execute_prompt(char **split, t_token *lex, t_data *data)
 {
+	int status_code;
+
 	if (parser(lex))
 	{
 		split = print_order(lex);
 		free_lexer(lex);
-		data->error_code = exec_main(split, 0, data);
+		status_code = exec_main(split, 0, data);
 		free_split(split, 0);
 	}
 	else
 	{
 		free_lexer(lex);
-		data->error_code = 2;
+		status_code = 2;
 		ft_putstr_fd("minishell: syntax error\n", 2);
 	}
-	return (data->error_code);
+	return (status_code);
 }
 
 void	main_loop(char **split, t_token *lex, t_data *data)
@@ -86,5 +88,6 @@ void	main_loop(char **split, t_token *lex, t_data *data)
 		free(str);
 		if (lex)
 			status = execute_prompt(split, lex, data);
+		data->error_code = status;
 	}
 }

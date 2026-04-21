@@ -12,6 +12,58 @@
 
 #include "../../header/header.h"
 
+static int	check_space(const char *str, int i)
+{
+	while (str[i] == '\t'
+		|| str[i] == '\n'
+		|| str[i] == '\v'
+		|| str[i] == '\f'
+		|| str[i] == '\r'
+		|| str[i] == ' ')
+		return (1);
+	return (0);
+}
+
+static long long	calcul(const char *str, int i, int signe, long long result)
+{
+	int digit;
+
+	while (str[i])
+	{
+		digit = str[i] - '0';
+
+		if (result > (LLONG_MAX - digit) / 10)
+			return (0);
+		if (str[i] >= '0' && str[i] <= '9')
+			result = result * 10 + str[i] - '0';
+		else
+			return (result * signe);
+		i++;
+	}
+	return (result * signe);
+}
+
+long long	ft_atoll(const char *nptr)
+{
+	long long	result;
+	int	i;
+	int	signe;
+
+	i = 0;
+	result = 0;
+	signe = 1;
+	while (check_space(nptr, i))
+		i++;
+	if (nptr[i] == '+' || nptr[i] == '-')
+	{
+		if (nptr[i] == '-')
+			signe = -1;
+		i++;
+	}
+	result = calcul(nptr, i, signe, result);
+	return (result);
+}
+
 static char	*get_user(t_data *data)
 {
 	int		i;
@@ -108,14 +160,18 @@ static int	env(char **envp)
 
 static int	status_code(char *input, t_data *data)
 {
-	int	i;
+	int			i;
+	long long	code;
 
 	i = 0;
 	while (input[i] && input[i] != ' ')
 		i++;
 	if (!input[i])
 		return (data->error_code);
-	return (ft_atoi(&input[i]));
+	code = ft_atoll(&input[i]);
+	if (!code)
+		return (2);
+	return (code % 256);
 }
 
 int	exec_built_in(char *input, t_data *data, char **cmd_split)
