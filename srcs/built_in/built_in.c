@@ -146,7 +146,7 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split)
 		free_split(split, 0);
 	}
 	else if ((!ft_strncmp(input, "export", 6)) && ft_strlen(input) == 6)
-		status = export_single(data);
+		export_single(data);
 	else if ((!ft_strncmp(input, "export ", 7)))
 		status = ft_export(input, data, 0, 0);
 	else if (!ft_strncmp(input, "cd ", 3)
