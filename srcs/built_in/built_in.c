@@ -31,6 +31,8 @@ static int	calcul(const char *str, int i, int signe, long long *result)
 	while (str[i])
 	{
 		digit = str[i] - '0';
+		if (digit < 0 || digit > 9)
+			return (0);
 		if (signe == 1)
 		{
 			if (*result > (LLONG_MAX - digit) / 10)
