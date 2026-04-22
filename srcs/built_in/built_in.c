@@ -170,9 +170,11 @@ static int	env(char **envp)
 static int	status_code(char *input, t_data *data)
 {
 	int			i;
+	int			j;
 	long long	code;
 
 	i = 0;
+	j = 0;
 	code = 0;
 	while (input[i] && input[i] != ' ')
 		i++;
