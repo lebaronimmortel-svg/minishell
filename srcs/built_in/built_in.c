@@ -187,7 +187,7 @@ static int	status_code(char *input, t_data *data)
 	return (code % 256);
 }
 
-int	exec_built_in(char *input, t_data *data, char **cmd_split)
+int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 {
 	char	**split;
 	int		status;
@@ -206,10 +206,16 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split)
 	}
 	else if (!ft_strncmp(input, "env", 3) && ft_strlen(input) == 3)
 		status = env(data->env);
-	else if ((!ft_strncmp(input, "exit", 4)
+	else if (!ft_strncmp(input, "exit", 4)
 			&& ft_strlen(input) == 4)
-		|| (!ft_strncmp(input, "exit ", 5)))
 		exit_cleanly(status_code(input, data), data, cmd_split);
+	else if (!ft_strncmp(input, "exit ", 5))
+	{
+		if (my_memlen(cmd_split) > i + 1)
+			status = status_code(input, data);
+		else
+			exit_cleanly(status_code(input, data), data, cmd_split);
+	}
 	else if ((!ft_strncmp(input, "echo ", 5)))
 	{
 		split = ft_split(input, ' ');

@@ -27,7 +27,7 @@ char	*convert_var(char *str, int index, char **envp);
 int		is_valid_var(char *str, int flag);
 int		is_ok_quote(char *str, int index);
 
-int	exec_built_in(char *input, t_data *data, char **split);
+int	exec_built_in(char *input, t_data *data, char **split, int i);
 int	echo(char *input, int k);
 int		cd(char *input, t_data *data);
 
