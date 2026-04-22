@@ -195,6 +195,8 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split)
 	status = 0;
 	if (!ft_strncmp(input, "pwd", 3) && ft_strlen(input) == 3)
 		status = pwd();
+	else if (!ft_strncmp(input, "unset", 5) && ft_strlen(input) == 5)
+		status = 0;
 	else if (!ft_strncmp(input, "unset ", 6))
 	{
 		split = ft_split(input, ' ');

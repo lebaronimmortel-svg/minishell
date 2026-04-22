@@ -20,6 +20,8 @@ int	is_built_in(char *input)
 		return (1);
 	if (!ft_strncmp(input, "env", 3) && ft_strlen(input) == 3)
 		return (1);
+	if (!ft_strncmp(input, "unset", 5) && ft_strlen(input) == 5)
+		return (1);
 	if (!ft_strncmp(input, "unset ", 6))
 		return (1);
 	if (!ft_strncmp(input, "echo ", 5))
