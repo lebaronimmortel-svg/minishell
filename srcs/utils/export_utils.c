@@ -52,6 +52,8 @@ int is_valid_export_var(char *str)
 			return (0);
 		i++;
 	}
+	if (!i)
+		return (0);
 	return (1);
 }
 
