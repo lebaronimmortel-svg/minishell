@@ -180,6 +180,8 @@ static int	status_code(char *input, t_data *data)
 		i++;
 	if (!input[i])
 		return (data->error_code);
+	if (ft_strchr(&input[i + 1], ' '))
+		return (1);
 	if (!ft_atoll(&input[i], &code))
 		return (2);
 	return (code % 256);
