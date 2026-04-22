@@ -21,34 +21,6 @@ static void	handler0(int sig)
 	rl_redisplay();
 }
 
-static int	inject_missing_vars(t_data *data, int i, int has_path, int has_pwd)
-{
-	char	buf[1024];
-	char	*pwd_entry;
-
-	while (data->env[i])
-	{
-		if (!ft_strncmp(data->env[i], "PATH=", 5))
-			has_path = 1;
-		if (!ft_strncmp(data->env[i], "PWD=", 4))
-			has_pwd = 1;
-		i++;
-	}
-	if (!has_path)
-		add_var("PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-			data);
-	if (!has_pwd)
-	{
-		if (!getcwd(buf, sizeof(buf)))
-			return (0);
-		pwd_entry = ft_strjoin("PWD=", buf);
-		if (!pwd_entry)
-			return (0);
-		add_var(pwd_entry, data);
-		free(pwd_entry);
-	}
-	return (1);
-}
 
 static int	init(t_data *data, char **envp)
 {
@@ -69,12 +41,6 @@ static int	init(t_data *data, char **envp)
 			free_split(data->env, 0);
 			return (0);
 		}
-	}
-	if (!inject_missing_vars(data, 0, 0, 0))
-	{
-		free_split(data->env, 0);
-		free_split(data->env_bis, 0);
-		return (0);
 	}
 	return (1);
 }
