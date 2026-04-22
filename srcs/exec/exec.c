@@ -93,7 +93,7 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 	exec->input = split[*i];
 	if (is_built_in(exec->input))
 	{
-		status = do_built_in_part(split, i, ctx); // ici -> je dirige le bon status
+		status = do_built_in_part(split, i, ctx);
 		return (status);
 	}
 	if (exec_init(exec, 0))

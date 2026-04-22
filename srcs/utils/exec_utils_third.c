@@ -106,6 +106,7 @@ void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
 		if (should_skip_token(split, i))
 			continue ;
 		ret = exec_main_sequel(split, i, ctx);
+		ctx->data->error_code = ret;
 		if (ret == 1)
 		{
 			ctx->cmd_index++;

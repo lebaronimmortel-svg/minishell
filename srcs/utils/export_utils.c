@@ -41,6 +41,20 @@ static int	replace(char *str, char **env, int i)
 	return (1);
 }
 
+int is_valid_export_var(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] && str[i] != ' ' && str[i] != '=')
+	{
+		if (!ft_isalpha(str[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 int	add_var(char *str, t_data *data)
 {
 	int	i;
@@ -49,7 +63,7 @@ int	add_var(char *str, t_data *data)
 
 	i = 0;
 	j = 0;
-	if (!is_valid_var(str, 1))
+	if (!is_valid_export_var(str))
 		return (1);
 	if (ft_strchr(str, '='))
 	{
