@@ -26,6 +26,27 @@ static void	fill_input(char **command, int *i)
 	(*i)++;
 }
 
+static char *get_path(char **env)
+{
+	int 	i;
+	char 	*result;
+
+	i = 0;
+	result = NULL;
+	while (env[i])
+	{
+		if (!ft_strncmp("PATH=", env[i], 5))
+		{
+			result = &env[i][5];
+			if (!result)
+				return (NULL);
+			return (result);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
 static int	exec_init(t_exec *exec, int i)
 {
 	size_t	len;
@@ -33,10 +54,7 @@ static int	exec_init(t_exec *exec, int i)
 	exec->all_path = NULL;
 	exec->command = NULL;
 	exec->w_path = NULL;
-	exec->path = getenv("PATH");
-	if (!exec->path)
-		exec->path
-			= "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
+	exec->path = get_path(exec->data->env);
 	len = ft_strlen(exec->input);
 	if (len > 0 && exec->input[len - 1] == '\n')
 		exec->input[len - 1] = '\0';
@@ -75,6 +93,18 @@ int	pipe_and_pid(t_exec *exec, int cmd_count, char **envp)
 		i++;
 	}
 	return (0);
+}
+
+int	is_path(char **env)
+{
+	int i;
+
+	i = 0;
+	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
+		i++;
+	if (!env[i])
+		return (0);
+	return (1);
 }
 
 int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)

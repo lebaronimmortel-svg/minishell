@@ -21,6 +21,8 @@ static void	handler0(int sig)
 	rl_redisplay();
 }
 
+// Commented since bash fails if a var is missing 
+/*
 static int	inject_missing_vars(t_data *data, int i, int has_path, int has_pwd)
 {
 	char	buf[1024];
@@ -49,7 +51,7 @@ static int	inject_missing_vars(t_data *data, int i, int has_path, int has_pwd)
 	}
 	return (1);
 }
-
+*/
 static int	init(t_data *data, char **envp)
 {
 	data->error_code = 0;
@@ -70,12 +72,12 @@ static int	init(t_data *data, char **envp)
 			return (0);
 		}
 	}
-	if (!inject_missing_vars(data, 0, 0, 0))
+	/*if (!inject_missing_vars(data, 0, 0, 0))
 	{
 		free_split(data->env, 0);
 		free_split(data->env_bis, 0);
 		return (0);
-	}
+	}*/
 	return (1);
 }
 
