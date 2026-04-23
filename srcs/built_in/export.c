@@ -81,6 +81,7 @@ int	export_plus(char **split, t_data *data)
 			if (ft_strchr(data->env_bis[i], '='))
 			{
 				data->env_bis[i] = ft_strjoin(data->env_bis[i], &split[1][1]);
+				free(tmp);
 				if (!data->env_bis[i])
 					return (1);
 				j = 0;
@@ -89,7 +90,9 @@ int	export_plus(char **split, t_data *data)
 					if (!ft_strncmp(split[0], data->env[j],
 							ft_strlen(split[0])))
 					{		
+						tmp = data->env[j];
 						data->env[j] = ft_strjoin(data->env[j], &split[1][1]);
+						free(tmp);
 						if (!data->env[j])
 							return (1);
 					}
@@ -223,7 +226,10 @@ int	ft_export(char *input, t_data *data, int j, int i)
 	while (split[i])
 	{
 		if (add_var(split[i++], data))
+		{
+			free_split(split, 0);
 			return (1);
+		}
 	}
 	free_split(split, 0);
 	return (0);
