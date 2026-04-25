@@ -83,11 +83,11 @@ void	main_loop(char **split, t_token *lex, t_data *data)
 		str = readline("$> ");
 		if (str == NULL)
 			exit_cleanly(status, data, split);
-		add_history(str);
+		else
+			add_history(str);
 		lex = lexer(str, data);
 		free(str);
 		if (lex)
 			status = execute_prompt(split, lex, data);
-		data->error_code = status;
 	}
 }

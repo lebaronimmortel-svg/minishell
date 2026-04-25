@@ -55,6 +55,7 @@ static int	inject_missing_vars(t_data *data, int i, int has_path, int has_pwd)
 static int	init(t_data *data, char **envp)
 {
 	data->error_code = 0;
+	data->end = 0;
 	data->env = split_dup(envp);
 	if (!data->env)
 	{

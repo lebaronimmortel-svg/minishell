@@ -32,6 +32,7 @@ typedef struct s_redir
 typedef struct s_data
 {
 	int		error_code;
+	int		end;
 	char	**env;
 	char	**env_bis;
 }	t_data;
