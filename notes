@@ -96,8 +96,6 @@ On ajoute 128 et ca nous donne le exit status correspondant.
 -> <srcs/main/main.c export |cat|sleep 10|export caca=chienducul|sleep 10|wc>cfre
 	(exemple de commande de con qui foire)
 
--> ./ls, ././ls, ne doivent pas fonctionner 
-
 -> exit ne doit pas fonctionner si plus de 1 parametre
 	
 -> gérer tous les whitespaces 	
