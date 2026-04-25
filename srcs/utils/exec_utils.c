@@ -24,7 +24,7 @@ static int	find_env(t_exec *exec, int i)
 			return (1);
 		return (0);
 	}
-	if (exec->command[0][0] == '/')
+	if (exec->command[0][0] == '/' || exec->command[0][0] == '.')
 	{
 		exec->w_path = NULL;
 		return (1);

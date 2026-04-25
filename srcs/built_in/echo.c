@@ -12,7 +12,6 @@
 
 #include "../../header/header.h"
 
-
 static int	assign_flag(int flag, char *input, int *i)
 {
 	while (input[*i] && is_alphanum((int)input[*i]))
