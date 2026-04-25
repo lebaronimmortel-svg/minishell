@@ -12,6 +12,7 @@
 
 #include "../../header/header.h"
 
+/*
 static int	is_alpha(char c)
 {
 	if (c >= 'a' && c <= 'z')
@@ -20,6 +21,7 @@ static int	is_alpha(char c)
 		return (1);
 	return (0);
 }
+*/
 
 static int	assign_flag(int flag, char *input, int *i)
 {
@@ -67,14 +69,14 @@ static int	has_n_flag(char *input)
 		return (0);
 }
 
-static int	is_alpha_flag(char *str)
+static int	is_valid_flag(char *str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i] && str[i] != ' ')
 	{
-		if (!(is_alpha(str[i])))
+		if (str[i] != 'n')
 			return (0);
 		i++;
 	}
@@ -133,7 +135,7 @@ int	echo(char *input, int k)
 		}
 		if (flag && !has_more_n_flag(&input[i]))
 			break ;
-		if (input[i] != '-' || !is_alpha_flag(&input[i + 1]))
+		if (input[i] != '-' || !is_valid_flag(&input[i + 1]))
 			break ;
 		else
 			flag = 1;

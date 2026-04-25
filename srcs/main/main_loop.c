@@ -89,5 +89,7 @@ void	main_loop(char **split, t_token *lex, t_data *data)
 		free(str);
 		if (lex)
 			status = execute_prompt(split, lex, data);
+		if (data->end)
+			exit_cleanly(data->error_code, data, split);
 	}
 }
