@@ -25,6 +25,7 @@ static void	handler0(int sig)
 static int	init(t_data *data, char **envp)
 {
 	data->error_code = 0;
+	data->end = 0;
 	data->env = split_dup(envp);
 	if (!data->env)
 	{

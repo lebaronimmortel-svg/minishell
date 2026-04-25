@@ -62,7 +62,7 @@ result :	./test: No such file or directory
 						duplique le '<' input de minishell
 						n'affiche pas a
 - Ctrl-C devrait exit heredoc
-- Ctrl-D devrait afficher heredoc :warning: here-document at line 2 delimited by end-of-file (wanted `named of delimiter')
+- Ctrl-D devrait afficher heredoc :warning: here-document at line 2 delimited by end-of-file (wanted `name of delimiter')
 
 
 
@@ -81,7 +81,21 @@ result :	./test: No such file or directory
 
 # + leaks + protections
 
+_________________________________________________________________________
 
+24 / 04 /26 
+_________________________________________________________________________
+
+-> les signaux pour le heredoc. 1 handler pour le prompt, 1 handler pour les commandes bloquantes (cat), 1 handler pour le heredoc. La globale est la pour stocker la valeur du signal. On ajoute 128 et ca nous donne le exit status correspondant.
+
+-> ne pas exit dans la fonction. Mettre a jour un indicateur pour pouvoir fermer apres avoir close les fd.
+
+-> changer le Makefile en plus il relink
+
+-> <srcs/main/main.c export |cat|sleep 10|export caca=chienducul|sleep 10|wc>cfre
+	(exemple de commande de con qui foire)
+
+-> ./ls, ././ls, etc... a corriger
 
 
 

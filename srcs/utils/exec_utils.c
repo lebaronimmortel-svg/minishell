@@ -114,7 +114,7 @@ int	end_exec(t_exec_ctx *ctx, int exit_code, int status)
 	}
 	if (ctx->exec->pid)
 		free(ctx->exec->pid);
-	if (last_builtin)
+	if (last_builtin || ctx->data->end)
 		return (ctx->data->error_code);
 	if (WIFEXITED(status))
 		exit_code = WEXITSTATUS(status);

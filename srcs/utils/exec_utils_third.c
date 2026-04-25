@@ -112,7 +112,7 @@ void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
 			ctx->cmd_index++;
 			continue ;
 		}
-		if (ret == 2)
+		if (ret == 2 && !ctx->data->end)
 		{
 			ctx->data->error_code = 127;
 			ctx->cmd_index++;

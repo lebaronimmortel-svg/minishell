@@ -139,6 +139,7 @@ int	change_path(int flag, char *path, t_data *data)
 	char	*prefix;
 	char	*tmp;
 
+	printf("\nchanging the path!\n");
 	prefix = ft_strdup("PWD=\0");
 	if (prefix && !flag)
 	{

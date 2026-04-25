@@ -120,7 +120,7 @@ int	cd(char *input, t_data *data)
 	char	*path;
 	char	buffer[1024];
 
-	(void)data;
+	printf("%s\n", input);
 	path = &input[3];
 	unmask_spaces(path);
 	if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
@@ -208,13 +208,19 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 		status = env(data->env);
 	else if (!ft_strncmp(input, "exit", 4)
 			&& ft_strlen(input) == 4)
-		exit_cleanly(status_code(input, data), data, cmd_split);
+	{
+		status = status_code(input, data);
+		data->end = 1;
+	}
 	else if (!ft_strncmp(input, "exit ", 5))
 	{
 		if (my_memlen(cmd_split) > i + 1)
 			status = status_code(input, data);
 		else
-			exit_cleanly(status_code(input, data), data, cmd_split);
+		{
+			status = status_code(input, data);
+			data->end = 1;
+		}
 	}
 	else if ((!ft_strncmp(input, "echo ", 5)))
 	{
