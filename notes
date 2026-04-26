@@ -1,6 +1,15 @@
 # Flag pour l'execution Valgrind :
 
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --track-fds=yes --trace-children=yes --suppressions=valgrind.supp ./minishell
+	
+# Minishell_tester :
+	cd minishell_tester
+	./tester
+	
+# Minishell_tester2 :
+	cd minishell_tester
+	cd src
+	./tester
 
 # Fichier valgrind.supp :
 
@@ -91,15 +100,12 @@ _________________________________________________________________________
 La globale est la pour stocker la valeur du signal.
 On ajoute 128 et ca nous donne le exit status correspondant.
 
+	il faut mettre en place le handler en debut de fonction,
+	comme pour le main. Son scope est limité à la fonction. 
+	
+
 -> changer le Makefile en plus il relink
 
--> <srcs/main/main.c export |cat|sleep 10|export caca=chienducul|sleep 10|wc>cfre
-	(exemple de commande de con qui foire)
-
--> exit ne doit pas fonctionner si plus de 1 parametre
-	
--> gérer tous les whitespaces 	
-	(remplacer == ' ' par is_whitespace)
 
 
 

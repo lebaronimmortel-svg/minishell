@@ -88,6 +88,7 @@ void	append_to_cmd(char **split, int cmd_pos, char *extra);
 void	handle_redir_sequel(t_exec *exec, char **split, int cmd_pos, int i);
 
 void	main_loop(char **split, t_token *lex, t_data *data);
+void	handler0(int sig);
 
 void	loop(t_token *lexer, char **split);
 

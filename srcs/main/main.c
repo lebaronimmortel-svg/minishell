@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-static void	handler0(int sig)
+void	handler0(int sig)
 {
 	(void) sig;
 	printf("\n");

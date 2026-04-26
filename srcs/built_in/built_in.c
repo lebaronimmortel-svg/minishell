@@ -200,6 +200,8 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 	else if (!ft_strncmp(input, "unset ", 6))
 	{
 		split = ft_split(input, ' ');
+		if (!split)
+			return (-1);
 		split = quote_clean(split);
 		status = unset(&split[1], data);
 		free_split(split, 0);
@@ -225,6 +227,8 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 	else if ((!ft_strncmp(input, "echo ", 5)))
 	{
 		split = ft_split(input, ' ');
+		if (!split)
+			return (-1);
 		status = echo(input, 0);
 		free_split(split, 0);
 	}
