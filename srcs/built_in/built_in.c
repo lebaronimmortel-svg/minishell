@@ -200,6 +200,8 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 	else if (!ft_strncmp(input, "unset ", 6))
 	{
 		split = ft_split(input, ' ');
+		if (!split)
+			return (-1);
 		split = quote_clean(split);
 		status = unset(&split[1], data);
 		free_split(split, 0);
@@ -212,7 +214,6 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 		status = status_code(input, data);
 		data->end = 1;
 	}
-		//exit_cleanly(status_code(input, data), data, cmd_split); //fd pas close
 	else if (!ft_strncmp(input, "exit ", 5))
 	{
 		if (my_memlen(cmd_split) > i + 1)
@@ -221,12 +222,13 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 		{
 			status = status_code(input, data);
 			data->end = 1;
-			//exit_cleanly(status_code(input, data), data, cmd_split); //pareil
 		}
 	}
 	else if ((!ft_strncmp(input, "echo ", 5)))
 	{
 		split = ft_split(input, ' ');
+		if (!split)
+			return (-1);
 		status = echo(input, 0);
 		free_split(split, 0);
 	}

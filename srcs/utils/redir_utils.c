@@ -12,16 +12,43 @@
 
 #include "../../header/header.h"
 
+int g_ack;
+
+static void handler1(int sig)
+{
+	(void) sig;
+	/*
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	*/
+	g_ack = 1;
+}
+
+int	check_signals(void)
+{
+	if (g_ack == 1)
+		rl_done = 1;
+	return (0);
+}
+
 static void	handle_hdoc_bis(char *delim, int expand, char **envp, int *pipefd)
 {
 	char	*line;
 
+	g_ack = 0;
+	signal(SIGINT, handler1);
+	rl_event_hook = check_signals;
 	while (1)
 	{
 		line = readline("heredoc> ");
-		if (!line || ft_strcmp(line, delim) == 0)
+		if (g_ack == 1 || !line || ft_strcmp(line, delim) == 0)
 		{
-			free(line);
+			g_ack = 0;
+			if (!line)
+				write(1, "bash: warning: here-document at line X delimited by end-of-file (wanted X)\n", 77);
+			else
+				free(line);
 			break ;
 		}
 		if (expand)
@@ -33,7 +60,17 @@ static void	handle_hdoc_bis(char *delim, int expand, char **envp, int *pipefd)
 		write(pipefd[1], "\n", 1);
 		free(line);
 	}
+	rl_event_hook = NULL;
+	signal(SIGINT, handler0);
 }
+
+/*
+static void	handler1(int sig)
+{
+	(void) sig;
+	write(1, "\nheredoc> ", 10);
+}
+*/
 
 int	handle_heredoc(char *delimiter, char **envp, int expand, int len)
 {

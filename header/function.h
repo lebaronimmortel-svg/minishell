@@ -108,6 +108,7 @@ void	handle_redir_sequel(t_exec *exec, char **split, int cmd_pos, int i);
 
 /* ================================ main.c =============================== */
 void	main_loop(char **split, t_token *lex, t_data *data);
+void	handler0(int sig);
 
 /* =========================== main_loop_utils.c ========================= */
 void	loop(t_token *lexer, char **split);
