@@ -1,91 +1,65 @@
-# ================= CONFIG =================
-NAME    	= minishell
-CC      	= cc
-CFLAGS  	= -Wall -Wextra -Werror
-LIBFTDIR 	= ./srcs/libft
-LIBFT 		= $(LIBFTDIR)/libft.a
+NAME        = minishell
 
-SRC     	= srcs/main/main.c srcs/parser/lexer.c\
-			  srcs/parser/parser.c srcs/utils/utils.c\
-			  srcs/utils/utils_bis.c srcs/exec/exec.c\
-			  srcs/exec/free_exec.c srcs/utils/free_exec_utils.c\
-			  srcs/utils/exec_utils.c srcs/utils/utils_third_bis.c\
-			  srcs/exec/exec_error.c srcs/exec/redir.c\
-			  srcs/utils/redir_utils.c srcs/utils/redir_utils_bis.c\
-			  srcs/utils/redir_utils_third.c srcs/utils/exec_utils_fourth.c\
-			  srcs/utils/exec_utils_fifth.c\
-			  srcs/utils/exec_utils_bis.c srcs/utils/exec_utils_third.c\
-			  srcs/utils/export_utils.c srcs/utils/utils_third.c\
-			  srcs/main/main_loop.c srcs/utils/expand_utils.c\
-			  srcs/utils/main_loop_utils.c srcs/parser/expand.c\
-			  srcs/built_in/built_in.c srcs/built_in/echo.c\
-			  srcs/built_in/export.c srcs/built_in/unset.c
+# --- Chemins et Fichiers ---
+SRC         = srcs/main/main.c srcs/main/main_loop.c \
+              srcs/exec/exec.c srcs/exec/exec_error.c \
+              srcs/exec/free_exec.c srcs/exec/redir.c \
+              srcs/built_in/built_in.c srcs/built_in/echo.c \
+              srcs/built_in/export.c srcs/built_in/unset.c \
+              srcs/parser/expand.c srcs/parser/lexer.c \
+              srcs/parser/parser.c srcs/utils/exec_utils.c \
+              srcs/utils/exec_utils_bis.c \
+              srcs/utils/exec_utils_fifth.c \
+              srcs/utils/exec_utils_fourth.c \
+              srcs/utils/exec_utils_third.c \
+              srcs/utils/expand_utils.c \
+              srcs/utils/export_utils.c \
+              srcs/utils/free_exec_utils.c \
+              srcs/utils/main_loop_utils.c \
+              srcs/utils/redir_utils.c \
+              srcs/utils/redir_utils_bis.c \
+              srcs/utils/redir_utils_third.c \
+              srcs/utils/utils.c \
+              srcs/utils/utils_bis.c \
+              srcs/utils/utils_third.c \
+              srcs/utils/utils_third_bis.c
 
-OBJDIR  	= objs
-OBJ     	= $(SRC:%.c=$(OBJDIR)/%.o)
+OBJ         = $(SRC:.c=.o)
+HEADER      = header/header.h
 
-TOTAL   	:= $(words $(SRC))
-COUNT   	:= 0
+# --- Librairies ---
+LIBFT_DIR   = ./srcs/libft
+LIBFT       = $(LIBFT_DIR)/libft.a
 
-# ================= COLORS =================
-RESET   = \033[0m
-BOLD    = \033[1m
-RED     = \033[31m
-GREEN   = \033[32m
-CYAN    = \033[36m
-MAGENTA = \033[35m
-WHITE	= \033[37m
+# --- Compilation ---
+CC          = cc
+FLAGS       = -Wall -Wextra -Werror -g
+RM          = rm -rf
 
-# ================= RULES =================
-all: banner $(NAME)
+# --- Règles ---
 
-$(NAME): $(LIBFT) $(OBJ)
-	@$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline || { \
-		printf "$(RED)✖ Compilation failure !$(RESET)\n"; \
-		exit 1; }
-	@printf "\n$(GREEN)✔ Compilation success !$(RESET)\n\n"
-	@printf "\a"
+all: $(NAME)
 
+# Liaison finale : Ajout de $(LIBFT) pour que le linker l'utilise
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) $(FLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline
+
+# Compilation des .o : Ajout de -I pour trouver les headers facilement
+%.o: %.c $(HEADER)
+	$(CC) $(FLAGS) -I header -I $(LIBFT_DIR) -c $< -o $@
+
+# Compilation de la Libft
 $(LIBFT):
-	@$(MAKE) -C $(LIBFTDIR) --no-print-directory
-
-$(OBJDIR)/%.o: %.c
-	@mkdir -p $(dir $@)
-	@$(eval COUNT=$(shell echo $$(($(COUNT)+1))))
-	@PERCENT=$$(echo $$(($(COUNT)*100/$(TOTAL)))); \
-	BAR_WIDTH=40; \
-	FILLED=$$(echo $$(($(COUNT)*BAR_WIDTH/$(TOTAL)))); \
-	EMPTY=$$(echo $$((BAR_WIDTH-FILLED))); \
-	printf "\r$(MAGENTA)⟦Compiling MINISHELL⟧	$(CYAN)["; \
-	printf "%0.s▓" $$(seq 1 $$FILLED); \
-	printf "%0.s░" $$(seq 1 $$EMPTY); \
-	printf "] $(MAGENTA)%3d%%$(RESET)" $$PERCENT; \
-	$(CC) $(CFLAGS) -c $< -o $@ -g
-
-banner:
-	@clear
-	@printf "$(CYAN)$(BOLD)\n"
-	@printf "██████╗ ██╗   ██╗██╗██╗     ██████╗ \n"
-	@printf "██╔══██╗██║   ██║██║██║     ██╔══██╗\n"
-	@printf "██████╔╝██║   ██║██║██║     ██║  ██║\n"
-	@printf "██╔══██╗██║   ██║██║██║     ██║  ██║\n"
-	@printf "██████╔╝╚██████╔╝██║███████╗██████╔╝\n"
-	@printf "╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝ \n"
-	@printf "$(RESET)\n"
-	@sleep 0.5
+	make -C $(LIBFT_DIR)
 
 clean:
-	@printf "$(WHITE)"
-	@rm -rf $(OBJDIR)
-	@$(MAKE) clean -C $(LIBFTDIR) --no-print-directory
-	@printf "$(MAGENTA)♻ Cleanup successful$(RESET)\n"
+	make clean -C $(LIBFT_DIR)
+	$(RM) $(OBJ)
 
 fclean: clean
-	@printf "$(WHITE)"
-	@rm -f $(NAME)
-	@rm -f $(LIBFT)
-	@printf "$(MAGENTA)♻ Executable removed$(RESET)\n"
+	make fclean -C $(LIBFT_DIR)
+	$(RM) $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re banner
+.PHONY: all clean fclean re
