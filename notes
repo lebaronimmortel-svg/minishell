@@ -83,19 +83,11 @@ _________________________________________________________________________
 24 / 04 /26 
 _________________________________________________________________________
 
--> les signaux pour le heredoc. 1 handler pour le prompt,
-1 handler pour les commandes bloquantes (cat), 1 handler pour le heredoc. 
-La globale est la pour stocker la valeur du signal.
-On ajoute 128 et ca nous donne le exit status correspondant.
+-> cat : le ctrl-c affiche deux prompts a la suite au lieu d'un
 
-	il faut mettre en place le handler en debut de fonction,
-	comme pour le main. Son scope est limité à la fonction. 
+->	exemple de commande de con qui foire : 
+	<srcs/main/main.c export |cat|sleep 10|export caca=chienducul|sleep 10|wc>cfre
 	
-
--> changer le Makefile en plus il relink
-
-<srcs/main/main.c export |cat|sleep 10|export caca=chienducul|sleep 10|wc>cfre
-
 
 
 
