@@ -54,12 +54,13 @@ static void	free_lexer(t_token *lex)
 
 static int	execute_prompt(char **split, t_token *lex, t_data *data)
 {
-	int status_code;
+	int	status_code;
 
 	if (parser(lex))
 	{
 		split = print_order(lex);
 		free_lexer(lex);
+		preprocess_split(split, 0, 0);
 		status_code = exec_main(split, 0, data, count_cmds(split, 0, 0));
 		free_split(split, 0);
 	}
