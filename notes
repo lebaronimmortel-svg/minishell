@@ -33,7 +33,7 @@
 
 # Parsing :
 
-COMMAND : < log.txt | wc
+COMMAND : < file | wc
 bash: file: No such file or directory
       0       0       0
 MINISHELL : waiting prompt
