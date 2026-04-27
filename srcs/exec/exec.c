@@ -114,14 +114,9 @@ int	exec_main(char **split, int i, t_data *data, int cmd_count)
 	exec.split = split;
 	if (cmd_count == 0)
 	{
-		exec.env = data->env;
-		exec.redir_count = 0;
-		exec.redir = NULL;
-		collect_redirs(&exec, split, 0, data->env);
-		if (exec.redir_count > 0)
-			apply_redirs(&exec);
+		data->error_code = exec_cmd(&exec, data, split);
 		free_redir(&exec);
-		return (0);
+		return (data->error_code);
 	}
 	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)
 		return (1);

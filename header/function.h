@@ -80,6 +80,10 @@ void	ctx_innit(t_exec_ctx *ctx, t_exec *exec, t_data *data, int cmd_count);
 void	process_built_in(t_exec_ctx *ctx);
 int		handle_exec_result(int ret, int built_in, t_exec_ctx *ctx);
 
+/* ================================ exec_utils_fifth.c ================== */
+void	preprocess_split(char **split, int i, int cmd_pos);
+int		exec_cmd(t_exec *exec, t_data *data, char **split);
+
 /* =============================== free_exec.c =========================== */
 void	free_data_split(t_exec *exec);
 void	free_split_exec(t_exec *exec);

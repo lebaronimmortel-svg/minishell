@@ -65,7 +65,8 @@ int	count_cmds(char **split, int i, int count)
 			i = skip_redirection(split, i);
 			continue ;
 		}
-		if (should_skip_empty(split, i) || is_redir_argument(split, i))
+		if (split[i][0] == '\0' || should_skip_empty(split, i)
+			|| is_redir_argument(split, i))
 		{
 			i++;
 			continue ;
