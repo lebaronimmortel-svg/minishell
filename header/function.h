@@ -49,7 +49,7 @@ int		add_var(char *str, t_data *data);
 int		change_path(int flag, char *path, t_data *data);
 
 /* ================================ exec.c =============================== */
-int		exec_main(char **split, int i, t_data *data);
+int		exec_main(char **split, int i, t_data *data, int cmd_count);
 int		exec_main_sequel(char **split, int *i, t_exec_ctx *ctx);
 
 /* ============================= exec_error.c ============================ */
@@ -57,7 +57,8 @@ void	execve_error(char *str, char *command);
 
 /* ============================== exec_utils.c =========================== */
 void	fork_created(t_exec *exec, int cmd_index, int cmd_count);
-int		end_exec(t_exec_ctx *ctx, int exit_code, int status);
+int		end_exec(t_exec_ctx *ctx, int exit_code, int status, int i);
+int		end_exec_sig(t_exec_ctx *ctx, int exit_code, int last_pid_status);
 
 /* =========================== exec_utils_bis.c ========================== */
 int		is_pipe(char *s);
@@ -72,6 +73,12 @@ int		find_env_loop(t_exec *exec, int i);
 int		do_built_in_part( char **split, int *i, t_exec_ctx *ctx);
 int		should_skip_token(char **split, int *i);
 void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx);
+
+/* ================================ exec_utils_fourth.c ================== */
+char	*get_path(char **env);
+void	ctx_innit(t_exec_ctx *ctx, t_exec *exec, t_data *data, int cmd_count);
+void	process_built_in(t_exec_ctx *ctx);
+int		handle_exec_result(int ret, int built_in, t_exec_ctx *ctx);
 
 /* =============================== free_exec.c =========================== */
 void	free_data_split(t_exec *exec);
@@ -139,6 +146,7 @@ char	*my_get_pid(void);
 void	unmask_spaces(char *str);
 char	**quote_clean(char **split);
 char	*change_var_hd(char *str, char **envp);
+int		is_path(char **env);
 
 /* ================================ free.c =============================== */
 void	exit_cleanly(int code, t_data *data, char **split);

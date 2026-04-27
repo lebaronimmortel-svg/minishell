@@ -26,27 +26,6 @@ static void	fill_input(char **command, int *i)
 	(*i)++;
 }
 
-static char	*get_path(char **env)
-{
-	int		i;
-	char	*result;
-
-	i = 0;
-	result = NULL;
-	while (env[i])
-	{
-		if (!ft_strncmp("PATH=", env[i], 5))
-		{
-			result = &env[i][5];
-			if (!result)
-				return (NULL);
-			return (result);
-		}
-		i++;
-	}
-	return (NULL);
-}
-
 static int	exec_init(t_exec *exec, int i)
 {
 	size_t	len;
@@ -95,18 +74,6 @@ int	pipe_and_pid(t_exec *exec, int cmd_count, char **envp)
 	return (0);
 }
 
-int	is_path(char **env)
-{
-	int	i;
-
-	i = 0;
-	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
-		i++;
-	if (!env[i])
-		return (0);
-	return (1);
-}
-
 int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 {
 	t_exec	*exec;
@@ -136,17 +103,15 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 	return (0);
 }
 
-int	exec_main(char **split, int i, t_data *data)
+int	exec_main(char **split, int i, t_data *data, int cmd_count)
 {
 	t_exec		exec;
 	t_exec_ctx	ctx;
-	int			cmd_count;
 	int			exit_code;
 
 	ft_memset(&exec, 0, sizeof(t_exec));
 	exec.data = data;
 	exec.split = split;
-	cmd_count = count_cmds(split, 0, 0);
 	if (cmd_count == 0)
 	{
 		exec.env = data->env;
@@ -160,12 +125,9 @@ int	exec_main(char **split, int i, t_data *data)
 	}
 	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)
 		return (1);
-	ctx.exec = &exec;
-	ctx.data = data;
-	ctx.cmd_index = 0;
-	ctx.cmd_count = cmd_count;
+	ctx_innit(&ctx, &exec, data, cmd_count);
 	process_exec_loop(split, &i, &ctx);
-	exit_code = end_exec(&ctx, 0, 0);
+	exit_code = end_exec(&ctx, 0, 0, 0);
 	free_redir(&exec);
 	return (exit_code);
 }

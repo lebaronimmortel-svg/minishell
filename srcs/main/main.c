@@ -21,7 +21,7 @@ void	handler0(int sig)
 	rl_redisplay();
 }
 
-// Commented since bash fails if a var is missing 
+// Commented since bash fails if a var is missing
 /*
 static int	inject_missing_vars(t_data *data, int i, int has_path, int has_pwd)
 {

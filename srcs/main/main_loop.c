@@ -60,7 +60,7 @@ static int	execute_prompt(char **split, t_token *lex, t_data *data)
 	{
 		split = print_order(lex);
 		free_lexer(lex);
-		status_code = exec_main(split, 0, data);
+		status_code = exec_main(split, 0, data, count_cmds(split, 0, 0));
 		free_split(split, 0);
 	}
 	else

@@ -58,9 +58,6 @@ result : 	./test: No such file or directory
 
 # Signaux :
 
-- sleep 10 | echo a		puis Ctrl-C pendant le sleep renvoie exit status (130) au lieu de 0
-						duplique le '<' input de minishell
-						n'affiche pas a
 - Ctrl-C devrait exit heredoc
 - Ctrl-D devrait afficher heredoc :warning: here-document at line 2 delimited by end-of-file (wanted `name of delimiter')
 
