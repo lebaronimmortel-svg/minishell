@@ -21,7 +21,6 @@ void	handler0(int sig)
 	rl_redisplay();
 }
 
-
 static int	init(t_data *data, char **envp)
 {
 	data->error_code = 0;

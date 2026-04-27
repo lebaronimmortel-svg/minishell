@@ -12,50 +12,50 @@
 
 #include "../../header/header.h"
 
-static int handle_hdoc_bis(char *delim, int expand, char **envp, int *pipefd)
+static int	handle_hdoc_bis(char *delim, int expand, char **envp, int *pipefd)
 {
-    pid_t   pid;
+	pid_t	pid;
 	int		exit_status;
-    int     status;
-    char    *line;
+	int		status;
+	char	*line;
 
-    pid = fork();
+	pid = fork();
 	exit_status = 1;
-    if (pid == 0)
-    {
-        signal(SIGINT, SIG_DFL);
-        while (1)
-        {
-            line = readline("heredoc> ");
-            if (!line)
-            {
-                write(1, "bash: warning: here-document delimited by end-of-file\n", 55);
-                break;
-            }
-            if (ft_strcmp(line, delim) == 0)
-            {
-                free(line);
-                break;
-            }
-            if (expand)
-                while (!are_var_hd(line))
-                    line = change_var_hd(line, envp);
-            write(pipefd[1], line, ft_strlen(line));
-            write(pipefd[1], "\n", 1);
-            free(line);
-        }
-        close(pipefd[1]);
-        exit(0);
-    }
-    close(pipefd[1]);
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		while (1)
+		{
+			line = readline("heredoc> ");
+			if (!line)
+			{
+				write(1, "bash: warning: here-document delimited by end-of-file\n", 55);
+				break ;
+			}
+			if (ft_strcmp(line, delim) == 0)
+			{
+				free(line);
+				break ;
+			}
+			if (expand)
+				while (!are_var_hd(line))
+					line = change_var_hd(line, envp);
+			write(pipefd[1], line, ft_strlen(line));
+			write(pipefd[1], "\n", 1);
+			free(line);
+		}
+		close(pipefd[1]);
+		exit(0);
+	}
+	close(pipefd[1]);
 	signal(SIGINT, SIG_IGN);
-    waitpid(pid, &status, 0);
+	waitpid(pid, &status, 0);
 	signal(SIGINT, handler0);
-    if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-    {
-        exit_status = 130;
-        write(STDOUT_FILENO, "\n", 1);
-    }
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+	{
+		exit_status = 130;
+		write(STDOUT_FILENO, "\n", 1);
+	}
 	return (exit_status);
 }
 

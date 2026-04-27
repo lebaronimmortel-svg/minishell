@@ -209,7 +209,7 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 	else if (!ft_strncmp(input, "env", 3) && ft_strlen(input) == 3)
 		status = env(data->env);
 	else if (!ft_strncmp(input, "exit", 4)
-			&& ft_strlen(input) == 4)
+		&& ft_strlen(input) == 4)
 	{
 		status = status_code(input, data);
 		data->end = 1;
