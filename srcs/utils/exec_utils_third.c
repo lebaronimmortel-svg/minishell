@@ -27,7 +27,8 @@ void	check_dir(t_exec *exec)
 
 int	find_env_loop(t_exec *exec, int i)
 {
-	char	*tmp;
+	char		*tmp;
+	struct stat	info;
 
 	tmp = NULL;
 	while (exec->all_path && exec->all_path[i])
@@ -36,7 +37,16 @@ int	find_env_loop(t_exec *exec, int i)
 		exec->w_path = ft_strjoin(tmp, exec->command[0]);
 		free(tmp);
 		if (exec->w_path && access(exec->w_path, X_OK) == 0)
+		{
+			if (stat(exec->w_path, &info) == 0 && S_ISDIR(info.st_mode))
+			{
+				free(exec->w_path);
+				exec->w_path = NULL;
+				i++;
+				continue ;
+			}
 			return (0);
+		}
 		free(exec->w_path);
 		exec->w_path = NULL;
 		i++;
@@ -100,11 +110,13 @@ int	should_skip_token(char **split, int *i)
 void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
 {
 	int	ret;
+	int	built_in;
 
 	while (split && split[*i])
 	{
 		if (should_skip_token(split, i))
 			continue ;
+		built_in = is_built_in(split[*i]);
 		ret = exec_main_sequel(split, i, ctx);
 		ctx->data->error_code = ret;
 		if (ret == 1)
@@ -116,6 +128,13 @@ void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
 		{
 			ctx->data->error_code = 127;
 			ctx->cmd_index++;
+			continue ;
+		}
+		if (built_in)
+		{
+			ctx->cmd_index++;
+			free_exec_cmd(ctx->exec);
+			free_redir(ctx->exec);
 			continue ;
 		}
 		fork_and_free_exec(ctx->exec, &ctx->cmd_index, ctx->cmd_count);

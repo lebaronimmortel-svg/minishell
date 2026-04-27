@@ -33,29 +33,20 @@
 
 # Parsing :
 
-COMMAND : ..
--BASH : ..: command not found
--MINISHELL : ..: Permission denied
-
 COMMAND : > file
 -BASH : create file
 -MINISHELL : nothing
 
--BASH :	touch test
-		chmod 000 test
-		./test 
-result : ./ok: Permission denied
--MINISHELL :	touch test
-				chmod 000 test
-				./test 
-result : ./ok: No such file or directory
-
+COMMAND : < file
+-BASH : file: No such file or directory
+-MINISHELL : nothing
 
 -BASH : touch test | chmod 000 test | ./test
 result :	./test: No such file or directory
 			chmod: cannot access 'test': No such file or directory
 -MINISHELL :
-
+result : 	./test: No such file or directory
+			test is chmod 000
 
 # Built_in : 
 
