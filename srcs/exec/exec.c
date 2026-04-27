@@ -26,10 +26,10 @@ static void	fill_input(char **command, int *i)
 	(*i)++;
 }
 
-static char *get_path(char **env)
+static char	*get_path(char **env)
 {
-	int 	i;
-	char 	*result;
+	int		i;
+	char	*result;
 
 	i = 0;
 	result = NULL;
@@ -97,7 +97,7 @@ int	pipe_and_pid(t_exec *exec, int cmd_count, char **envp)
 
 int	is_path(char **env)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
@@ -148,7 +148,16 @@ int	exec_main(char **split, int i, t_data *data)
 	exec.split = split;
 	cmd_count = count_cmds(split, 0, 0);
 	if (cmd_count == 0)
+	{
+		exec.env = data->env;
+		exec.redir_count = 0;
+		exec.redir = NULL;
+		collect_redirs(&exec, split, 0, data->env);
+		if (exec.redir_count > 0)
+			apply_redirs(&exec);
+		free_redir(&exec);
 		return (0);
+	}
 	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)
 		return (1);
 	ctx.exec = &exec;

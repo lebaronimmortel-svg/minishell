@@ -32,16 +32,16 @@ int		is_valid_var(char *str, int flag);
 int		is_ok_quote(char *str, int index);
 
 /* =============================== built_in.c ============================ */
-int	exec_built_in(char *input, t_data *data, char **split, int i);
-int	echo(char *input, int k);
+int		exec_built_in(char *input, t_data *data, char **split, int i);
+int		echo(char *input, int k);
 int		cd(char *input, t_data *data);
 
 /* ============================ unset.c =========================== */
-int	unset(char **split, t_data *data);
+int		unset(char **split, t_data *data);
 
 /* ================================ export.c ============================= */
 int		exists(char *str, char **env, int *i);
-int	ft_export(char *input, t_data *data, int j, int i);
+int		ft_export(char *input, t_data *data, int j, int i);
 void	export_single(t_data *data);
 
 /* ============================ export_utils.c =========================== */
@@ -69,7 +69,7 @@ int		count_cmds(char **split, int i, int count);
 /* ========================== exec_utils_third.c ========================= */
 void	check_dir(t_exec *exec);
 int		find_env_loop(t_exec *exec, int i);
-int	do_built_in_part( char **split, int *i, t_exec_ctx *ctx);
+int		do_built_in_part( char **split, int *i, t_exec_ctx *ctx);
 int		should_skip_token(char **split, int *i);
 void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx);
 

@@ -41,7 +41,12 @@ static void	exec_command(t_exec *exec)
 	if (find_env(exec, 0) == 1)
 	{
 		if (ft_strchr(exec->command[0], '/'))
-			execve_error(exec->command[0], ": No such file or directory");
+		{
+			if (access(exec->command[0], F_OK) != 0)
+				execve_error(exec->command[0], ": No such file or directory");
+			else
+				execve_error(exec->command[0], ": Permission denied");
+		}
 		else
 			execve_error(exec->command[0], ": command not found");
 		free_exec_failed(exec, 127);
@@ -101,27 +106,31 @@ void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 int	end_exec(t_exec_ctx *ctx, int exit_code, int status)
 {
 	int		i;
-	int		last_builtin;
+	int		last_pid_status;
 
-	last_builtin = (ctx->exec->pid[ctx->cmd_count - 1] <= 0);
 	close_fd(ctx->exec, ctx->cmd_count);
+	last_pid_status = 0;
 	i = 0;
 	while (i < ctx->cmd_count)
 	{
 		if (ctx->exec->pid[i] > 0)
+		{
 			waitpid(ctx->exec->pid[i], &status, 0);
+			if (i == ctx->cmd_count - 1)
+				last_pid_status = status;
+		}
 		i++;
 	}
 	if (ctx->exec->pid)
 		free(ctx->exec->pid);
-	if (last_builtin || ctx->data->end)
+	if (ctx->data->end)
 		return (ctx->data->error_code);
-	if (WIFEXITED(status))
-		exit_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		exit_code = 128 + WTERMSIG(status);
+	if (WIFEXITED(last_pid_status))
+		exit_code = WEXITSTATUS(last_pid_status);
+	else if (WIFSIGNALED(last_pid_status))
+		exit_code = 128 + WTERMSIG(last_pid_status);
 	else
-		exit_code = 1;
+		exit_code = ctx->data->error_code;
 	ctx->data->error_code = exit_code;
 	return (exit_code);
 }
