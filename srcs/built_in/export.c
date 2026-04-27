@@ -89,7 +89,7 @@ int	export_plus(char **split, t_data *data)
 				{
 					if (!ft_strncmp(split[0], data->env[j],
 							ft_strlen(split[0])))
-					{		
+					{
 						tmp = data->env[j];
 						data->env[j] = ft_strjoin(data->env[j], &split[1][1]);
 						free(tmp);

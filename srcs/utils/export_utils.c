@@ -41,9 +41,9 @@ static int	replace(char *str, char **env, int i)
 	return (1);
 }
 
-int is_valid_export_var(char *str)
+int	is_valid_export_var(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i] && str[i] != ' ' && str[i] != '=')

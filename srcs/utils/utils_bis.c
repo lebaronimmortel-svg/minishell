@@ -38,7 +38,6 @@ int	print_split(char **split)
 			if (!word_split)
 				return (1);
 			if (word_split[1])
-			//METTRE des put str fd sur 1 (standard)
 				printf("declare -x %s=\"%s\"\n", word_split[0], word_split[1]);
 			else
 				printf("declare -x %s=\"\"\n", word_split[0]);
