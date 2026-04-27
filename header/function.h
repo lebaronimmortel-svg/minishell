@@ -40,13 +40,14 @@ void	export_single(t_data *data);
 int		add_var(char *str, t_data *data);
 int		change_path(int flag, char *path, t_data *data);
 
-int		exec_main(char **split, int i, t_data *data);
+int		exec_main(char **split, int i, t_data *data, int cmd_count);
 int		exec_main_sequel(char **split, int *i, t_exec_ctx *ctx);
 
 void	execve_error(char *str, char *command);
 
 void	fork_created(t_exec *exec, int cmd_index, int cmd_count);
-int		end_exec(t_exec_ctx *ctx, int exit_code, int status);
+int		end_exec(t_exec_ctx *ctx, int exit_code, int status, int i);
+int		end_exec_sig(t_exec_ctx *ctx, int exit_code, int last_pid_status);
 
 int		is_pipe(char *s);
 int		skip_redirection(char **split, int i);
@@ -59,6 +60,11 @@ int		find_env_loop(t_exec *exec, int i);
 int		do_built_in_part( char **split, int *i, t_exec_ctx *ctx);
 int		should_skip_token(char **split, int *i);
 void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx);
+
+char	*get_path(char **env);
+void	ctx_innit(t_exec_ctx *ctx, t_exec *exec, t_data *data, int cmd_count);
+void	process_built_in(t_exec_ctx *ctx);
+int		handle_exec_result(int ret, int built_in, t_exec_ctx *ctx);
 
 void	free_data_split(t_exec *exec);
 void	free_split_exec(t_exec *exec);
@@ -114,6 +120,7 @@ char	*my_get_pid(void);
 void	unmask_spaces(char *str);
 char	**quote_clean(char **split);
 char	*change_var_hd(char *str, char **envp);
+int		is_path(char **env);
 
 void	exit_cleanly(int code, t_data *data, char **split);
 

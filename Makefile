@@ -12,7 +12,7 @@ SRC     	= srcs/main/main.c srcs/parser/lexer.c\
 			  srcs/utils/exec_utils.c srcs/utils/utils_third_bis.c\
 			  srcs/exec/exec_error.c srcs/exec/redir.c\
 			  srcs/utils/redir_utils.c srcs/utils/redir_utils_bis.c\
-			  srcs/utils/redir_utils_third.c\
+			  srcs/utils/redir_utils_third.c srcs/utils/exec_utils_fourth.c\
 			  srcs/utils/exec_utils_bis.c srcs/utils/exec_utils_third.c\
 			  srcs/utils/export_utils.c srcs/utils/utils_third.c\
 			  srcs/main/main_loop.c srcs/utils/expand_utils.c\

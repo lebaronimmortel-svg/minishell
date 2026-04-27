@@ -56,12 +56,7 @@ static void	exec_command(t_exec *exec)
 		free_data_split(exec);
 		execve(exec->w_path, exec->command, exec->env);
 		perror(exec->command[0]);
-		free_split_exec(exec);
-		if (exec->data)
-			free(exec->data);
-		if (exec->pid)
-			free(exec->pid);
-		exit(126);
+		free_exec_failed(exec, 126);
 	}
 	free_exec_failed(exec, 127);
 }
@@ -103,14 +98,12 @@ void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 		end_fork_created(exec, cmd_index, cmd_count);
 }
 
-int	end_exec(t_exec_ctx *ctx, int exit_code, int status)
+int	end_exec(t_exec_ctx *ctx, int exit_code, int status, int i)
 {
-	int		i;
 	int		last_pid_status;
 
 	close_fd(ctx->exec, ctx->cmd_count);
 	last_pid_status = 0;
-	i = 0;
 	while (i < ctx->cmd_count)
 	{
 		if (ctx->exec->pid[i] > 0)
@@ -121,16 +114,6 @@ int	end_exec(t_exec_ctx *ctx, int exit_code, int status)
 		}
 		i++;
 	}
-	if (ctx->exec->pid)
-		free(ctx->exec->pid);
-	if (ctx->data->end)
-		return (ctx->data->error_code);
-	if (WIFEXITED(last_pid_status))
-		exit_code = WEXITSTATUS(last_pid_status);
-	else if (WIFSIGNALED(last_pid_status))
-		exit_code = 128 + WTERMSIG(last_pid_status);
-	else
-		exit_code = ctx->data->error_code;
-	ctx->data->error_code = exit_code;
+	exit_code = end_exec_sig(ctx, exit_code, last_pid_status);
 	return (exit_code);
 }

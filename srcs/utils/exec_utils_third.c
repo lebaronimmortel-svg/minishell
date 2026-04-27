@@ -118,25 +118,8 @@ void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
 			continue ;
 		built_in = is_built_in(split[*i]);
 		ret = exec_main_sequel(split, i, ctx);
-		ctx->data->error_code = ret;
-		if (ret == 1)
-		{
-			ctx->cmd_index++;
+		if (handle_exec_result(ret, built_in, ctx))
 			continue ;
-		}
-		if (ret == 2 && !ctx->data->end)
-		{
-			ctx->data->error_code = 127;
-			ctx->cmd_index++;
-			continue ;
-		}
-		if (built_in)
-		{
-			ctx->cmd_index++;
-			free_exec_cmd(ctx->exec);
-			free_redir(ctx->exec);
-			continue ;
-		}
 		fork_and_free_exec(ctx->exec, &ctx->cmd_index, ctx->cmd_count);
 		(*i)++;
 	}

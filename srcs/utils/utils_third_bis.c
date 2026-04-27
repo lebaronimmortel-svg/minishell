@@ -81,3 +81,15 @@ char	*change_var_hd(char *str, char **envp)
 	free(str);
 	return (tmp);
 }
+
+int	is_path(char **env)
+{
+	int	i;
+
+	i = 0;
+	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
+		i++;
+	if (!env[i])
+		return (0);
+	return (1);
+}
