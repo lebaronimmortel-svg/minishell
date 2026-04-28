@@ -43,10 +43,21 @@ static int	find_env(t_exec *exec, int i)
 
 static void	exec_command(t_exec *exec)
 {
-	if (!exec->command || !exec->command[0] || exec->command[0][0] == '\0')
+	if (!exec->command || !exec->command[0])
 	{
 		free_redir(exec);
-		free_exec_failed(exec, 0); // This cleanly frees splits, data, and pids before exiting
+		free_exec_failed(exec, 0);
+	}
+	if (exec->command[0][0] == '\0')
+	{
+		if (ft_strchr(exec->input, '\6')) // Was it quoted?
+		{
+			ft_putstr_fd("Command '' not found\n", 2);
+			free_redir(exec);
+			free_exec_failed(exec, 127);
+		}
+		free_redir(exec);
+		free_exec_failed(exec, 0);
 	}
 	if (find_env(exec, 0) == 1)
 	{

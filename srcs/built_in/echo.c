@@ -158,6 +158,11 @@ int	echo(char *input, int k)
 			input[k] = '<';
 		else if (input[k] == '\5')
 			input[k] = '>';
+		else if (input[k] == '\6')
+		{
+			move_one(&input[k]);
+			continue ;
+		}
 		k++;
 	}
 	ft_putstr_fd(&input[i], 1);

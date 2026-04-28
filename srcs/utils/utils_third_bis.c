@@ -51,6 +51,11 @@ void	unmask_spaces(char *str)
 			str[i] = '<';
 		else if (str[i] == '\5')
 			str[i] = '>';
+		else if (str[i] == '\6')
+		{
+			move_one(&str[i]);
+			continue ;
+		}
 		i++;
 	}
 }
@@ -74,6 +79,11 @@ char	**quote_clean(char **split)
 				split[i][j] = '<';
 			else if (split[i][j] == '\5')
 				split[i][j] = '>';
+			else if (split[i][j] == '\6')
+			{
+				move_one(&split[i][j]);
+				continue ;
+			}
 			j++;
 		}
 		i++;

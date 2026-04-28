@@ -116,6 +116,11 @@ int	should_skip_token(char **split, int *i)
 		(*i)++;
 		return (1);
 	}
+	if (ft_strcmp(split[*i], " ") == 0 && !has_redir_after_empty(split, *i))
+	{
+		(*i)++;
+		return (1);
+	}
 	if (is_redir_argument(split, *i))
 	{
 		(*i)++;
