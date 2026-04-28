@@ -81,6 +81,12 @@ static void	fill_space(char *str, int *i, char c)
 	{
 		if (str[*i] == ' ')
 			str[*i] = '\1';
+		else if (str[*i] == '|')
+			str[*i] = '\3';
+		else if (str[*i] == '<')
+			str[*i] = '\4';
+		else if (str[*i] == '>')
+			str[*i] = '\5';
 		(*i)++;
 	}
 	(*i)++;

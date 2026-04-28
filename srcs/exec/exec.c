@@ -21,6 +21,12 @@ static void	fill_input(char **command, int *i)
 	{
 		if (command[*i][j] == '\1')
 			command[*i][j] = ' ';
+		else if (command[*i][j] == '\3')
+			command[*i][j] = '|';
+		else if (command[*i][j] == '\4')
+			command[*i][j] = '<';
+		else if (command[*i][j] == '\5')
+			command[*i][j] = '>';
 		j++;
 	}
 	(*i)++;

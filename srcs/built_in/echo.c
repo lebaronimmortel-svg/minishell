@@ -152,6 +152,12 @@ int	echo(char *input, int k)
 	{
 		if (input[k] == '\1')
 			input[k] = ' ';
+		else if (input[k] == '\3')
+			input[k] = '|';
+		else if (input[k] == '\4')
+			input[k] = '<';
+		else if (input[k] == '\5')
+			input[k] = '>';
 		k++;
 	}
 	ft_putstr_fd(&input[i], 1);
