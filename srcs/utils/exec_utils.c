@@ -16,28 +16,24 @@ static int	find_env(t_exec *exec, int i)
 {
 	if (!exec->command || !exec->command[0])
 		return (1);
-	if (access(exec->command[0], X_OK) == 0 && ft_strchr(exec->command[0], '/'))
+	
+	if (ft_strchr(exec->command[0], '/'))
 	{
-		check_dir(exec);
-		exec->w_path = ft_strdup(exec->command[0]);
-		if (!exec->w_path)
-			return (1);
-		return (0);
-	}
-	if (exec->command[0][0] == '/' || exec->command[0][0] == '.')
-	{
+		if (access(exec->command[0], X_OK) == 0)
+		{
+			check_dir(exec);
+			exec->w_path = ft_strdup(exec->command[0]);
+			if (!exec->w_path)
+				return (1);
+			return (0);
+		}
 		exec->w_path = NULL;
 		return (1);
 	}
+	
 	if (find_env_loop(exec, i) == 0)
 		return (0);
-	if (access(exec->command[0], X_OK) == 0)
-	{
-		check_dir(exec);
-		exec->w_path = ft_strdup(exec->command[0]);
-		if (exec->w_path)
-			return (0);
-	}
+		
 	return (1);
 }
 
