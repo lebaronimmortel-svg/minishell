@@ -33,7 +33,7 @@
 
 # Parsing :
 
-
+quand count_cmd est >= 512 alors stop command
 
 
 # Built_in : 
