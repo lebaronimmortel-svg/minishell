@@ -197,6 +197,11 @@ int	ft_export(char *input, t_data *data, int j, int i)
 				split[i][j] = '<';
 			else if (split[i][j] == '\5')
 				split[i][j] = '>';
+			else if (split[i][j] == '\6')
+			{
+				move_one(&split[i][j]);
+				continue ;
+			}
 			j++;
 		}
 		i++;

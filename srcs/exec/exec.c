@@ -27,6 +27,11 @@ static void	fill_input(char **command, int *i)
 			command[*i][j] = '<';
 		else if (command[*i][j] == '\5')
 			command[*i][j] = '>';
+		else if (command[*i][j] == '\6')
+		{
+			move_one(&command[*i][j]);
+			continue ;
+		}
 		j++;
 	}
 	(*i)++;
@@ -142,11 +147,16 @@ int	exec_main(char **split, int i, t_data *data, int cmd_count)
 	exec.split = split;
 	if (cmd_count == 0)
 	{
-		if (split && split[0] && split[0][0] == '\0')
+		if (split && split[0] && ft_strchr(split[0], '\6'))
 		{
 			ft_putstr_fd("Command '' not found\n", 2);
 			data->error_code = 127;
 			return (127);
+		}
+		if (split && split[0] && (split[0][0] == '\0' || ft_strcmp(split[0], " ") == 0))
+		{
+			data->error_code = 0;
+			return (0);
 		}
 		data->error_code = exec_cmd(&exec, data, split);
 		free_redir(&exec);

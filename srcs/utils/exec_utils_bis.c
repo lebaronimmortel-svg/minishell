@@ -87,6 +87,11 @@ int	count_cmds(char **split, int i, int count)
 			i++;
 			continue ;
 		}
+		if (ft_strcmp(split[i], " ") == 0 && !has_redir_after_empty(split, i))
+		{
+			i++;
+			continue ;
+		}
 		count++;
 		i++;
 	}

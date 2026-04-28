@@ -68,11 +68,13 @@ static void	lex_convert(char **split, t_token *token, t_data *data)
 	int	i;
 	int	j;
 	int	k;
+	int	quoted;
 
 	i = 0;
 	j = 0;
 	while (split[j])
 	{
+		quoted = (ft_strchr(split[j], '"') || ft_strchr(split[j], '\''));
 		token[i].type = convert_type(split[j]);
 		token[i].value = ft_strdup(split[j]);
 		handle_single(token[i].value);
@@ -82,22 +84,23 @@ static void	lex_convert(char **split, t_token *token, t_data *data)
 		token[i].value = expand_code(token[i].value, data);
 		if (i == 0 || token[i - 1].type != 'h')
 			remove_quotes(token[i].value);
-		if (token[i].value[0] == '\0')
-		{
-			token[i].value[0] = ' ';
-			token[i].value[1] = '\0';
-		}
+		
 		k = 0;
 		while (token[i].value[k])
 		{
 			if (token[i].value[k] == '\2')
 				move_one(&token[i].value[k]);
-			k++;
+			else
+				k++;
 		}
-		if (*(token[i].value))
-			i++;
-		else
-			free(token[i].value);
+		
+		if (token[i].value[0] == '\0' && quoted)
+		{
+			token[i].value[0] = '\6';
+			token[i].value[1] = '\0';
+		}
+
+		i++;
 		j++;
 	}
 	token[i].type = 0;
