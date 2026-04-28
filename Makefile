@@ -1,6 +1,12 @@
 NAME        = minishell
 
-# --- Chemins et Fichiers ---
+# --- Directories ---
+SRC_DIR     = srcs
+OBJ_DIR     = objs
+LIBFT_DIR   = srcs/libft
+HEADER_DIR  = header
+
+# --- Files ---
 SRC         = srcs/main/main.c srcs/main/main_loop.c \
               srcs/exec/exec.c srcs/exec/exec_error.c \
               srcs/exec/free_exec.c srcs/exec/redir.c \
@@ -24,11 +30,8 @@ SRC         = srcs/main/main.c srcs/main/main_loop.c \
               srcs/utils/utils_third.c \
               srcs/utils/utils_third_bis.c
 
-OBJ         = $(SRC:.c=.o)
+OBJ         = $(SRC:%.c=$(OBJ_DIR)/%.o)
 HEADER      = header/header.h
-
-# --- Librairies ---
-LIBFT_DIR   = ./srcs/libft
 LIBFT       = $(LIBFT_DIR)/libft.a
 
 # --- Compilation ---
@@ -36,25 +39,23 @@ CC          = cc
 FLAGS       = -Wall -Wextra -Werror -g
 RM          = rm -rf
 
-# --- Règles ---
-
+# --- Rules ---
 all: $(NAME)
 
-# Liaison finale : Ajout de $(LIBFT) pour que le linker l'utilise
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(FLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline
 
-# Compilation des .o : Ajout de -I pour trouver les headers facilement
-%.o: %.c $(HEADER)
-	$(CC) $(FLAGS) -I header -I $(LIBFT_DIR) -c $< -o $@
+# Create objs/ directories automatically
+$(OBJ_DIR)/%.o: %.c $(HEADER)
+	@mkdir -p $(dir $@)
+	$(CC) $(FLAGS) -I $(HEADER_DIR) -I $(LIBFT_DIR) -c $< -o $@
 
-# Compilation de la Libft
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
 clean:
 	make clean -C $(LIBFT_DIR)
-	$(RM) $(OBJ)
+	$(RM) $(OBJ_DIR)
 
 fclean: clean
 	make fclean -C $(LIBFT_DIR)
