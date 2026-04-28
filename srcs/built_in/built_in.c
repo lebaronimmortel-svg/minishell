@@ -120,7 +120,6 @@ int	cd(char *input, t_data *data)
 	char	*path;
 	char	buffer[1024];
 
-	printf("%s\n", input);
 	path = &input[3];
 	unmask_spaces(path);
 	if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
