@@ -39,6 +39,12 @@ static void	join_cmd(char **split, t_token *lexer, int *i, int j)
 {
 	char	*tmp;
 
+	/* If the token is a vanished unquoted variable, skip it completely */
+	if (lexer[*i].value[0] == '\0')
+	{
+		(*i)++;
+		return ;
+	}
 	if (lexer[*i].value[0] == ' ' && !lexer[*i].value[1])
 		tmp = ft_strjoin(split[j], " ");
 	else
