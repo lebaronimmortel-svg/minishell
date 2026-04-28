@@ -30,6 +30,7 @@ static int	handle_hdoc_bis(char *delim, int expand, char **envp, int *pipefd)
 			if (!line)
 			{
 				write(1, "bash: warning: here-document delimited by end-of-file\n", 55);
+				// FREE les var;
 				break ;
 			}
 			if (ft_strcmp(line, delim) == 0)
