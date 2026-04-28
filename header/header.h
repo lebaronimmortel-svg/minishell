@@ -26,6 +26,7 @@
 # include <dirent.h>
 # include <string.h>
 # include <termios.h>
+#include <sys/ioctl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../srcs/libft/libft.h"

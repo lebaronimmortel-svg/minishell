@@ -100,7 +100,7 @@ void	collect_redirs(t_exec *exec, char **split, int cmd_pos, char **envp);
 void	end_redir_sequel(t_exec *exec, char **split, int i, char type);
 
 /* ============================= redir_utils.c =========================== */
-int		handle_heredoc(char *delimiter, char **envp, int expand, int len);
+int		handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand, int len);
 int		first_part_apply_redir(char type, t_exec *exec, int i, int fd);
 int		second_part_apply_redir(char type, t_exec *exec, int i);
 int		apply_redirs(t_exec *exec);
