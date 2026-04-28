@@ -39,12 +39,17 @@ static void	join_cmd(char **split, t_token *lexer, int *i, int j)
 {
 	char	*tmp;
 
-	tmp = ft_strjoin(split[j], " ");
-	if (!tmp)
-		return ;
-	free(split[j]);
-	split[j] = tmp;
-	tmp = ft_strjoin(split[j], lexer[*i].value);
+	if (lexer[*i].value[0] == ' ' && !lexer[*i].value[1])
+		tmp = ft_strjoin(split[j], " ");
+	else
+	{
+		tmp = ft_strjoin(split[j], " ");
+		if (!tmp)
+			return ;
+		free(split[j]);
+		split[j] = tmp;
+		tmp = ft_strjoin(split[j], lexer[*i].value);
+	}
 	if (!tmp)
 		return ;
 	free(split[j]);
