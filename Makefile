@@ -31,7 +31,7 @@ SRC         = srcs/main/main.c srcs/main/main_loop.c \
               srcs/utils/utils_third_bis.c
 
 OBJ         = $(SRC:%.c=$(OBJ_DIR)/%.o)
-HEADER      = header/header.h
+HEADERS = header/typedef.h header/function.h header/header.h
 LIBFT       = $(LIBFT_DIR)/libft.a
 
 # --- Compilation ---
