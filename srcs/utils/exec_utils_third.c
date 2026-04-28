@@ -94,7 +94,12 @@ int	should_skip_token(char **split, int *i)
 		*i = skip_redirection(split, *i);
 		return (1);
 	}
-	if (split[*i][0] == '\0' || should_skip_empty(split, *i))
+	if (should_skip_empty(split, *i))
+	{
+		(*i)++;
+		return (1);
+	}
+	if (split[*i][0] == '\0' && !has_redir_after_empty(split, *i))
 	{
 		(*i)++;
 		return (1);

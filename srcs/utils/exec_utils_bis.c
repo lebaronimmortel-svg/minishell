@@ -51,6 +51,18 @@ int	is_redir_argument(char **split, int i)
 	return (0);
 }
 
+int	has_redir_after_empty(char **split, int i)
+{
+	i++;
+	while (split[i] && split[i][0] != '|')
+	{
+		if (split[i][0] == '<' || split[i][0] == '>')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 int	count_cmds(char **split, int i, int count)
 {
 	while (split && split[i])
@@ -65,8 +77,12 @@ int	count_cmds(char **split, int i, int count)
 			i = skip_redirection(split, i);
 			continue ;
 		}
-		if (split[i][0] == '\0' || should_skip_empty(split, i)
-			|| is_redir_argument(split, i))
+		if (should_skip_empty(split, i) || is_redir_argument(split, i))
+		{
+			i++;
+			continue ;
+		}
+		if (split[i][0] == '\0' && !has_redir_after_empty(split, i))
 		{
 			i++;
 			continue ;
