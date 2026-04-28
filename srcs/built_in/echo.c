@@ -63,6 +63,8 @@ static int	is_valid_flag(char *str)
 	int	i;
 
 	i = 0;
+	if (!str[i] || str[i] == ' ')
+		return (0);
 	while (str[i] && str[i] != ' ')
 	{
 		if (str[i] != 'n')
@@ -110,10 +112,18 @@ int	echo(char *input, int k)
 		while (input[i] && input[i] != ' ')
 			i++;
 		if (!input[i])
+		{
+			if (!has_n_flag(input))
+				ft_putstr_fd("\n", 1);
 			return (0);
+		}
 		i++;
 		if (!input[i])
+		{
+			if (!has_n_flag(input))
+				ft_putstr_fd("\n", 1);
 			return (0);
+		}
 		if (input[i] == ' ')
 		{
 			j = i;
@@ -126,7 +136,8 @@ int	echo(char *input, int k)
 			i++;
 		if (!input[i])
 		{
-			ft_putstr_fd("\n", 1);
+			if (!has_n_flag(input))
+				ft_putstr_fd("\n", 1);
 			return (0);
 		}
 		if (flag && !has_more_n_flag(&input[i]))

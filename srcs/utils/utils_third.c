@@ -24,7 +24,7 @@ int	is_built_in(char *input)
 		return (1);
 	if (!ft_strncmp(input, "unset ", 6))
 		return (1);
-	if (!ft_strncmp(input, "echo ", 5))
+	if (!ft_strncmp(input, "echo ", 5) || (!ft_strncmp(input, "echo", 4) && ft_strlen(input) == 4))
 		return (1);
 	if (!ft_strncmp(input, "exit", 4) && ft_strlen(input) == 4)
 		return (1);

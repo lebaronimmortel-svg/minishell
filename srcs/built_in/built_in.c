@@ -229,7 +229,7 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 			data->end = 1;
 		}
 	}
-	else if ((!ft_strncmp(input, "echo ", 5)))
+	else if (!ft_strncmp(input, "echo ", 5) || (!ft_strncmp(input, "echo", 4) && ft_strlen(input) == 4))
 	{
 		split = ft_split(input, ' ');
 		if (!split)
