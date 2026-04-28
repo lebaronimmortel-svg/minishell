@@ -12,24 +12,52 @@
 
 #include "../../header/header.h"
 
-static int	handle_hdoc_bis(char *delim, int expand, char **envp, int *pipefd)
+int g_ack = 0;
+
+void	handle_sigint_son(int sig)
+{
+	g_ack = sig;
+	ioctl(STDIN_FILENO, TIOCSTI, "\n");
+	rl_on_new_line();
+}
+
+void	free_son_heredoc(t_exec *exec, char *delim, int pipe_fd[2])
+{
+	if (pipe_fd[0] != -1)
+		close(pipe_fd[0]);
+	if (pipe_fd[1] != -1)
+		close(pipe_fd[1]);
+	if (delim)
+		free(delim);
+	free_redir(exec);
+	free_exec_cmd(exec);
+	if (exec->pid)
+		free(exec->pid);
+	exit_cleanly(130, exec->data, exec->split);
+}
+
+static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, int *pipefd)
 {
 	pid_t	pid;
-	int		exit_status;
 	int		status;
 	char	*line;
 
 	pid = fork();
-	exit_status = 1;
 	if (pid == 0)
 	{
-		signal(SIGINT, SIG_DFL);
+		g_ack = 0;
+		signal(SIGINT, handle_sigint_son);
 		while (1)
 		{
 			line = readline("heredoc> ");
+			if (g_status == SIGINT)
+			{
+				if (line) free(line);
+				free_son_heredoc(exec, delim, pipefd);
+			}
 			if (!line)
 			{
-				write(1, "bash: warning: here-document delimited by end-of-file\n", 55);
+				write(1, "minishell: warning: here-document delimited by end-of-file\n", 59);
 				break ;
 			}
 			if (ft_strcmp(line, delim) == 0)
@@ -44,22 +72,16 @@ static int	handle_hdoc_bis(char *delim, int expand, char **envp, int *pipefd)
 			write(pipefd[1], "\n", 1);
 			free(line);
 		}
-		close(pipefd[1]);
-		exit(0);
+		free_son_heredoc(exec, delim, pipefd);
 	}
 	close(pipefd[1]);
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	signal(SIGINT, handler0);
-	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-	{
-		exit_status = 130;
-		write(STDOUT_FILENO, "\n", 1);
-	}
-	return (exit_status);
+	return (WEXITSTATUS(status));
 }
 
-int	handle_heredoc(char *delimiter, char **envp, int expand, int len)
+int	handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand, int len)
 {
 	int		pipefd[2];
 	char	*delim;
@@ -81,7 +103,7 @@ int	handle_heredoc(char *delimiter, char **envp, int expand, int len)
 		free(delim);
 		return (-1);
 	}
-	handle_hdoc_bis(delim, expand, envp, pipefd);
+	handle_hdoc_bis(exec, delim, expand, envp, pipefd);
 	free(delim);
 	close(pipefd[1]);
 	return (pipefd[0]);
