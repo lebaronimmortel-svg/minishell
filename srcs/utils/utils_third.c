@@ -32,6 +32,8 @@ int	is_built_in(char *input)
 		return (1);
 	if (!ft_strncmp(input, "cd ", 3))
 		return (1);
+	if (!ft_strncmp(input, ".", 1) && ft_strlen(input) == 1)
+		return (1);
 	if (!ft_strncmp(input, "cd", 2) && ft_strlen(input) == 2)
 		return (1);
 	if (!ft_strncmp(input, "export", 6) && ft_strlen(input) == 6)

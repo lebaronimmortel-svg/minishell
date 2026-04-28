@@ -50,7 +50,7 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 		while (1)
 		{
 			line = readline("heredoc> ");
-			if (g_status == SIGINT)
+			if (g_ack == SIGINT)
 			{
 				if (line) free(line);
 				free_son_heredoc(exec, delim, pipefd);
