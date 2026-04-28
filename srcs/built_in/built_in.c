@@ -166,30 +166,70 @@ static int	env(char **envp)
 	return (0);
 }
 
-static int	status_code(char *input, t_data *data)
+static int	is_numeric_arg(char *str)
 {
-	int			i;
-	int			j;
-	long long	code;
+	int	i;
 
 	i = 0;
-	code = 0;
-	while (input[i] && input[i] != ' ')
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n'
+		|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
 		i++;
-	if (!input[i])
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	if (str[i] < '0' || str[i] > '9')
+		return (0);
+	while (str[i] >= '0' && str[i] <= '9')
+		i++;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n'
+		|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
+		i++;
+	if (str[i] != '\0')
+		return (0);
+	return (1);
+}
+
+static int	status_code(char *input, t_data *data)
+{
+	char		**args;
+	long long	code;
+	int			i;
+	int			len;
+
+	args = ft_split(input, ' ');
+	if (!args)
 		return (data->error_code);
-	j = i + 1;
-	while (input[j] && input[j] != ' ')
+	i = 0;
+	while (args[i])
 	{
-		if ((input[j] < '0' || input[j] > '9') && input[j] != '+' && input[j] != '-')
-			return (2);
-		j++;
+		unmask_spaces(args[i]);
+		i++;
 	}
-	if (ft_strchr(&input[i + 1], ' '))
-		return (1);
-	if (!ft_atoll(&input[i], &code))
+	len = i;
+	if (len == 1)
+	{
+		free_split(args, 0);
+		data->end = 1;
+		return (data->error_code);
+	}
+	code = 0;
+	if (!is_numeric_arg(args[1]) || !ft_atoll(args[1], &code))
+	{
+		ft_putstr_fd("minishell: exit: ", 2);
+		ft_putstr_fd(args[1], 2);
+		ft_putstr_fd(": numeric argument required\n", 2);
+		free_split(args, 0);
+		data->end = 1;
 		return (2);
-	return (code % 256);
+	}
+	if (len > 2)
+	{
+		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+		free_split(args, 0);
+		return (1);
+	}
+	free_split(args, 0);
+	data->end = 1;
+	return ((code % 256 + 256) % 256);
 }
 
 int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
