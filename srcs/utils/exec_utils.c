@@ -52,7 +52,10 @@ static void	exec_command(t_exec *exec)
 			if (access(exec->command[0], F_OK) != 0)
 				execve_error(exec->command[0], ": No such file or directory");
 			else
+			{
 				execve_error(exec->command[0], ": Permission denied");
+				free_exec_failed(exec, 126);
+			}
 		}
 		else
 			execve_error(exec->command[0], ": command not found");
