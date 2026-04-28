@@ -15,6 +15,11 @@
 int	handle_exec_result(int ret, int built_in, t_exec_ctx *ctx)
 {
 	ctx->data->error_code = ret;
+	if (built_in)
+	{
+		process_built_in(ctx);
+		return (1);
+	}
 	if (ret == 1)
 	{
 		ctx->cmd_index++;
@@ -24,11 +29,6 @@ int	handle_exec_result(int ret, int built_in, t_exec_ctx *ctx)
 	{
 		ctx->data->error_code = 127;
 		ctx->cmd_index++;
-		return (1);
-	}
-	if (built_in)
-	{
-		process_built_in(ctx);
 		return (1);
 	}
 	return (0);
