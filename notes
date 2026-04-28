@@ -32,8 +32,6 @@
 	}
 
 # Parsing :
-->	exemple de commande de con qui foire : 
-	<srcs/main/main.c export |cat|sleep 10|export caca=chienducul|sleep 10|wc>cfre
 
 
 

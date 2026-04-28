@@ -69,6 +69,7 @@ int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 	if (ctx->exec->redir_count > 0)
 		apply_redirs(ctx->exec);
 	status = exec_built_in(ctx->exec->input, ctx->data, split, *i);
+	ctx->exec->env = ctx->data->env;
 	dup2(saved_stdin, STDIN_FILENO);
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdin);

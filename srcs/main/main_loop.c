@@ -68,6 +68,7 @@ static int	execute_prompt(char **split, t_token *lex, t_data *data)
 	{
 		free_lexer(lex);
 		status_code = 2;
+		data->error_code = 2;
 		ft_putstr_fd("minishell: syntax error\n", 2);
 	}
 	return (status_code);
