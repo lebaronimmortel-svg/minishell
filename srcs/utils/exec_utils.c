@@ -107,19 +107,28 @@ void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 
 int	end_exec(t_exec_ctx *ctx, int exit_code, int status, int i)
 {
-	int		last_pid_status;
+	int	last_pid_status;
+	int	had_real_pid;
 
 	close_fd(ctx->exec, ctx->cmd_count);
 	last_pid_status = 0;
+	had_real_pid = 0;
 	while (i < ctx->cmd_count)
 	{
 		if (ctx->exec->pid[i] > 0)
 		{
+			had_real_pid = 1;
 			waitpid(ctx->exec->pid[i], &status, 0);
 			if (i == ctx->cmd_count - 1)
 				last_pid_status = status;
 		}
 		i++;
+	}
+	if (!had_real_pid)
+	{
+		if (ctx->exec->pid)
+			free(ctx->exec->pid);
+		return (ctx->data->error_code);
 	}
 	exit_code = end_exec_sig(ctx, exit_code, last_pid_status);
 	return (exit_code);
