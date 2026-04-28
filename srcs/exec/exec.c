@@ -65,21 +65,10 @@ int	pipe_and_pid(t_exec *exec, int cmd_count, char **envp)
 	if (pipe_and_pid_init(exec, cmd_count) == 1)
 		return (1);
 	i = 0;
-	while (i < cmd_count - 1)
+	while (i < 1024)
 	{
-		if (pipe(exec->fd[i]) == -1)
-		{
-			i--;
-			while (i >= 0)
-			{
-				close(exec->fd[i][0]);
-				close(exec->fd[i][1]);
-				i--;
-			}
-			free(exec->pid);
-			exec->pid = NULL;
-			return (1);
-		}
+		exec->fd[i][0] = -1;
+		exec->fd[i][1] = -1;
 		i++;
 	}
 	return (0);

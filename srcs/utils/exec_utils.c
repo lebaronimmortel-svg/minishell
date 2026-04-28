@@ -117,10 +117,16 @@ static void	exec_command(t_exec *exec)
 
 static void	end_fork_created(t_exec *exec, int cmd_index, int cmd_count)
 {
-	if (cmd_index > 0)
+	if (cmd_index > 0 && exec->fd[cmd_index - 1][0] != -1)
+	{
 		close(exec->fd[cmd_index - 1][0]);
-	if (cmd_index < cmd_count - 1)
+		exec->fd[cmd_index - 1][0] = -1;
+	}
+	if (cmd_index < cmd_count - 1 && exec->fd[cmd_index][1] != -1)
+	{
 		close(exec->fd[cmd_index][1]);
+		exec->fd[cmd_index][1] = -1;
+	}
 }
 
 void	fork_created(t_exec *exec, int cmd_index, int cmd_count)

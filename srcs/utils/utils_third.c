@@ -90,10 +90,18 @@ void	close_fd(t_exec *exec, int cmd_count)
 	int	j;
 
 	j = 0;
-	while (j < cmd_count - 1)
+	while (j < cmd_count - 1 && j < 1024)
 	{
-		close(exec->fd[j][0]);
-		close(exec->fd[j][1]);
+		if (exec->fd[j][0] != -1)
+		{
+			close(exec->fd[j][0]);
+			exec->fd[j][0] = -1;
+		}
+		if (exec->fd[j][1] != -1)
+		{
+			close(exec->fd[j][1]);
+			exec->fd[j][1] = -1;
+		}
 		j++;
 	}
 }

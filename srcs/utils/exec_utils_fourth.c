@@ -20,14 +20,20 @@ int	handle_exec_result(int ret, int built_in, t_exec_ctx *ctx)
 		process_built_in(ctx);
 		return (1);
 	}
-	if (ret == 1)
+	if (ret == 1 || (ret == 2 && !ctx->data->end))
 	{
-		ctx->cmd_index++;
-		return (1);
-	}
-	if (ret == 2 && !ctx->data->end)
-	{
-		ctx->data->error_code = 127;
+		if (ret == 2 && !ctx->data->end)
+			ctx->data->error_code = 127;
+		if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
+		{
+			close(ctx->exec->fd[ctx->cmd_index - 1][0]);
+			ctx->exec->fd[ctx->cmd_index - 1][0] = -1;
+		}
+		if (ctx->cmd_index < ctx->cmd_count - 1 && ctx->exec->fd[ctx->cmd_index][1] != -1)
+		{
+			close(ctx->exec->fd[ctx->cmd_index][1]);
+			ctx->exec->fd[ctx->cmd_index][1] = -1;
+		}
 		ctx->cmd_index++;
 		return (1);
 	}
