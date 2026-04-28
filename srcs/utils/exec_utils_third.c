@@ -62,9 +62,9 @@ int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
-	if (ctx->cmd_index > 0)
+	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
 		dup2(ctx->exec->fd[ctx->cmd_index - 1][0], STDIN_FILENO);
-	if (ctx->cmd_index < ctx->cmd_count - 1)
+	if (ctx->cmd_index < ctx->cmd_count - 1 && ctx->exec->fd[ctx->cmd_index][1] != -1)
 		dup2(ctx->exec->fd[ctx->cmd_index][1], STDOUT_FILENO);
 	status = 0;
 	if (ctx->exec->redir_count > 0)
@@ -79,10 +79,16 @@ int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdin);
 	close(saved_stdout);
-	if (ctx->cmd_index > 0)
+	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
+	{
 		close(ctx->exec->fd[ctx->cmd_index - 1][0]);
-	if (ctx->cmd_index < ctx->cmd_count - 1)
+		ctx->exec->fd[ctx->cmd_index - 1][0] = -1;
+	}
+	if (ctx->cmd_index < ctx->cmd_count - 1 && ctx->exec->fd[ctx->cmd_index][1] != -1)
+	{
 		close(ctx->exec->fd[ctx->cmd_index][1]);
+		ctx->exec->fd[ctx->cmd_index][1] = -1;
+	}
 	free_redir(ctx->exec);
 	(*i)++;
 	return (status);
@@ -138,6 +144,17 @@ void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
 	{
 		if (should_skip_token(split, i))
 			continue ;
+			
+		if (ctx->cmd_index < ctx->cmd_count - 1)
+		{
+			if (pipe(ctx->exec->fd[ctx->cmd_index]) == -1)
+			{
+				perror("pipe");
+				ctx->data->error_code = 1;
+				break ;
+			}
+		}
+
 		built_in = is_built_in(split[*i]);
 		ret = exec_main_sequel(split, i, ctx);
 		if (handle_exec_result(ret, built_in, ctx))
