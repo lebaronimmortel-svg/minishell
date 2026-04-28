@@ -23,14 +23,14 @@ void	handle_single(char *str)
 	flag2 = 0;
 	while (str[i])
 	{
-		if (str[i] == 39)
+		if (str[i] == 39 && flag1 == 0)
 			flag2 = update_flag(flag2);
-		if (str[i] == 34)
+		else if (str[i] == 34 && flag2 == 0)
 			flag1 = update_flag(flag1);
+		
 		if (str[i] == '$')
 		{
-			if ((str[i + 1] == 39 && flag2 == 0)
-				|| (str[i + 1] == 34 && flag1 == 0))
+			if (flag1 == 0 && flag2 == 0 && (str[i + 1] == 39 || str[i + 1] == 34))
 				move_one(&str[i]);
 			else
 				i++;
