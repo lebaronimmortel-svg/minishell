@@ -45,6 +45,12 @@ void	unmask_spaces(char *str)
 	{
 		if (str[i] == '\1')
 			str[i] = ' ';
+		else if (str[i] == '\3')
+			str[i] = '|';
+		else if (str[i] == '\4')
+			str[i] = '<';
+		else if (str[i] == '\5')
+			str[i] = '>';
 		i++;
 	}
 }
@@ -62,6 +68,12 @@ char	**quote_clean(char **split)
 		{
 			if (split[i][j] == '\1')
 				split[i][j] = ' ';
+			else if (split[i][j] == '\3')
+				split[i][j] = '|';
+			else if (split[i][j] == '\4')
+				split[i][j] = '<';
+			else if (split[i][j] == '\5')
+				split[i][j] = '>';
 			j++;
 		}
 		i++;

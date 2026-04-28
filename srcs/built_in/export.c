@@ -191,6 +191,12 @@ int	ft_export(char *input, t_data *data, int j, int i)
 		{
 			if (split[i][j] == '\1')
 				split[i][j] = ' ';
+			else if (split[i][j] == '\3')
+				split[i][j] = '|';
+			else if (split[i][j] == '\4')
+				split[i][j] = '<';
+			else if (split[i][j] == '\5')
+				split[i][j] = '>';
 			j++;
 		}
 		i++;

@@ -98,6 +98,7 @@ int	handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand, int l
 		delim = ft_strdup(delimiter);
 	if (!delim)
 		return (-1);
+	unmask_spaces(delim);
 	if (pipe(pipefd) < 0)
 	{
 		free(delim);
