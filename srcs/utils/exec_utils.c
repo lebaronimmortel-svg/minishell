@@ -41,8 +41,41 @@ static int	find_env(t_exec *exec, int i)
 	return (1);
 }
 
+static int	get_path_error(char *path)
+{
+	int		i;
+	char	c;
+
+	i = 0;
+	while (path[i])
+	{
+		while (path[i] == '/')
+			i++;
+		while (path[i] && path[i] != '/')
+			i++;
+		if (i == 0)
+			break ;
+		c = path[i];
+		path[i] = '\0';
+		if (access(path, F_OK) != 0)
+		{
+			path[i] = c;
+			return (127);
+		}
+		if (access(path, X_OK) != 0)
+		{
+			path[i] = c;
+			return (126);
+		}
+		path[i] = c;
+	}
+	return (127);
+}
+
 static void	exec_command(t_exec *exec)
 {
+	int	err_code;
+
 	if (!exec->command || !exec->command[0])
 	{
 		free_redir(exec);
@@ -50,7 +83,7 @@ static void	exec_command(t_exec *exec)
 	}
 	if (exec->command[0][0] == '\0')
 	{
-		if (ft_strchr(exec->input, '\6')) // Was it quoted?
+		if (ft_strchr(exec->input, '\6'))
 		{
 			ft_putstr_fd("Command '' not found\n", 2);
 			free_redir(exec);
@@ -63,23 +96,24 @@ static void	exec_command(t_exec *exec)
 	{
 		if (ft_strchr(exec->command[0], '/'))
 		{
-			if (access(exec->command[0], F_OK) != 0)
-				execve_error(exec->command[0], ": No such file or directory");
-			else
-			{
+			err_code = get_path_error(exec->command[0]);
+			if (err_code == 126)
 				execve_error(exec->command[0], ": Permission denied");
-				free_exec_failed(exec, 126);
-			}
+			else
+				execve_error(exec->command[0], ": No such file or directory");
+			free_exec_failed(exec, err_code);
 		}
 		else
+		{
 			execve_error(exec->command[0], ": command not found");
-		free_exec_failed(exec, 127);
+			free_exec_failed(exec, 127);
+		}
 	}
 	if (exec->w_path)
 	{
 		free_data_split(exec);
 		execve(exec->w_path, exec->command, exec->env);
-		perror(exec->command[0]);
+		execve_error(exec->command[0], ": Permission denied");
 		free_exec_failed(exec, 126);
 	}
 	free_exec_failed(exec, 127);
