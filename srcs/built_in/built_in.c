@@ -174,12 +174,18 @@ static int	status_code(char *input, t_data *data)
 	long long	code;
 
 	i = 0;
-	j = 0;
 	code = 0;
 	while (input[i] && input[i] != ' ')
 		i++;
 	if (!input[i])
 		return (data->error_code);
+	j = i + 1;
+	while (input[j] && input[j] != ' ')
+	{
+		if ((input[j] < '0' || input[j] > '9') && input[j] != '+' && input[j] != '-')
+			return (2);
+		j++;
+	}
 	if (ft_strchr(&input[i + 1], ' '))
 		return (1);
 	if (!ft_atoll(&input[i], &code))
