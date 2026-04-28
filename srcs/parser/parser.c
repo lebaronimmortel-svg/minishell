@@ -46,6 +46,9 @@ static int	has_cmd_after_pipe(t_token *lexer, int i)
 	{
 		if (lexer[i].type == 'w')
 			return (1);
+		if (lexer[i].type == 'r' || lexer[i].type == 'a'
+			|| lexer[i].type == 's' || lexer[i].type == 'h')
+			return (1);
 		i += 2;
 	}
 	return (0);
