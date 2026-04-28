@@ -38,8 +38,6 @@
 
 # Built_in : 
 
-- Rajouter les exit_code aux built_in (comme fait pour pwd)
-
 -EXPORT : 
 		  - ajouter le +=
 
@@ -54,13 +52,7 @@
 # Exit STATUS :
 
 - check Segfault pour tous les malloc -> exit status (139)
-- exit : 128: Invalid argument to exit.
 -Ctrl-C : 130: Script terminated by Control-C.
-
--MINISHELL : redir afficher : syntax error near unexpected token 'x'
-			exit status(2)
-
--BUILTIN : exit status(2): Misuse of shell builtins
 
 # + leaks + protections
 
