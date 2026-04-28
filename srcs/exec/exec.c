@@ -74,6 +74,19 @@ int	pipe_and_pid(t_exec *exec, int cmd_count, char **envp)
 	return (0);
 }
 
+static int	setup_empty_cmd(t_exec *exec)
+{
+	exec->all_path = ft_calloc(1, sizeof(char *));
+	exec->command = ft_calloc(2, sizeof(char *));
+	if (!exec->all_path || !exec->command)
+		return (1);
+	exec->command[0] = ft_strdup("");
+	if (!exec->command[0])
+		return (1);
+	exec->w_path = NULL;
+	return (0);
+}
+
 int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 {
 	t_exec	*exec;
@@ -92,6 +105,15 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 	{
 		status = do_built_in_part(split, i, ctx);
 		return (status);
+	}
+	if (!exec->input[0] && exec->redir_count > 0)
+	{
+		if (setup_empty_cmd(exec))
+		{
+			free_redir(exec);
+			return (1);
+		}
+		return (0);
 	}
 	if (exec_init(exec, 0))
 	{

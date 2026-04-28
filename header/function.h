@@ -65,6 +65,7 @@ int		is_pipe(char *s);
 int		skip_redirection(char **split, int i);
 int		should_skip_empty(char **split, int i);
 int		is_redir_argument(char **split, int i);
+int		has_redir_after_empty(char **split, int i);
 int		count_cmds(char **split, int i, int count);
 
 /* ========================== exec_utils_third.c ========================= */

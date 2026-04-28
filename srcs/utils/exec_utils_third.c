@@ -82,6 +82,12 @@ int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 	return (status);
 }
 
+/*
+** Returns 1 and advances *i when the current token should be skipped by
+** the execution loop.  An empty slot is only skipped when it has NO
+** redirect operators following it before the next pipe; if it does own
+** redirects it must be executed as an anonymous subshell (e.g. "< f | wc").
+*/
 int	should_skip_token(char **split, int *i)
 {
 	if (is_pipe(split[*i]))
@@ -94,7 +100,12 @@ int	should_skip_token(char **split, int *i)
 		*i = skip_redirection(split, *i);
 		return (1);
 	}
-	if (split[*i][0] == '\0' || should_skip_empty(split, *i))
+	if (should_skip_empty(split, *i))
+	{
+		(*i)++;
+		return (1);
+	}
+	if (split[*i][0] == '\0' && !has_redir_after_empty(split, *i))
 	{
 		(*i)++;
 		return (1);

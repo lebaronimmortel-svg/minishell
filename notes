@@ -32,20 +32,9 @@
 	}
 
 # Parsing :
+->	exemple de commande de con qui foire : 
+	<srcs/main/main.c export |cat|sleep 10|export caca=chienducul|sleep 10|wc>cfre
 
-COMMAND : < file | wc
-bash: file: No such file or directory
-      0       0       0
-MINISHELL : waiting prompt
-redir does not use the file fd's
-
-
--BASH : touch test | chmod 000 test | ./test
-result :	./test: No such file or directory
-			chmod: cannot access 'test': No such file or directory
--MINISHELL :
-result : 	./test: No such file or directory
-			test is chmod 000
 
 
 
@@ -83,15 +72,3 @@ _________________________________________________________________________
 _________________________________________________________________________
 
 -> cat : le ctrl-c affiche deux prompts a la suite au lieu d'un
-
-->	exemple de commande de con qui foire : 
-	<srcs/main/main.c export |cat|sleep 10|export caca=chienducul|sleep 10|wc>cfre
-	
-
-
-
-
-
-
-
-
