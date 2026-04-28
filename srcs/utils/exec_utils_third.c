@@ -66,9 +66,14 @@ int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 		dup2(ctx->exec->fd[ctx->cmd_index - 1][0], STDIN_FILENO);
 	if (ctx->cmd_index < ctx->cmd_count - 1)
 		dup2(ctx->exec->fd[ctx->cmd_index][1], STDOUT_FILENO);
+	status = 0;
 	if (ctx->exec->redir_count > 0)
-		apply_redirs(ctx->exec);
-	status = exec_built_in(ctx->exec->input, ctx->data, split, *i);
+	{
+		if (apply_redirs(ctx->exec) != 0)
+			status = 1;
+	}
+	if (status == 0)
+		status = exec_built_in(ctx->exec->input, ctx->data, split, *i);
 	ctx->exec->env = ctx->data->env;
 	dup2(saved_stdin, STDIN_FILENO);
 	dup2(saved_stdout, STDOUT_FILENO);
