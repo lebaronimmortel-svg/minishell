@@ -101,6 +101,7 @@ int	echo(char *input, int k)
 {
 	int	i;
 	int	flag;
+	int	j;
 
 	i = 0;
 	flag = 0;
@@ -114,7 +115,13 @@ int	echo(char *input, int k)
 		if (!input[i])
 			return (0);
 		if (input[i] == ' ')
-			ft_putstr_fd(" ", 1);
+		{
+			j = i;
+			while (input[j] == ' ')
+				j++;
+			if (input[j])
+				ft_putstr_fd(" ", 1);
+		}
 		while (input[i] && input[i] == ' ')
 			i++;
 		if (!input[i])

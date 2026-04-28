@@ -43,7 +43,7 @@
 
 # Signaux :
 
-- LEAKS QUAND SIGNAUX
+- LEAKS QUAND SIGNAUX HEREDOC
 
 
 
@@ -61,4 +61,4 @@ _________________________________________________________________________
 24 / 04 /26 
 _________________________________________________________________________
 
--> cat : le ctrl-c affiche deux prompts a la suite au lieu d'un
+-> cat ou wc... : le ctrl-c affiche deux prompts a la suite au lieu d'un
