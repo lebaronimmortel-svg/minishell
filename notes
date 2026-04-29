@@ -34,13 +34,13 @@
 # Parsing :
 
 -plus de 1024 pipe segfault
-
+-gerer file with space exemple : "file name"
 
 # Built_in : 
 
 
 # Signaux :
-
+heredoc Ctrl-C WARNING
 
 
 # Exit STATUS :
