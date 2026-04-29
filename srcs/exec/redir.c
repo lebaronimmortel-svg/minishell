@@ -14,12 +14,20 @@
 
 void	end_redir_sequel(t_exec *exec, char **split, int i, char type)
 {
+	char	*file;
+	int		sp;
+
 	exec->redir[exec->redir_count].type = type;
-	exec->redir[exec->redir_count].malloced = 0;
-	exec->redir[exec->redir_count].file = split[i + 1];
-	if (space_pos(split[i + 1]) != -1)
-		exec->redir[exec->redir_count].file[space_pos(split[i + 1])] = 0;
-	unmask_spaces(exec->redir[exec->redir_count].file); // <--- Add this
+	sp = space_pos(split[i + 1]);
+	if (sp != -1)
+		file = ft_substr(split[i + 1], 0, sp);
+	else
+		file = ft_strdup(split[i + 1]);
+	if (!file)
+		return ;
+	unmask_spaces(file);
+	exec->redir[exec->redir_count].file = file;
+	exec->redir[exec->redir_count].malloced = 1;
 	exec->redir_count++;
 }
 
@@ -68,7 +76,7 @@ static void	collect_pre_redir(t_exec *exec, char **split, int cmd_pos)
 		exec->redir[exec->redir_count].file = ft_strdup(split[cmd_pos]);
 	if (!exec->redir[exec->redir_count].file)
 		return ;
-	unmask_spaces(exec->redir[exec->redir_count].file); // <--- Add this
+	unmask_spaces(exec->redir[exec->redir_count].file);
 	end_pre_redir(exec, type);
 }
 
