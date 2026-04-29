@@ -52,7 +52,7 @@ static void	free_lexer(t_token *lex)
 	free(lex);
 }
 
-static int	execute_prompt(char **split, t_token *lex, t_data *data)
+int	execute_prompt(char **split, t_token *lex, t_data *data)
 {
 	int	status_code;
 
@@ -72,26 +72,4 @@ static int	execute_prompt(char **split, t_token *lex, t_data *data)
 		ft_putstr_fd("minishell: syntax error\n", 2);
 	}
 	return (status_code);
-}
-
-void	main_loop(char **split, t_token *lex, t_data *data)
-{
-	char	*str;
-	int		status;
-
-	status = 0;
-	while (1)
-	{
-		str = readline("$> ");
-		if (str == NULL)
-			exit_cleanly(status, data, split);
-		else if (ft_strlen(str) != 0)
-			add_history(str);
-		lex = lexer(str, data);
-		free(str);
-		if (lex)
-			status = execute_prompt(split, lex, data);
-		if (data->end)
-			exit_cleanly(data->error_code, data, split);
-	}
 }
