@@ -52,12 +52,13 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 			line = readline("heredoc> ");
 			if (g_ack == SIGINT)
 			{
-				if (line) free(line);
+				if (line)
+					free(line);
 				free_son_heredoc(exec, delim, pipefd);
 			}
 			if (!line)
 			{
-				write(1, "minishell: warning: here-document delimited by end-of-file\n", 59);
+				ft_putstr_fd("minishell: warning: here-document delimited by end-of-file\n", 1);
 				break ;
 			}
 			if (ft_strcmp(line, delim) == 0)
