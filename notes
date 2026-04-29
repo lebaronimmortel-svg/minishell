@@ -36,6 +36,8 @@
 -plus de 1024 pipe segfault
 -gerer file with space exemple : "file name"
 
+CHECK message d'erreur sur sortie 2
+
 # Built_in : 
 
 
