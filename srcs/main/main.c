@@ -12,9 +12,12 @@
 
 #include "../../header/header.h"
 
+int g_sig = 0;
+
 void	handler0(int sig)
 {
 	(void) sig;
+	g_sig = sig + 128;
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -43,6 +46,40 @@ static int	init(t_data *data, char **envp)
 		}
 	}
 	return (1);
+}
+
+void	main_loop(char **split, t_token *lex, t_data *data)
+{
+	char	*str;
+	int		status;
+	int		flag;
+
+	flag = 0;
+	status = 0;
+	while (1)
+	{
+		str = readline("$> ");
+		if (g_sig)
+		{
+			flag = g_sig;
+			g_sig = 0;
+		}
+		if (flag)
+		{
+			data->error_code = flag;
+			flag = 0;
+		}
+		if (str == NULL)
+			exit_cleanly(status, data, split);
+		else if (ft_strlen(str) != 0)
+			add_history(str);
+		lex = lexer(str, data);
+		free(str);
+		if (lex)
+			status = execute_prompt(split, lex, data);
+		if (data->end)
+			exit_cleanly(data->error_code, data, split);
+	}
 }
 
 int	main(int argc, char **argv, char **envp)
