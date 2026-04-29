@@ -33,4 +33,6 @@
 # include "./typedef.h"
 # include "./function.h"
 
+extern int g_ack;
+
 #endif

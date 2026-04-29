@@ -14,7 +14,10 @@
 
 int	handle_exec_result(int ret, int built_in, t_exec_ctx *ctx)
 {
-	ctx->data->error_code = ret;
+    if (!ctx->data->signal)
+	{
+    	ctx->data->error_code = ret;
+	}
 	if (built_in)
 	{
 		process_built_in(ctx);

@@ -12,8 +12,6 @@
 
 #include "../../header/header.h"
 
-int g_ack = 0;
-
 void	handle_sigint_son(int sig)
 {
 	g_ack = sig;
@@ -41,7 +39,9 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 	pid_t	pid;
 	int		status;
 	char	*line;
+	int		normal_exit;    // ← renommer eof_exit en normal_exit
 
+	normal_exit = 0;
 	pid = fork();
 	if (pid == 0)
 	{
@@ -54,16 +54,18 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 			{
 				if (line)
 					free(line);
-				free_son_heredoc(exec, delim, pipefd);
+				free_son_heredoc(exec, delim, pipefd); // exit(130)
 			}
 			if (!line)
 			{
 				ft_putstr_fd("minishell: warning: here-document delimited by end-of-file\n", 1);
+				normal_exit = 1;    // ← EOF = sortie normale
 				break ;
 			}
 			if (ft_strcmp(line, delim) == 0)
 			{
 				free(line);
+				normal_exit = 1;    // ← delimiter trouvé = sortie normale
 				break ;
 			}
 			if (expand)
@@ -73,12 +75,18 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 			write(pipefd[1], "\n", 1);
 			free(line);
 		}
-		free_son_heredoc(exec, delim, pipefd);
+		// Ici on n'arrive QUE par delimiter ou EOF (Ctrl+C sort dans le loop)
+		close(pipefd[0]);
+		close(pipefd[1]);
+		free(delim);
+		exit(0);                    // ← toujours 0 pour sortie normale
 	}
 	close(pipefd[1]);
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	signal(SIGINT, handler0);
+	if (status)
+		exec->data->signal = 1;
 	return (WEXITSTATUS(status));
 }
 
@@ -86,6 +94,7 @@ int	handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand, int l
 {
 	int		pipefd[2];
 	char	*delim;
+	int		ret;
 
 	if (delimiter[0] == 34 || delimiter[0] == 39)
 	{
@@ -105,7 +114,9 @@ int	handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand, int l
 		free(delim);
 		return (-1);
 	}
-	handle_hdoc_bis(exec, delim, expand, envp, pipefd);
+	ret = handle_hdoc_bis(exec, delim, expand, envp, pipefd);
+	if (ret)
+		exec->data->error_code = ret;
 	free(delim);
 	close(pipefd[1]);
 	return (pipefd[0]);
