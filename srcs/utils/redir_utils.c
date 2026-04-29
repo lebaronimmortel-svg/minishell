@@ -40,11 +40,29 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 	int		status;
 	char	*line;
 	int		normal_exit;
+	int		j;
 
 	normal_exit = 0;
 	pid = fork();
 	if (pid == 0)
 	{
+		j = 0;
+		while (j < 1024)
+		{
+			if (exec->fd[j][0] != -1)
+				close(exec->fd[j][0]);
+			if (exec->fd[j][1] != -1)
+				close(exec->fd[j][1]);
+			j++;
+		}
+		j = 0;
+		while (j < exec->redir_count)
+		{
+			if (exec->redir[j].fd >= 0)
+				close(exec->redir[j].fd);
+			j++;
+		}
+
 		g_ack = 0;
 		signal(SIGINT, handle_sigint_son);
 		while (1)
