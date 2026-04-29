@@ -94,12 +94,6 @@ int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 	return (status);
 }
 
-/*
-** Returns 1 and advances *i when the current token should be skipped by
-** the execution loop.  An empty slot is only skipped when it has NO
-** redirect operators following it before the next pipe; if it does own
-** redirects it must be executed as an anonymous subshell (e.g. "< f | wc").
-*/
 int	should_skip_token(char **split, int *i)
 {
 	if (is_pipe(split[*i]))
@@ -144,7 +138,6 @@ void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
 	{
 		if (should_skip_token(split, i))
 			continue ;
-			
 		if (ctx->cmd_index < ctx->cmd_count - 1)
 		{
 			if (pipe(ctx->exec->fd[ctx->cmd_index]) == -1)

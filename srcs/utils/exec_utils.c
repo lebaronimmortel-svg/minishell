@@ -16,8 +16,6 @@ static int	find_env(t_exec *exec, int i)
 {
 	if (!exec->command || !exec->command[0])
 		return (1);
-	
-	/* If there is a slash, DO NOT search PATH. Just check directly. */
 	if (ft_strchr(exec->command[0], '/'))
 	{
 		if (access(exec->command[0], X_OK) == 0)
@@ -29,13 +27,10 @@ static int	find_env(t_exec *exec, int i)
 			return (0);
 		}
 		exec->w_path = NULL;
-		return (1); /* Let exec_command elegantly handle the 126/127 errors */
+		return (1);
 	}
-	
-	/* If no slash, search PATH. If not found, do NOT check the local directory! */
 	if (find_env_loop(exec, i) == 0)
 		return (0);
-		
 	return (1);
 }
 
