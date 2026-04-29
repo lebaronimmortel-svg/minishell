@@ -57,6 +57,3 @@ heredoc Ctrl-C WARNING
 
 - check Segfault pour tous les malloc -> exit status (139)
 -Ctrl-C : 130: Script terminated by Control-C.
-
-# + leaks + protections
-
