@@ -122,15 +122,29 @@ int	cd(char *input, t_data *data)
 
 	path = &input[3];
 	unmask_spaces(path);
+	if (ft_strchr(path, ' '))
+	{
+		ft_putstr_fd(" too many arguments\n", 2);
+		return (1);
+	}
 	if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
 		return (get_home_path(path, data));
 	if (!getcwd(buffer, sizeof(buffer)))
+	{
+		ft_putstr_fd(" No such file or directory\n", 2);
 		return (1);
+	}
 	if (chdir(path))
+	{
+		ft_putstr_fd(" No such file or directory\n", 2);
 		return (1);
+	}
 	change_path(0, buffer, data);
 	if (!getcwd(buffer, sizeof(buffer)))
+	{
+		ft_putstr_fd(" No such file or directory\n", 2);
 		return (1);
+	}
 	change_path(1, buffer, data);
 	return (0);
 }
