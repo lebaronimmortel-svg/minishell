@@ -33,6 +33,15 @@
 
 # Parsing :
 
+Test [<< AH cat -e | grep -o 'simple' \nsimple\nend\nAH][KO]
+Memory leak:
+  Open file descriptor 4:
+  Open file descriptor 3:
+  
+Memory leak:
+  Open file descriptor 4:
+  Open file descriptor 3:
+
 -plus de 1024 pipe segfault
 -gerer file with space exemple : "file name"
 
