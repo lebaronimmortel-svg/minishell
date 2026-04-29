@@ -138,7 +138,6 @@ void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
 	{
 		if (should_skip_token(split, i))
 			continue ;
-			
 		if (ctx->cmd_index < ctx->cmd_count - 1)
 		{
 			if (pipe(ctx->exec->fd[ctx->cmd_index]) == -1)

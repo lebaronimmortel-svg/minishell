@@ -16,7 +16,6 @@ static int	find_env(t_exec *exec, int i)
 {
 	if (!exec->command || !exec->command[0])
 		return (1);
-	
 	if (ft_strchr(exec->command[0], '/'))
 	{
 		if (access(exec->command[0], X_OK) == 0)
@@ -30,10 +29,8 @@ static int	find_env(t_exec *exec, int i)
 		exec->w_path = NULL;
 		return (1);
 	}
-	
 	if (find_env_loop(exec, i) == 0)
 		return (0);
-		
 	return (1);
 }
 
