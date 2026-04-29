@@ -33,7 +33,7 @@
 
 # Parsing :
 
-quand count_cmd est >= 512 alors stop command
+ne pas mettre les command vide : "" dans l'historique
 
 
 # Built_in : 
@@ -42,10 +42,6 @@ quand count_cmd est >= 512 alors stop command
 		  - ajouter le +=
 
 # Signaux :
-
-- LEAKS QUAND SIGNAUX HEREDOC
-
-
 
 
 
