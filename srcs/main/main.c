@@ -12,12 +12,12 @@
 
 #include "../../header/header.h"
 
-int g_sig = 0;
+int g_ack = 0;
 
 void	handler0(int sig)
 {
 	(void) sig;
-	g_sig = sig + 128;
+	g_ack = sig + 128;
 	printf("\n");
 	rl_on_new_line();
 	rl_replace_line("", 0);
@@ -60,10 +60,10 @@ void	main_loop(char **split, t_token *lex, t_data *data)
 	while (1)
 	{
 		str = readline("$> ");
-		if (g_sig)
+		if (g_ack)
 		{
-			flag = g_sig;
-			g_sig = 0;
+			flag = g_ack;
+			g_ack = 0;
 		}
 		if (flag)
 		{
@@ -82,8 +82,6 @@ void	main_loop(char **split, t_token *lex, t_data *data)
 			exit_cleanly(data->error_code, data, split);
 	}
 }
-
-int g_ack = 0;
 
 int	main(int argc, char **argv, char **envp)
 {
