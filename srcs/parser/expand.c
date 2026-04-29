@@ -122,5 +122,7 @@ char	*change_var(char *str, char **envp)
 		i++;
 	tmp = convert_var(str, i, envp);
 	free(str);
+	if (!tmp)
+		return (NULL);
 	return (tmp);
 }

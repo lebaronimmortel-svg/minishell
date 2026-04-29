@@ -26,6 +26,11 @@ static char	**my_realloc(char **split, int old_size)
 	while (i < old_size)
 	{
 		new_split[i] = ft_strdup(split[i]);
+		if (!new_split[i])
+		{
+			free_split(new_split, 0);
+			return (NULL);
+		}
 		i++;
 	}
 	free_split(split, 0);
