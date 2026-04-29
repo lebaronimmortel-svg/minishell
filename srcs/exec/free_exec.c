@@ -49,7 +49,8 @@ void	free_redir(t_exec *exec)
 			close(exec->redir[i].fd);
 		i++;
 	}
-	free(exec->redir);
+	if (exec->redir)
+		free(exec->redir);
 	exec->redir = NULL;
 	exec->redir_count = 0;
 }
