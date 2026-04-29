@@ -172,8 +172,6 @@ int	exec_main(char **split, int i, t_data *data, int cmd_count)
 	exit_code = end_exec(&ctx, 0, 0, 0);
 	signal(SIGINT, handler0);
 	signal(SIGQUIT, SIG_IGN);
-	if (exit_code == 130)
-		write(1, "\n", 1);
 	free_redir(&exec);
 	return (exit_code);
 }
