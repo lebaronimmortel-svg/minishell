@@ -39,12 +39,32 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 	pid_t	pid;
 	int		status;
 	char	*line;
-	int		normal_exit;    // ← renommer eof_exit en normal_exit
+	int		normal_exit;
+	int		j;
 
 	normal_exit = 0;
 	pid = fork();
 	if (pid == 0)
 	{
+		/* --- FIX: Close inherited pipeline FDs --- */
+		j = 0;
+		while (j < 1024)
+		{
+			if (exec->fd[j][0] != -1)
+				close(exec->fd[j][0]);
+			if (exec->fd[j][1] != -1)
+				close(exec->fd[j][1]);
+			j++;
+		}
+		/* --- FIX: Close previously opened redir FDs --- */
+		j = 0;
+		while (j < exec->redir_count)
+		{
+			if (exec->redir[j].fd >= 0)
+				close(exec->redir[j].fd);
+			j++;
+		}
+
 		g_ack = 0;
 		signal(SIGINT, handle_sigint_son);
 		while (1)
@@ -54,18 +74,18 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 			{
 				if (line)
 					free(line);
-				free_son_heredoc(exec, delim, pipefd); // exit(130)
+				free_son_heredoc(exec, delim, pipefd);
 			}
 			if (!line)
 			{
 				ft_putstr_fd("minishell: warning: here-document delimited by end-of-file\n", 1);
-				normal_exit = 1;    // ← EOF = sortie normale
+				normal_exit = 1;
 				break ;
 			}
 			if (ft_strcmp(line, delim) == 0)
 			{
 				free(line);
-				normal_exit = 1;    // ← delimiter trouvé = sortie normale
+				normal_exit = 1;
 				break ;
 			}
 			if (expand)
@@ -75,11 +95,10 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 			write(pipefd[1], "\n", 1);
 			free(line);
 		}
-		// Ici on n'arrive QUE par delimiter ou EOF (Ctrl+C sort dans le loop)
 		close(pipefd[0]);
 		close(pipefd[1]);
 		free(delim);
-		exit(0);                    // ← toujours 0 pour sortie normale
+		exit(0);
 	}
 	close(pipefd[1]);
 	signal(SIGINT, SIG_IGN);
