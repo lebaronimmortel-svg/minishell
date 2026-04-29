@@ -190,6 +190,7 @@ int	end_exec(t_exec_ctx *ctx, int exit_code, int status, int i)
 	{
 		if (ctx->exec->pid)
 			free(ctx->exec->pid);
+        ctx->data->signal = 0;
 		return (ctx->data->error_code);
 	}
 	exit_code = end_exec_sig(ctx, exit_code, last_pid_status);

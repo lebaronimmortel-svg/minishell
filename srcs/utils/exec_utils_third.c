@@ -147,7 +147,6 @@ void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
 				break ;
 			}
 		}
-
 		built_in = is_built_in(split[*i]);
 		ret = exec_main_sequel(split, i, ctx);
 		if (handle_exec_result(ret, built_in, ctx))

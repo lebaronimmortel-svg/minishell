@@ -28,6 +28,7 @@ static int	init(t_data *data, char **envp)
 {
 	data->error_code = 0;
 	data->end = 0;
+	data->signal = 0;
 	data->env = split_dup(envp);
 	if (!data->env)
 	{
@@ -81,6 +82,8 @@ void	main_loop(char **split, t_token *lex, t_data *data)
 			exit_cleanly(data->error_code, data, split);
 	}
 }
+
+int g_ack = 0;
 
 int	main(int argc, char **argv, char **envp)
 {

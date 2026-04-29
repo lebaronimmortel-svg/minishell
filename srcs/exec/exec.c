@@ -98,6 +98,12 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 	exec->redir_count = 0;
 	exec->redir = NULL;
 	collect_redirs(exec, split, *i, exec->env);
+	if (data->signal)          
+	{
+    	free_redir(exec);
+    	(*i)++;
+    	return (1);
+	}
 	if (*i >= 1 && (split[(*i) - 1][0] == '<' || split[(*i) - 1][0] == '>'))
 		infile_redir(split, i, 0);
 	exec->input = split[*i];
@@ -149,6 +155,12 @@ int	exec_main(char **split, int i, t_data *data, int cmd_count)
 		}
 		data->error_code = exec_cmd(&exec, data, split);
 		free_redir(&exec);
+		if (data->signal)
+    	{
+        	data->signal = 0;
+        	data->error_code = 130;
+        	return (130);
+    	}
 		return (data->error_code);
 	}
 	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)

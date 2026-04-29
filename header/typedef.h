@@ -33,6 +33,7 @@ typedef struct s_data
 {
 	int		error_code;
 	int		end;
+	int		signal;
 	char	**env;
 	char	**env_bis;
 }	t_data;
