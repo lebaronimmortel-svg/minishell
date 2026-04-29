@@ -147,6 +147,8 @@ void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 	}
 	if (exec->pid[cmd_index] == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		if (cmd_index > 0)
 			dup2(exec->fd[cmd_index - 1][0], STDIN_FILENO);
 		if (cmd_index < cmd_count - 1)

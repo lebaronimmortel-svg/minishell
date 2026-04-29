@@ -154,8 +154,14 @@ int	exec_main(char **split, int i, t_data *data, int cmd_count)
 	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)
 		return (1);
 	ctx_innit(&ctx, &exec, data, cmd_count);
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 	process_exec_loop(split, &i, &ctx);
 	exit_code = end_exec(&ctx, 0, 0, 0);
+	signal(SIGINT, handler0);
+	signal(SIGQUIT, SIG_IGN);
+	if (exit_code == 130)
+		write(1, "\n", 1);
 	free_redir(&exec);
 	return (exit_code);
 }

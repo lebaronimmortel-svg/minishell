@@ -33,13 +33,9 @@
 
 # Parsing :
 
-ne pas mettre les command vide : "" dans l'historique
-
 
 # Built_in : 
 
--EXPORT : 
-		  - ajouter le +=
 
 # Signaux :
 
@@ -51,11 +47,4 @@ ne pas mettre les command vide : "" dans l'historique
 -Ctrl-C : 130: Script terminated by Control-C.
 
 # + leaks + protections
-
-_________________________________________________________________________
-
-24 / 04 /26 
-_________________________________________________________________________
-
--> cat ou wc... : le ctrl-c affiche deux prompts a la suite au lieu d'un
 

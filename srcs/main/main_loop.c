@@ -85,7 +85,7 @@ void	main_loop(char **split, t_token *lex, t_data *data)
 		str = readline("$> ");
 		if (str == NULL)
 			exit_cleanly(status, data, split);
-		else
+		else if (ft_strlen(str) != 0)
 			add_history(str);
 		lex = lexer(str, data);
 		free(str);
