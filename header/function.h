@@ -73,6 +73,7 @@ int		exec_cmd(t_exec *exec, t_data *data, char **split);
 void	free_data_split(t_exec *exec);
 void	free_split_exec(t_exec *exec);
 void	free_redir(t_exec *exec);
+void	free_fd(t_exec *exec);
 
 void	free_exec_failed(t_exec *exec, int exit_code);
 void	free_exec_cmd(t_exec *exec);

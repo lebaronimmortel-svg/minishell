@@ -188,6 +188,7 @@ int	end_exec(t_exec_ctx *ctx, int exit_code, int status, int i)
 	}
 	if (!had_real_pid)
 	{
+		free_fd(ctx->exec);
 		if (ctx->exec->pid)
 			free(ctx->exec->pid);
         ctx->data->signal = 0;

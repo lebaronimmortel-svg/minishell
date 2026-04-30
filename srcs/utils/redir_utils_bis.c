@@ -15,14 +15,46 @@
 int	pipe_and_pid_init(t_exec *exec, int cmd_count)
 {
 	int	i;
+	int	pipe_count;
 
 	exec->pid = NULL;
+	exec->fd = NULL;
+	exec->pipe_count = 0;
 	exec->pid = malloc(sizeof(pid_t) * cmd_count);
 	if (!exec->pid)
 		return (1);
 	i = 0;
 	while (i < cmd_count)
 		exec->pid[i++] = -1;
+	pipe_count = cmd_count - 1;
+	if (pipe_count <= 0)
+		return (0);
+	exec->fd = malloc(sizeof(int *) * pipe_count);
+	if (!exec->fd)
+	{
+		free(exec->pid);
+		exec->pid = NULL;
+		return (1);
+	}
+	i = 0;
+	while (i < pipe_count)
+	{
+		exec->fd[i] = malloc(sizeof(int) * 2);
+		if (!exec->fd[i])
+		{
+			while (--i >= 0)
+				free(exec->fd[i]);
+			free(exec->fd);
+			exec->fd = NULL;
+			free(exec->pid);
+			exec->pid = NULL;
+			return (1);
+		}
+		exec->fd[i][0] = -1;
+		exec->fd[i][1] = -1;
+		i++;
+	}
+	exec->pipe_count = pipe_count;
 	return (0);
 }
 

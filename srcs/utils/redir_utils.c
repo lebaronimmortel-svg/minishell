@@ -34,7 +34,8 @@ void	free_son_heredoc(t_exec *exec, char *delim, int pipe_fd[2], int code)
 	exit_cleanly(code, exec->data, exec->split);
 }
 
-static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, int *pipefd)
+static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand,
+							char **envp, int *pipefd)
 {
 	pid_t	pid;
 	int		status;
@@ -47,7 +48,7 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 	if (pid == 0)
 	{
 		j = 0;
-		while (j < 1024)
+		while (j < exec->pipe_count)
 		{
 			if (exec->fd[j][0] != -1)
 				close(exec->fd[j][0]);
@@ -62,7 +63,6 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 				close(exec->redir[j].fd);
 			j++;
 		}
-
 		g_ack = 0;
 		signal(SIGINT, handle_sigint_son);
 		while (1)
@@ -76,7 +76,8 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 			}
 			if (!line)
 			{
-				ft_putstr_fd("minishell: warning: here-document delimited by end-of-file\n", 1);
+				ft_putstr_fd("minishell: warning: here-document delimited"
+					" by end-of-file\n", 2);
 				normal_exit = 1;
 				break ;
 			}

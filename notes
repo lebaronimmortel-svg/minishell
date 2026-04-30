@@ -33,9 +33,6 @@
 
 # Parsing :
 
--plus de 1024 pipe segfault
-
-CHECK message d'erreur sur sortie 2
 
 # Built_in : 
 

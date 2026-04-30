@@ -59,18 +59,9 @@ static int	exec_init(t_exec *exec, int i)
 
 int	pipe_and_pid(t_exec *exec, int cmd_count, char **envp)
 {
-	int	i;
-
 	exec->env = envp;
 	if (pipe_and_pid_init(exec, cmd_count) == 1)
 		return (1);
-	i = 0;
-	while (i < 1024)
-	{
-		exec->fd[i][0] = -1;
-		exec->fd[i][1] = -1;
-		i++;
-	}
 	return (0);
 }
 
@@ -98,7 +89,7 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 	exec->redir_count = 0;
 	exec->redir = NULL;
 	collect_redirs(exec, split, *i, exec->env);
-	if (data->signal)          
+	if (data->signal)
 	{
     	free_redir(exec);
     	(*i)++;
