@@ -19,7 +19,7 @@ void	handle_sigint_son(int sig)
 	rl_on_new_line();
 }
 
-void	free_son_heredoc(t_exec *exec, char *delim, int pipe_fd[2])
+void	free_son_heredoc(t_exec *exec, char *delim, int pipe_fd[2], int code)
 {
 	if (pipe_fd[0] != -1)
 		close(pipe_fd[0]);
@@ -31,7 +31,7 @@ void	free_son_heredoc(t_exec *exec, char *delim, int pipe_fd[2])
 	free_exec_cmd(exec);
 	if (exec->pid)
 		free(exec->pid);
-	exit_cleanly(130, exec->data, exec->split);
+	exit_cleanly(code, exec->data, exec->split);
 }
 
 static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, int *pipefd)
@@ -72,7 +72,7 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 			{
 				if (line)
 					free(line);
-				free_son_heredoc(exec, delim, pipefd);
+				free_son_heredoc(exec, delim, pipefd, 130);
 			}
 			if (!line)
 			{
@@ -93,10 +93,7 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand, char **envp, i
 			write(pipefd[1], "\n", 1);
 			free(line);
 		}
-		close(pipefd[0]);
-		close(pipefd[1]);
-		free(delim);
-		exit(0);
+		free_son_heredoc(exec, delim, pipefd, 0);
 	}
 	close(pipefd[1]);
 	signal(SIGINT, SIG_IGN);

@@ -33,15 +33,6 @@
 
 # Parsing :
 
-Test [<< AH cat -e | grep -o 'simple' \nsimple\nend\nAH][KO]
-Memory leak:
-  Open file descriptor 4:
-  Open file descriptor 3:
-  
-Memory leak:
-  Open file descriptor 4:
-  Open file descriptor 3:
-
 -plus de 1024 pipe segfault
 
 CHECK message d'erreur sur sortie 2
@@ -56,4 +47,3 @@ heredoc Ctrl-C WARNING
 # Exit STATUS :
 
 - check Segfault pour tous les malloc -> exit status (139)
--Ctrl-C : 130: Script terminated by Control-C.
