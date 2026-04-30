@@ -16,7 +16,8 @@ void	check_dir(t_exec *exec)
 {
 	struct stat	info;
 
-	stat(exec->command[0], &info);
+	if (stat(exec->command[0], &info) != 0)
+		return ;
 	if (S_ISDIR(info.st_mode))
 	{
 		ft_putstr_fd(exec->command[0], 2);

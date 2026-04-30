@@ -14,9 +14,9 @@
 
 int	handle_exec_result(int ret, int built_in, t_exec_ctx *ctx)
 {
-    if (!ctx->data->signal)
+	if (!ctx->data->signal)
 	{
-    	ctx->data->error_code = ret;
+		ctx->data->error_code = ret;
 	}
 	if (built_in)
 	{

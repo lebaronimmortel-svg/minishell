@@ -80,6 +80,13 @@ static void	var_search(char *buffer, char **envp)
 				j++;
 			j++;
 			ft_strlcpy(buffer, &envp[i][j], ft_strlen(envp[i]) - j + 1);
+			j = 0;
+			while (buffer[j])
+			{
+				if (buffer[j] == ' ')
+					buffer[j] = '\x1f';
+				j++;
+			}
 			break ;
 		}
 		i++;
@@ -91,13 +98,38 @@ static void	var_search(char *buffer, char **envp)
 	}
 }
 
+static int	is_in_dquote(char *str, int index)
+{
+	int	i;
+	int	in_dq;
+
+	i = 0;
+	in_dq = 0;
+	while (i < index)
+	{
+		if (str[i] == 39 && !in_dq)
+		{
+			i++;
+			while (str[i] && str[i] != 39)
+				i++;
+		}
+		else if (str[i] == 34)
+			in_dq = !in_dq;
+		i++;
+	}
+	return (in_dq);
+}
+
 char	*convert_var(char *str, int index, char **envp)
 {
 	int		i;
 	char	buffer[2048];
+	int		in_dq;
+	int		j;
 
 	if (str[index] != '$')
 		return (NULL);
+	in_dq = is_in_dquote(str, index);
 	i = index;
 	i++;
 	while ((ft_isalnum(str[i]) || str[i] == '_')
@@ -108,6 +140,16 @@ char	*convert_var(char *str, int index, char **envp)
 	}
 	buffer[i - index - 1] = '\0';
 	var_search(buffer, envp);
+	if (in_dq)
+	{
+		j = 0;
+		while (buffer[j])
+		{
+			if (buffer[j] == '\x1f')
+				buffer[j] = '\1';
+			j++;
+		}
+	}
 	str = transpose(str, index, buffer, 1);
 	return (str);
 }

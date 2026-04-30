@@ -27,7 +27,6 @@ void	handle_single(char *str)
 			flag2 = update_flag(flag2);
 		else if (str[i] == 34 && flag2 == 0)
 			flag1 = update_flag(flag1);
-		
 		if (str[i] == '$')
 		{
 			if (flag1 == 0 && flag2 == 0 && (str[i + 1] == 39 || str[i + 1] == 34))

@@ -43,7 +43,7 @@ void	unmask_spaces(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\1')
+		if (str[i] == '\1' || str[i] == '\x1f')
 			str[i] = ' ';
 		else if (str[i] == '\3')
 			str[i] = '|';
@@ -71,7 +71,7 @@ char	**quote_clean(char **split)
 		j = 0;
 		while (split[i][j])
 		{
-			if (split[i][j] == '\1')
+			if (split[i][j] == '\1' || split[i][j] == '\x1f')
 				split[i][j] = ' ';
 			else if (split[i][j] == '\3')
 				split[i][j] = '|';

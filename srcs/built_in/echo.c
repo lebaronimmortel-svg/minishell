@@ -150,7 +150,7 @@ int	echo(char *input, int k)
 	k = i;
 	while (input[k])
 	{
-		if (input[k] == '\1')
+		if (input[k] == '\1' || input[k] == '\x1f')
 			input[k] = ' ';
 		else if (input[k] == '\3')
 			input[k] = '|';

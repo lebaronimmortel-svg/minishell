@@ -19,7 +19,7 @@ static void	fill_input(char **command, int *i)
 	j = 0;
 	while (command[*i][j])
 	{
-		if (command[*i][j] == '\1')
+		if (command[*i][j] == '\1' || command[*i][j] == '\x1f')
 			command[*i][j] = ' ';
 		else if (command[*i][j] == '\3')
 			command[*i][j] = '|';
@@ -40,6 +40,7 @@ static void	fill_input(char **command, int *i)
 static int	exec_init(t_exec *exec, int i)
 {
 	size_t	len;
+	char	*p;
 
 	exec->all_path = NULL;
 	exec->command = NULL;
@@ -48,6 +49,13 @@ static int	exec_init(t_exec *exec, int i)
 	len = ft_strlen(exec->input);
 	if (len > 0 && exec->input[len - 1] == '\n')
 		exec->input[len - 1] = '\0';
+	p = exec->input;
+	while (*p)
+	{
+		if (*p == '\x1f')
+			*p = ' ';
+		p++;
+	}
 	exec->command = ft_split(exec->input, ' ');
 	exec->all_path = ft_split(exec->path, ':');
 	if (!exec->command || !exec->all_path || !exec->command[0])
@@ -91,9 +99,9 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 	collect_redirs(exec, split, *i, exec->env);
 	if (data->signal)
 	{
-    	free_redir(exec);
-    	(*i)++;
-    	return (1);
+		free_redir(exec);
+		(*i)++;
+		return (1);
 	}
 	if (*i >= 1 && (split[(*i) - 1][0] == '<' || split[(*i) - 1][0] == '>'))
 		infile_redir(split, i, 0);
@@ -147,11 +155,11 @@ int	exec_main(char **split, int i, t_data *data, int cmd_count)
 		data->error_code = exec_cmd(&exec, data, split);
 		free_redir(&exec);
 		if (data->signal)
-    	{
-        	data->signal = 0;
-        	data->error_code = 130;
-        	return (130);
-    	}
+		{
+			data->signal = 0;
+			data->error_code = 130;
+			return (130);
+		}
 		return (data->error_code);
 	}
 	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)

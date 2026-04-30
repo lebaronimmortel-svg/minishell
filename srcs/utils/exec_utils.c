@@ -14,7 +14,7 @@
 
 static int	find_env(t_exec *exec, int i)
 {
-	struct stat info;
+	struct stat	info;
 
 	if (!exec->command || !exec->command[0])
 		return (1);
@@ -28,6 +28,8 @@ static int	find_env(t_exec *exec, int i)
 	}
 	if (exec->command[0][0] == '/' || exec->command[0][0] == '.')
 	{
+		if (exec->command[0][0] == '/')
+			check_dir(exec);
 		exec->w_path = NULL;
 		return (1);
 	}
@@ -191,7 +193,7 @@ int	end_exec(t_exec_ctx *ctx, int exit_code, int status, int i)
 		free_fd(ctx->exec);
 		if (ctx->exec->pid)
 			free(ctx->exec->pid);
-        ctx->data->signal = 0;
+		ctx->data->signal = 0;
 		return (ctx->data->error_code);
 	}
 	exit_code = end_exec_sig(ctx, exit_code, last_pid_status);
