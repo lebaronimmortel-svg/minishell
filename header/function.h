@@ -118,7 +118,7 @@ int		handle_input_redir(t_exec *exec, int i);
 int		handle_output_redir(t_exec *exec, int i);
 void	append_to_cmd(char **split, int cmd_pos, char *extra);
 void	handle_redir_sequel(t_exec *exec, char **split, int cmd_pos, int i);
-int     execute_prompt(char **split, t_token *lex, t_data *data);
+int		execute_prompt(char **split, t_token *lex, t_data *data);
 
 /* ================================ main.c =============================== */
 void	main_loop(char **split, t_token *lex, t_data *data);

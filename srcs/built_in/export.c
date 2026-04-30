@@ -189,7 +189,7 @@ int	ft_export(char *input, t_data *data, int j, int i)
 		j = 0;
 		while (split[i][j])
 		{
-			if (split[i][j] == '\1')
+			if (split[i][j] == '\1' || split[i][j] == '\x1f')
 				split[i][j] = ' ';
 			else if (split[i][j] == '\3')
 				split[i][j] = '|';

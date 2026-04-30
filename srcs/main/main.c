@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-int g_ack = 0;
+int	g_ack = 0;
 
 void	handler0(int sig)
 {

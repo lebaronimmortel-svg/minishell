@@ -26,7 +26,7 @@ static int	check_space(const char *str, int i)
 
 static int	calcul(const char *str, int i, int signe, long long *result)
 {
-	int digit;
+	int	digit;
 
 	while (str[i])
 	{

@@ -88,8 +88,11 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand,
 				break ;
 			}
 			if (expand)
+			{
 				while (!are_var_hd(line))
 					line = change_var_hd(line, envp);
+				unmask_spaces(line);
+			}
 			write(pipefd[1], line, ft_strlen(line));
 			write(pipefd[1], "\n", 1);
 			free(line);
