@@ -47,7 +47,8 @@ typedef struct s_exec
 	char	*input;
 	char	**env;
 	pid_t	*pid;
-	int		fd[1024][2];
+	int		**fd;
+	int		pipe_count;
 	t_redir	*redir;
 	int		redir_count;
 	char	**split;

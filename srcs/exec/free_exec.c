@@ -12,6 +12,24 @@
 
 #include "../../header/header.h"
 
+void	free_fd(t_exec *exec)
+{
+	int	i;
+
+	if (!exec->fd)
+		return ;
+	i = 0;
+	while (i < exec->pipe_count)
+	{
+		if (exec->fd[i])
+			free(exec->fd[i]);
+		i++;
+	}
+	free(exec->fd);
+	exec->fd = NULL;
+	exec->pipe_count = 0;
+}
+
 void	free_data_split(t_exec *exec)
 {
 	int	i;
@@ -91,5 +109,6 @@ void	free_split_exec(t_exec *exec)
 		exec->data->env = NULL;
 	}
 	free_data_split(exec);
+	free_fd(exec);
 	free_var(exec);
 }

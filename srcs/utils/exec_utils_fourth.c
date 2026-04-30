@@ -52,6 +52,7 @@ void	process_built_in(t_exec_ctx *ctx)
 
 int	end_exec_sig(t_exec_ctx *ctx, int exit_code, int last_pid_status)
 {
+	free_fd(ctx->exec);
 	if (ctx->exec->pid)
 		free(ctx->exec->pid);
 	if (ctx->data->end)

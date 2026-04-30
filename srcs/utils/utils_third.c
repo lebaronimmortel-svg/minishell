@@ -89,8 +89,11 @@ void	close_fd(t_exec *exec, int cmd_count)
 {
 	int	j;
 
+	(void)cmd_count;
+	if (!exec->fd)
+		return ;
 	j = 0;
-	while (j < cmd_count - 1 && j < 1024)
+	while (j < exec->pipe_count)
 	{
 		if (exec->fd[j][0] != -1)
 		{

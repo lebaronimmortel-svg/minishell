@@ -91,7 +91,6 @@ static char	*get_user(t_data *data)
 			if (!result)
 				return (NULL);
 			free_split(split, 0);
-			printf("%s\n", data->env[i]);
 			return (result);
 		}
 		i++;
