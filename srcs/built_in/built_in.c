@@ -253,6 +253,8 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 	status = 0;
 	if (!ft_strncmp(input, "pwd", 3) && ft_strlen(input) == 3)
 		status = pwd();
+	if (!ft_strncmp(input, "pwd ", 4))
+		status = pwd();
 	else if (!ft_strncmp(input, "unset", 5) && ft_strlen(input) == 5)
 		status = 0;
 	else if (!ft_strncmp(input, "unset ", 6))
@@ -265,6 +267,8 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 		free_split(split, 0);
 	}
 	else if (!ft_strncmp(input, "env", 3) && ft_strlen(input) == 3)
+		status = env(data->env);
+	else if (!ft_strncmp(input, "env ", 4))
 		status = env(data->env);
 	else if (!ft_strncmp(input, "exit", 4)
 		&& ft_strlen(input) == 4)

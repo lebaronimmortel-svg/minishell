@@ -83,8 +83,6 @@ static int	has_more_n_flag(char *str)
 	flag = 0;
 	while (str[i])
 	{
-		while (str[i] == ' ')
-			i++;
 		if (!str[i] || str[i] != '-')
 			break ;
 		i++;

@@ -44,3 +44,54 @@ heredoc Ctrl-C WARNING
 # Exit STATUS :
 
 - check Segfault pour tous les malloc -> exit status (139)
+
+___________________________________
+
+CORRECTION BLANCHE FLORENT 30/04/26
+___________________________________
+
+echo -nnnn -nnnn -nblabla -> fix
+
+echo - 
+==726066== 66 (32 direct, 34 indirect) bytes in 1 blocks are definitely lost in loss record 21 of 72
+==726066==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==726066==    by 0x48B1BAC: xmalloc (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==726066==    by 0x48A87C2: rl_add_undo (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==726066==    by 0x48A97D6: rl_delete_text (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==726066==    by 0x48AEDA0: _rl_rubout_char (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==726066==    by 0x488FE97: _rl_dispatch_subseq (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==726066==    by 0x4890CC9: readline_internal_char (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==726066==    by 0x4899D14: readline (in /usr/lib/x86_64-linux-gnu/libreadline.so.8.1)
+==726066==    by 0x401360: main_loop (main.c:62)
+==726066==    by 0x40150A: main (main.c:104)
+
+'cd no_perm': message d'erreur (a voir avec access avec le mode F_OK)
+
+'env a': va chercher le binaire -> fix
+
+'pwd blabla' execute le binaire au lieu de la builtin -> fix
+
+'exit 42 toto': ne doit pas quitter minishell
+
+'< infile nope': leaks
+
+'< Makefile cat | < outf': ==799439== Process terminating with default action of signal 13 (SIGPIPE)
+==799439==    at 0x498C907: write (write.c:26)
+==799439==    by 0x10DAE7: ??? (in /usr/bin/cat)
+==799439==    by 0x10B4C3: ??? (in /usr/bin/cat)
+==799439==    by 0x48A1D8F: (below main) (libc_start_call_main.h:58)
+==799439== 
+==799439== FILE DESCRIPTORS: 4 open (3 std) at exit.
+==799439== Open file descriptor 3: Makefile
+==799439==    at 0x498C5BB: open (open64.c:41)
+==799439==    by 0x10AC47: ??? (in /usr/bin/cat)
+==799439==    by 0x48A1D8F: (below main) (libc_start_call_main.h:58)
+
+'export _a': n'exporte pas la variable -> fix
+
+'export a_a': n'exporte pas la variable -> fix
+
+'export a8': n'exporte pas la variable -> fix
+
+'mkdir -p a/b ; cd a/b ; rm -rf ../../a': cd ne fonctionne plus (bloqué dans les trash files)
+
