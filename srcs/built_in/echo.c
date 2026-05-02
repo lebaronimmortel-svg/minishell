@@ -25,6 +25,14 @@ static int	assign_flag(int flag, char *input, int *i)
 	return (flag);
 }
 
+int	fonction2048(int flag)
+{
+	if (flag == 2)
+		return (1);
+	else
+		return (0);
+}
+
 static int	has_n_flag(char *input)
 {
 	int	i;
@@ -45,17 +53,13 @@ static int	has_n_flag(char *input)
 			}
 			i++;
 		}
-		if (!input[i] || flag2)
+		if (!input[i++] || flag2)
 			break ;
-		i++;
 		flag = assign_flag(flag, input, &i);
 		if (flag == 2)
 			break ;
 	}
-	if (flag == 2)
-		return (1);
-	else
-		return (0);
+	return (fonction2048(flag));
 }
 
 static int	is_valid_flag(char *str)
@@ -97,55 +101,15 @@ static int	has_more_n_flag(char *str)
 	return (flag);
 }
 
-int	echo(char *input, int k)
+int	end_of_string(char *input)
 {
-	int	i;
-	int	flag;
-	int	j;
+	if (!has_n_flag(input))
+		ft_putstr_fd("\n", 1);
+	return (0);
+}
 
-	i = 0;
-	flag = 0;
-	while (1)
-	{
-		while (input[i] && input[i] != ' ')
-			i++;
-		if (!input[i])
-		{
-			if (!has_n_flag(input))
-				ft_putstr_fd("\n", 1);
-			return (0);
-		}
-		i++;
-		if (!input[i])
-		{
-			if (!has_n_flag(input))
-				ft_putstr_fd("\n", 1);
-			return (0);
-		}
-		if (input[i] == ' ')
-		{
-			j = i;
-			while (input[j] == ' ')
-				j++;
-			if (input[j])
-				ft_putstr_fd(" ", 1);
-		}
-		while (input[i] && input[i] == ' ')
-			i++;
-		if (!input[i])
-		{
-			if (!has_n_flag(input))
-				ft_putstr_fd("\n", 1);
-			return (0);
-		}
-		if (flag && !has_more_n_flag(&input[i]))
-			break ;
-		if (input[i] != '-' || !is_valid_flag(&input[i + 1]))
-			break ;
-		else
-			flag = 1;
-	}
-	k = i;
+void	fonction3000(char *input, int k)
+{
 	while (input[k])
 	{
 		if (input[k] == '\1' || input[k] == '\x1f')
@@ -163,8 +127,56 @@ int	echo(char *input, int k)
 		}
 		k++;
 	}
+}
+
+void	fonction3001(char *input, int i)
+{
+	while (input[i] == ' ')
+		i++;
+	if (input[i])
+		ft_putstr_fd(" ", 1);
+}
+
+void	fonction2049(char *input, int *i)
+{
+	if (input[*i] == ' ')
+		fonction3001(input, *i);
+	while (input[*i] && input[*i] == ' ')
+		(*i)++;
+}
+
+int	fonction8000(char *input, int i, int k)
+{
+	fonction3000(input, k);
 	ft_putstr_fd(&input[i], 1);
-	if (!has_n_flag(input))
-		ft_putstr_fd("\n", 1);
-	return (0);
+	return (end_of_string(input));
+}
+
+int	echo(char *input, int k)
+{
+	int	i;
+	int	flag;
+
+	i = 0;
+	flag = 0;
+	while (1)
+	{
+		while (input[i] && input[i] != ' ')
+			i++;
+		if (!input[i])
+			return (end_of_string(input));
+		i++;
+		if (!input[i])
+			return (end_of_string(input));
+		fonction2049(input, &i);
+		if (!input[i])
+			return (end_of_string(input));
+		if (flag && !has_more_n_flag(&input[i]))
+			break ;
+		if (input[i] != '-' || !is_valid_flag(&input[i + 1]))
+			break ;
+		else
+			flag = 1;
+	}
+	return (fonction8000(input, i, k));
 }
