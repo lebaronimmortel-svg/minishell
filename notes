@@ -63,8 +63,6 @@ echo -
 ==726066==    by 0x401360: main_loop (main.c:62)
 ==726066==    by 0x40150A: main (main.c:104)
 
-'cd no_perm': message d'erreur (a voir avec access avec le mode F_OK)
-
 '< infile nope': leaks
 
 '< Makefile cat | < outf': ==799439== Process terminating with default action of signal 13 (SIGPIPE)
@@ -78,6 +76,4 @@ echo -
 ==799439==    at 0x498C5BB: open (open64.c:41)
 ==799439==    by 0x10AC47: ??? (in /usr/bin/cat)
 ==799439==    by 0x48A1D8F: (below main) (libc_start_call_main.h:58)
-
-'mkdir -p a/b ; cd a/b ; rm -rf ../../a': cd ne fonctionne plus (bloqué dans les trash files)
 
