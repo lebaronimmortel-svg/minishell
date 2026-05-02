@@ -114,8 +114,6 @@ int	get_home_path(char *path, t_data *data)
 	return (0);
 }
 
-#include <sys/stat.h>
-
 int cd(char *input, t_data *data)
 {
     char        *path;
@@ -141,13 +139,19 @@ int cd(char *input, t_data *data)
         ft_putstr_fd("cd: permission denied\n", 2);
         return (1);
     }
+
     if (!getcwd(buffer, sizeof(buffer)))
-        return (1);
+        buffer[0] = '\0';
+    change_path(0, buffer, data);
+
     if (chdir(path))
         return (1);
-    change_path(0, buffer, data);
+
     if (!getcwd(buffer, sizeof(buffer)))
+    {
+        ft_putstr_fd("cd: error retrieving current directory\n", 2);
         return (1);
+    }
     change_path(1, buffer, data);
     return (0);
 }
