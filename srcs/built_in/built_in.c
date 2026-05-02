@@ -114,48 +114,44 @@ int	get_home_path(char *path, t_data *data)
 	return (0);
 }
 
-int cd(char *input, t_data *data)
+int	display_cd_error_msg(int flag)
 {
-    char        *path;
-    char        buffer[1024];
-    struct stat info;
+	if (flag == 1)
+		ft_putstr_fd("cd: too many arguments\n", 2);
+	else if (flag == 2)
+		ft_putstr_fd("cd: no such file or directory\n", 2);
+	else if (flag == 3)
+		ft_putstr_fd("cd: permission denied\n", 2);
+	else if (flag == 4)
+		ft_putstr_fd("cd: error retrieving current directory\n", 2);
+	return (1);
+}
 
-    path = &input[3];
-    unmask_spaces(path);
-    if (ft_strchr(path, ' '))
-    {
-        ft_putstr_fd("cd: too many arguments\n", 2);
-        return (1);
-    }
-    if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
-        return (get_home_path(path, data));
-    if (stat(path, &info) != 0)
-    {
-        ft_putstr_fd("cd: no such file or directory\n", 2);
-        return (1);
-    }
-    if (access(path, X_OK) != 0)
-    {
-        ft_putstr_fd("cd: permission denied\n", 2);
-        return (1);
-    }
+int	cd(char *input, t_data *data)
+{
+	char		*path;
+	char		buffer[1024];
+	struct stat	info;
 
-    // ← Ne plus bloquer si le cwd actuel est mort (répertoire supprimé)
-    if (!getcwd(buffer, sizeof(buffer)))
-        buffer[0] = '\0';           // OLDPWD sera vide, c'est acceptable
-    change_path(0, buffer, data);   // met à jour OLDPWD
-
-    if (chdir(path))
-        return (1);
-
-    // ← Ce getcwd est critique : il fixe PWD après le chdir
-    if (!getcwd(buffer, sizeof(buffer)))
-    {
-        ft_putstr_fd("cd: error retrieving current directory\n", 2);
-        return (1);
-    }
-    change_path(1, buffer, data);   // met à jour PWD
-    return (0);
+	path = &input[3];
+	unmask_spaces(path);
+	if (ft_strchr(path, ' '))
+		return (display_cd_error_msg(1));
+	if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
+		return (get_home_path(path, data));
+	if (stat(path, &info) != 0)
+		return (display_cd_error_msg(2));
+	if (access(path, X_OK) != 0)
+		return (display_cd_error_msg(3));
+	if (!getcwd(buffer, sizeof(buffer)))
+		buffer[0] = '\0';
+	change_path(0, buffer, data);
+	if (chdir(path))
+		return (1);
+	if (!getcwd(buffer, sizeof(buffer)))
+		return (display_cd_error_msg(4));
+	change_path(1, buffer, data);
+	return (0);
 }
 
 static int	pwd(void)
@@ -211,6 +207,35 @@ static int	is_numeric_arg(char *str)
 	return (1);
 }
 
+static void	display_error_msg(t_data *data, char **args)
+{
+	ft_putstr_fd("minishell: exit: ", 2);
+	ft_putstr_fd(args[1], 2);
+	ft_putstr_fd(": numeric argument required\n", 2);
+	free_split(args, 0);
+	data->end = 1;
+}
+
+static int	fonction8(char **args)
+{
+	ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+	free_split(args, 0);
+	return (1);
+}
+
+static int	fonction10(t_data *data, char **args)
+{
+	free_split(args, 0);
+	data->end = 1;
+	return (data->error_code);
+}
+
+static int	fonction9(t_data *data, char **args)
+{
+	display_error_msg(data, args);
+	return (2);
+}
+
 static int	status_code(char *input, t_data *data)
 {
 	char		**args;
@@ -223,100 +248,134 @@ static int	status_code(char *input, t_data *data)
 		return (data->error_code);
 	i = 0;
 	while (args[i])
-	{
-		unmask_spaces(args[i]);
-		i++;
-	}
+		unmask_spaces(args[i++]);
 	len = i;
 	if (len == 1)
-	{
-		free_split(args, 0);
-		data->end = 1;
-		return (data->error_code);
-	}
+		return (fonction10(data, args));
 	code = 0;
 	if (!is_numeric_arg(args[1]) || !ft_atoll(args[1], &code))
-	{
-		ft_putstr_fd("minishell: exit: ", 2);
-		ft_putstr_fd(args[1], 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
-		free_split(args, 0);
-		data->end = 1;
-		return (2);
-	}
+		return (fonction9(data, args));
 	if (len > 2)
-	{
-		ft_putstr_fd("minishell: exit: too many arguments\n", 2);
-		free_split(args, 0);
-		return (1);
-	}
+		return (fonction8(args));
 	free_split(args, 0);
 	data->end = 1;
 	return ((code % 256 + 256) % 256);
 }
 
-int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
+static void	handle_pwd(int *status, char *input)
+{
+	if (!ft_strncmp(input, "pwd", 3) && ft_strlen(input) == 3)
+		*status = pwd();
+	else if (!ft_strncmp(input, "pwd ", 4))
+		*status = pwd();
+}
+
+static void	handle_unset(int *status, char *input, t_data *data)
 {
 	char	**split;
-	int		status;
 
-	status = 0;
-	if (!ft_strncmp(input, "pwd", 3) && ft_strlen(input) == 3)
-		status = pwd();
-	if (!ft_strncmp(input, "pwd ", 4))
-		status = pwd();
-	else if (!ft_strncmp(input, "unset", 5) && ft_strlen(input) == 5)
-		status = 0;
+	if (!ft_strncmp(input, "unset", 5) && ft_strlen(input) == 5)
+		*status = 0;
 	else if (!ft_strncmp(input, "unset ", 6))
 	{
 		split = ft_split(input, ' ');
 		if (!split)
-			return (-1);
+		{
+			*status = 139;
+			return ;
+		}
 		split = quote_clean(split);
-		status = unset(&split[1], data);
+		*status = unset(&split[1], data);
 		free_split(split, 0);
 	}
-	else if (!ft_strncmp(input, "env", 3) && ft_strlen(input) == 3)
-		status = env(data->env);
+}
+
+static void	handle_env(int *status, char *input, t_data *data)
+{
+	if (!ft_strncmp(input, "env", 3) && ft_strlen(input) == 3)
+		*status = env(data->env);
 	else if (!ft_strncmp(input, "env ", 4))
-		status = env(data->env);
-	else if (!ft_strncmp(input, "exit", 4)
+		*status = env(data->env);
+}
+
+static void	handle_exit(int *status, char *input, t_data *data, int flag)
+{
+	if (!ft_strncmp(input, "exit", 4)
 		&& ft_strlen(input) == 4)
 	{
-		status = status_code(input, data);
+		*status = status_code(input, data);
 		data->end = 1;
 	}
 	else if (!ft_strncmp(input, "exit ", 5))
 	{
-		if (my_memlen(cmd_split) > i + 1)
-			status = status_code(input, data);
+		if (flag)
+			*status = status_code(input, data);
 		else
 		{
-			status = status_code(input, data);
-			if (status != 1)
+			*status = status_code(input, data);
+			if (*status != 1)
 				data->end = 1;
 		}
 	}
-	else if (!ft_strncmp(input, ".", 1) && ft_strlen(input) == 1)
-	{
-		ft_putstr_fd(" filename argument required . filename [arguments]\n", 2);
-		status = 2;
-	}
-	else if (!ft_strncmp(input, "echo ", 5) || (!ft_strncmp(input, "echo", 4) && ft_strlen(input) == 4))
+}
+
+static void	handle_echo(int *status, char *input)
+{
+	char	**split;
+
+	if (!ft_strncmp(input, "echo ", 5) || (!ft_strncmp(input, "echo", 4)
+			&& ft_strlen(input) == 4))
 	{
 		split = ft_split(input, ' ');
 		if (!split)
-			return (-1);
-		status = echo(input, 0);
+		{
+			*status = 139;
+			return ;
+		}
+		*status = echo(input, 0);
 		free_split(split, 0);
 	}
-	else if ((!ft_strncmp(input, "export", 6)) && ft_strlen(input) == 6)
+}
+
+static void	handle_export(int *status, char *input, t_data *data)
+{
+	if ((!ft_strncmp(input, "export", 6)) && ft_strlen(input) == 6)
 		export_single(data);
 	else if ((!ft_strncmp(input, "export ", 7)))
-		status = ft_export(input, data, 0, 0);
-	else if (!ft_strncmp(input, "cd ", 3)
+		*status = ft_export(input, data, 0, 0);
+}
+
+static void	handle_cd(int *status, char *input, t_data *data)
+{
+	if (!ft_strncmp(input, "cd ", 3)
 		|| (!ft_strncmp(input, "cd", 2)
 			&& ft_strlen(input) == 2))
-		status = cd(input, data);
+		*status = cd(input, data);
+}
+
+static void	handle_dot(int *status, char *input)
+{
+	if (!ft_strncmp(input, ".", 1) && ft_strlen(input) == 1)
+	{
+		ft_putstr_fd(" filename argument required . filename [arguments]\n", 2);
+		*status = 2;
+	}
+}
+
+int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
+{
+	int		status;
+	int		flag;
+
+	flag = my_memlen(cmd_split) > i + 1;
+	status = 0;
+	handle_pwd(&status, input);
+	handle_unset(&status, input, data);
+	handle_env(&status, input, data);
+	handle_exit(&status, input, data, flag);
+	handle_echo(&status, input);
+	handle_export(&status, input, data);
+	handle_cd(&status, input, data);
+	handle_dot(&status, input);
 	return (status);
 }
