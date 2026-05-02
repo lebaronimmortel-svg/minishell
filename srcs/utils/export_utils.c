@@ -51,9 +51,11 @@ int	is_valid_export_var(char *str)
 	int	i;
 
 	i = 0;
+	if (!ft_isalpha(str[i]))
+		return (0);
 	while (str[i] && str[i] != ' ' && str[i] != '=')
 	{
-		if (!ft_isalpha(str[i]))
+		if (!ft_isalpha(str[i]) && str[i] != '_' && (str[i] < '0' || str[i] > '9'))
 			return (0);
 		i++;
 	}

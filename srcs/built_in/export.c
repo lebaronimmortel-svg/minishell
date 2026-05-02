@@ -238,6 +238,7 @@ int	ft_export(char *input, t_data *data, int j, int i)
 	{
 		if (add_var(split[i++], data))
 		{
+			ft_putstr_fd("Error : invalid identifier\n", 2);
 			free_split(split, 0);
 			return (1);
 		}
