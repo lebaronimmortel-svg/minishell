@@ -49,38 +49,42 @@ static int	init(t_data *data, char **envp)
 	return (1);
 }
 
-void	main_loop(char **split, t_token *lex, t_data *data)
+void	fonction_x(t_data *data, int *status, char **split, t_token *lex)
 {
-	char	*str;
-	int		status;
 	int		flag;
+	char	*str;
 
 	flag = 0;
+	str = readline("$> ");
+	if (g_ack)
+	{
+		flag = g_ack;
+		g_ack = 0;
+	}
+	if (flag)
+	{
+		data->error_code = flag;
+		flag = 0;
+	}
+	if (str == NULL)
+		exit_cleanly(*status, data, split);
+	else if (ft_strlen(str) != 0)
+		add_history(str);
+	lex = lexer(str, data);
+	free(str);
+	if (lex)
+		*status = execute_prompt(split, lex, data);
+	if (data->end)
+		exit_cleanly(data->error_code, data, split);
+}
+
+void	main_loop(char **split, t_token *lex, t_data *data)
+{
+	int		status;
+
 	status = 0;
 	while (1)
-	{
-		str = readline("$> ");
-		if (g_ack)
-		{
-			flag = g_ack;
-			g_ack = 0;
-		}
-		if (flag)
-		{
-			data->error_code = flag;
-			flag = 0;
-		}
-		if (str == NULL)
-			exit_cleanly(status, data, split);
-		else if (ft_strlen(str) != 0)
-			add_history(str);
-		lex = lexer(str, data);
-		free(str);
-		if (lex)
-			status = execute_prompt(split, lex, data);
-		if (data->end)
-			exit_cleanly(data->error_code, data, split);
-	}
+		fonction_x(data, &status, split, lex);
 }
 
 int	main(int argc, char **argv, char **envp)

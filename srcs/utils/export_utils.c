@@ -55,7 +55,8 @@ int	is_valid_export_var(char *str)
 		return (0);
 	while (str[i] && str[i] != ' ' && str[i] != '=')
 	{
-		if (!ft_isalpha(str[i]) && str[i] != '_' && (str[i] < '0' || str[i] > '9'))
+		if (!ft_isalpha(str[i]) && str[i] != '_'
+			&& (str[i] < '0' || str[i] > '9'))
 			return (0);
 		i++;
 	}
@@ -64,11 +65,79 @@ int	is_valid_export_var(char *str)
 	return (1);
 }
 
+int	fonction(t_data *data, char *str)
+{
+	int	len;
+
+	len = my_memlen(data->env);
+	data->env = my_realloc(data->env, len);
+	if (!data->env)
+		return (1);
+	data->env[len] = ft_strdup(str);
+	if (!data->env[len])
+		return (1);
+	len = my_memlen(data->env_bis);
+	data->env_bis = my_realloc(data->env_bis, len);
+	if (!data->env_bis)
+		return (1);
+	data->env_bis[len] = ft_strdup(str);
+	if (!data->env_bis[len])
+		return (1);
+	return (0);
+}
+
+int	fonction1(t_data *data, char *str)
+{
+	int	len;
+
+	len = my_memlen(data->env_bis);
+	data->env_bis = my_realloc(data->env_bis, len);
+	if (!data->env_bis)
+		return (1);
+	data->env_bis[len] = ft_strdup(str);
+	if (!data->env_bis[len])
+		return (1);
+	return (0);
+}
+
+int	fonction2(t_data *data, char *str)
+{
+	int	len;
+
+	len = my_memlen(data->env);
+	data->env = my_realloc(data->env, len);
+	if (!data->env)
+		return (1);
+	data->env[len] = ft_strdup(str);
+	if (!data->env[len])
+		return (1);
+	return (0);
+}
+
+int	fonction4(t_data *data, char *str, int *i, int *j)
+{
+	if (exists(str, data->env_bis, j))
+	{
+		(replace(str, data->env_bis, *j));
+		if (exists(str, data->env, i))
+			(replace(str, data->env, *j));
+		else
+			if (fonction2(data, str))
+				return (1);
+		return (0);
+	}
+	else
+	{
+		if (fonction(data, str))
+			return (1);
+		return (0);
+	}
+}
+
 int	add_var(char *str, t_data *data)
 {
 	int	i;
 	int	j;
-	int	len;
 
 	i = 0;
 	j = 0;
@@ -76,59 +145,20 @@ int	add_var(char *str, t_data *data)
 		return (1);
 	if (ft_strchr(str, '='))
 	{
-		if (exists(str, data->env_bis, &j))
-		{
-			(replace(str, data->env_bis, j));
-			if (exists(str, data->env, &i))
-				(replace(str, data->env, j));
-			else
-			{
-				len = my_memlen(data->env);
-				data->env = my_realloc(data->env, len);
-				if (!data->env)
-					return (1);
-				data->env[len] = ft_strdup(str);
-				if (!data->env[len])
-					return (1);
-			}
-			return (0);
-		}
-		else
-		{
-			len = my_memlen(data->env);
-			data->env = my_realloc(data->env, len);
-			if (!data->env)
-				return (1);
-			data->env[len] = ft_strdup(str);
-			if (!data->env[len])
-				return (1);
-			len = my_memlen(data->env_bis);
-			data->env_bis = my_realloc(data->env_bis, len);
-			if (!data->env_bis)
-				return (1);
-			data->env_bis[len] = ft_strdup(str);
-			if (!data->env_bis[len])
-				return (1);
-			return (0);
-		}
+		if (fonction4(data, str, &i, &j))
+			return (1);
+		return (0);
 	}
 	j = 0;
 	if (exists(str, data->env_bis, &j))
 		return (0);
 	else
-	{
-		len = my_memlen(data->env_bis);
-		data->env_bis = my_realloc(data->env_bis, len);
-		if (!data->env_bis)
+		if (fonction1(data, str))
 			return (1);
-		data->env_bis[len] = ft_strdup(str);
-		if (!data->env_bis[len])
-			return (1);
-	}
 	return (0);
 }
 
-static int	update_var(t_data *data, char *prefix, char *path, int i)
+static	int	update_var(t_data *data, char *prefix, char *path, int i)
 {
 	free(data->env[i]);
 	free(data->env_bis[i]);
