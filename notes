@@ -50,8 +50,6 @@ ___________________________________
 CORRECTION BLANCHE FLORENT 30/04/26
 ___________________________________
 
-echo -nnnn -nnnn -nblabla -> fix
-
 echo - 
 ==726066== 66 (32 direct, 34 indirect) bytes in 1 blocks are definitely lost in loss record 21 of 72
 ==726066==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
@@ -67,12 +65,6 @@ echo -
 
 'cd no_perm': message d'erreur (a voir avec access avec le mode F_OK)
 
-'env a': va chercher le binaire -> fix
-
-'pwd blabla' execute le binaire au lieu de la builtin -> fix
-
-'exit 42 toto': ne doit pas quitter minishell
-
 '< infile nope': leaks
 
 '< Makefile cat | < outf': ==799439== Process terminating with default action of signal 13 (SIGPIPE)
@@ -86,12 +78,6 @@ echo -
 ==799439==    at 0x498C5BB: open (open64.c:41)
 ==799439==    by 0x10AC47: ??? (in /usr/bin/cat)
 ==799439==    by 0x48A1D8F: (below main) (libc_start_call_main.h:58)
-
-'export _a': n'exporte pas la variable -> fix
-
-'export a_a': n'exporte pas la variable -> fix
-
-'export a8': n'exporte pas la variable -> fix
 
 'mkdir -p a/b ; cd a/b ; rm -rf ../../a': cd ne fonctionne plus (bloqué dans les trash files)
 

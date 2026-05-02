@@ -283,7 +283,8 @@ int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
 		else
 		{
 			status = status_code(input, data);
-			data->end = 1;
+			if (status != 1)
+				data->end = 1;
 		}
 	}
 	else if (!ft_strncmp(input, ".", 1) && ft_strlen(input) == 1)
