@@ -114,38 +114,42 @@ int	get_home_path(char *path, t_data *data)
 	return (0);
 }
 
-int	cd(char *input, t_data *data)
-{
-	char	*path;
-	char	buffer[1024];
+#include <sys/stat.h>
 
-	path = &input[3];
-	unmask_spaces(path);
-	if (ft_strchr(path, ' '))
-	{
-		ft_putstr_fd(" too many arguments\n", 2);
-		return (1);
-	}
-	if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
-		return (get_home_path(path, data));
-	if (!getcwd(buffer, sizeof(buffer)))
-	{
-		ft_putstr_fd(" No such file or directory\n", 2);
-		return (1);
-	}
-	if (chdir(path))
-	{
-		ft_putstr_fd(" No such file or directory\n", 2);
-		return (1);
-	}
-	change_path(0, buffer, data);
-	if (!getcwd(buffer, sizeof(buffer)))
-	{
-		ft_putstr_fd(" No such file or directory\n", 2);
-		return (1);
-	}
-	change_path(1, buffer, data);
-	return (0);
+int cd(char *input, t_data *data)
+{
+    char        *path;
+    char        buffer[1024];
+    struct stat info;
+
+    path = &input[3];
+    unmask_spaces(path);
+    if (ft_strchr(path, ' '))
+    {
+        ft_putstr_fd("cd: too many arguments\n", 2);
+        return (1);
+    }
+    if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
+        return (get_home_path(path, data));
+    if (stat(path, &info) != 0)
+    {
+        ft_putstr_fd("cd: no such file or directory\n", 2);
+        return (1);
+    }
+    if (access(path, X_OK) != 0)
+    {
+        ft_putstr_fd("cd: permission denied\n", 2);
+        return (1);
+    }
+    if (!getcwd(buffer, sizeof(buffer)))
+        return (1);
+    if (chdir(path))
+        return (1);
+    change_path(0, buffer, data);
+    if (!getcwd(buffer, sizeof(buffer)))
+        return (1);
+    change_path(1, buffer, data);
+    return (0);
 }
 
 static int	pwd(void)
