@@ -114,8 +114,6 @@ int	get_home_path(char *path, t_data *data)
 	return (0);
 }
 
-#include <sys/stat.h>
-
 int cd(char *input, t_data *data)
 {
     char        *path;
@@ -141,14 +139,22 @@ int cd(char *input, t_data *data)
         ft_putstr_fd("cd: permission denied\n", 2);
         return (1);
     }
+
+    // ← Ne plus bloquer si le cwd actuel est mort (répertoire supprimé)
     if (!getcwd(buffer, sizeof(buffer)))
-        return (1);
+        buffer[0] = '\0';           // OLDPWD sera vide, c'est acceptable
+    change_path(0, buffer, data);   // met à jour OLDPWD
+
     if (chdir(path))
         return (1);
-    change_path(0, buffer, data);
+
+    // ← Ce getcwd est critique : il fixe PWD après le chdir
     if (!getcwd(buffer, sizeof(buffer)))
+    {
+        ft_putstr_fd("cd: error retrieving current directory\n", 2);
         return (1);
-    change_path(1, buffer, data);
+    }
+    change_path(1, buffer, data);   // met à jour PWD
     return (0);
 }
 
