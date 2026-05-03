@@ -62,32 +62,38 @@ void	unmask_spaces(char *str)
 	}
 }
 
+void	fonction_trinitaire(char **split, int i)
+{
+	int	j;
+
+	j = 0;
+	while (split[i][j])
+	{
+		if (split[i][j] == '\1' || split[i][j] == '\x1f')
+			split[i][j] = ' ';
+		else if (split[i][j] == '\3')
+			split[i][j] = '|';
+		else if (split[i][j] == '\4')
+			split[i][j] = '<';
+		else if (split[i][j] == '\5')
+			split[i][j] = '>';
+		else if (split[i][j] == '\6')
+		{
+			move_one(&split[i][j]);
+			continue ;
+		}
+		j++;
+	}
+}
+
 char	**quote_clean(char **split)
 {
 	int	i;
-	int	j;
 
 	i = 0;
 	while (split && split[i])
 	{
-		j = 0;
-		while (split[i][j])
-		{
-			if (split[i][j] == '\1' || split[i][j] == '\x1f')
-				split[i][j] = ' ';
-			else if (split[i][j] == '\3')
-				split[i][j] = '|';
-			else if (split[i][j] == '\4')
-				split[i][j] = '<';
-			else if (split[i][j] == '\5')
-				split[i][j] = '>';
-			else if (split[i][j] == '\6')
-			{
-				move_one(&split[i][j]);
-				continue ;
-			}
-			j++;
-		}
+		fonction_trinitaire(split, i);
 		i++;
 	}
 	return (split);
