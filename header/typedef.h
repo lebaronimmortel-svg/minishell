@@ -36,6 +36,7 @@ typedef struct s_data
 	int		signal;
 	char	**env;
 	char	**env_bis;
+	int		expand;
 }	t_data;
 
 typedef struct s_exec
