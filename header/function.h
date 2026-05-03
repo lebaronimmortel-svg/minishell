@@ -157,6 +157,7 @@ int		is_path(char **env);
 
 /* ================================ free.c =============================== */
 void	exit_cleanly(int code, t_data *data, char **split);
+void	set_signal_dfl(void);
 
 /* ============================ misc helpers ============================= */
 
