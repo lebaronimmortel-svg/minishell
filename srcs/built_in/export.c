@@ -254,10 +254,25 @@ int	fonction3000001(char **split, char *chr, t_data *data, int i)
 	return (status);
 }
 
+int	fonction121(char **split, int i, t_data *data)
+{
+	char	*chr;
+
+	chr = ft_strchr(split[i], '+');
+	if (chr && chr[1] && chr[1] == '=')
+	{
+		if (fonction3000001(split, chr, data, i))
+		{
+			free_split(split, 0);
+			return (1);
+		}
+	}
+	return (0);
+}
+
 int	ft_export(char *input, t_data *data)
 {
 	char	**split;
-	char	*chr;
 	int		i;
 
 	split = ft_split(input, ' ');
@@ -265,17 +280,10 @@ int	ft_export(char *input, t_data *data)
 		return (1);
 	fonction3000000(split, 0);
 	i = 0;
-	while (split && split[i])    /// il faut traiter les args 1 par 1, += ou non ...
+	while (split && split[i])
 	{
-		chr = ft_strchr(split[i], '+');
-		if (chr && chr[1] && chr[1] == '=')
-		{
-			if (fonction3000001(split, chr, data, i))
-			{
-				free_split(split, 0);
-				return (1);
-			}
-		}
+		if (fonction121(split, i, data))
+			return (1);
 		i++;
 	}
 	if (fonction_samere(split, data))

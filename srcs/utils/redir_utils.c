@@ -111,7 +111,7 @@ int	fonction_kfc(int *normal_exit, char *line, char *delim)
 	return (0);
 }
 
-static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand,
+static int	handle_hdoc_bis(t_exec *exec, char *delim,
 							char **envp, int *pipefd)
 {
 	pid_t	pid;
@@ -131,7 +131,8 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand,
 			line = fonction_abcdef(exec, delim, pipefd);
 			if (fonction_kfc(&normal_exit, line, delim))
 				break ;
-			fonction_mfc(expand, line, pipefd, envp);
+			fonction_mfc(exec->data->expand, line, pipefd, envp);
+			exec->data->expand = 1;
 		}
 		free_son_heredoc(exec, delim, pipefd, 0);
 	}
@@ -139,18 +140,18 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand,
 	return (WEXITSTATUS(status));
 }
 
-void	fonction2008(t_exec *exec, char *delim, int expand, char **envp, int *pipefd)
+void	fonction2008(t_exec *exec, char *delim, char **envp, int *pipefd)
 {
 	int	ret;
 
-	ret = handle_hdoc_bis(exec, delim, expand, envp, pipefd);
+	ret = handle_hdoc_bis(exec, delim, envp, pipefd);
 	if (ret)
 		exec->data->error_code = ret;
 	free(delim);
 	close(pipefd[1]);
 }
 
-int	handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand)
+int	handle_heredoc(t_exec *exec, char *delimiter, char **envp)
 {
 	int		pipefd[2];
 	char	*delim;
@@ -162,7 +163,7 @@ int	handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand)
 		delim = ft_substr(delimiter, 1, len - 2);
 		if (!delim)
 			return (-1);
-		expand = 0;
+		exec->data->expand = 0;
 	}
 	else
 		delim = ft_strdup(delimiter);
@@ -174,7 +175,7 @@ int	handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand)
 		free(delim);
 		return (-1);
 	}
-	fonction2008(exec, delim, expand, envp, pipefd);
+	fonction2008(exec, delim, envp, pipefd);
 	return (pipefd[0]);
 }
 

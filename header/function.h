@@ -102,7 +102,7 @@ void	end_redir_sequel(t_exec *exec, char **split, int i, char type);
 void	free_lexer(t_token *lex);
 
 /* ============================= redir_utils.c =========================== */
-int		handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand);
+int		handle_heredoc(t_exec *exec, char *delimiter, char **envp);
 int		first_part_apply_redir(char type, t_exec *exec, int i, int fd);
 int		second_part_apply_redir(char type, t_exec *exec, int i);
 int		apply_redirs(t_exec *exec);
