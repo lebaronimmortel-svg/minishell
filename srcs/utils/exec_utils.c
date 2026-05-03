@@ -12,10 +12,23 @@
 
 #include "../../header/header.h"
 
-static int	find_env(t_exec *exec, int i)
+int	fonction17(t_exec *exec)
 {
 	struct stat	info;
 
+	if (access(exec->command[0], X_OK) == 0
+		&& stat(exec->command[0], &info) == 0
+		&& S_ISREG(info.st_mode))
+	{
+		exec->w_path = ft_strdup(exec->command[0]);
+		if (exec->w_path)
+			return (0);
+	}
+	return (1);
+}
+
+static int	find_env(t_exec *exec, int i)
+{
 	if (!exec->command || !exec->command[0])
 		return (1);
 	if (access(exec->command[0], X_OK) == 0 && ft_strchr(exec->command[0], '/'))
@@ -35,14 +48,8 @@ static int	find_env(t_exec *exec, int i)
 	}
 	if (find_env_loop(exec, i) == 0)
 		return (0);
-	if (access(exec->command[0], X_OK) == 0
-		&& stat(exec->command[0], &info) == 0
-		&& S_ISREG(info.st_mode))
-	{
-		exec->w_path = ft_strdup(exec->command[0]);
-		if (exec->w_path)
-			return (0);
-	}
+	if (!fonction17(exec))
+		return (0);
 	return (1);
 }
 
@@ -63,18 +70,54 @@ static int	get_path_error(char *path)
 		c = path[i];
 		path[i] = '\0';
 		if (access(path, F_OK) != 0)
-		{
 			path[i] = c;
+		if (access(path, F_OK) != 0)
 			return (127);
-		}
 		if (access(path, X_OK) != 0)
-		{
 			path[i] = c;
+		if (access(path, X_OK) != 0)
 			return (126);
-		}
 		path[i] = c;
 	}
 	return (127);
+}
+
+void	fonctionbbb(t_exec *exec, int *err_code)
+{
+	if (ft_strchr(exec->command[0], '/'))
+	{
+		*err_code = get_path_error(exec->command[0]);
+		if (*err_code == 126)
+			execve_error(exec->command[0], ": Permission denied");
+		else
+			execve_error(exec->command[0], ": No such file or directory");
+		free_exec_failed(exec, *err_code);
+	}
+	else
+	{
+		execve_error(exec->command[0], ": command not found");
+		free_exec_failed(exec, 127);
+	}
+}
+
+void	fonctionccc(t_exec *exec)
+{
+	free_data_split(exec);
+	execve(exec->w_path, exec->command, exec->env);
+	execve_error(exec->command[0], ": Permission denied");
+	free_exec_failed(exec, 126);
+}
+
+void	fonctionddd(t_exec *exec)
+{
+	if (ft_strchr(exec->input, '\6'))
+	{
+		ft_putstr_fd("Command '' not found\n", 2);
+		free_redir(exec);
+		free_exec_failed(exec, 127);
+	}
+	free_redir(exec);
+	free_exec_failed(exec, 0);
 }
 
 static void	exec_command(t_exec *exec)
@@ -87,40 +130,11 @@ static void	exec_command(t_exec *exec)
 		free_exec_failed(exec, 0);
 	}
 	if (exec->command[0][0] == '\0')
-	{
-		if (ft_strchr(exec->input, '\6'))
-		{
-			ft_putstr_fd("Command '' not found\n", 2);
-			free_redir(exec);
-			free_exec_failed(exec, 127);
-		}
-		free_redir(exec);
-		free_exec_failed(exec, 0);
-	}
+		fonctionddd(exec);
 	if (find_env(exec, 0) == 1)
-	{
-		if (ft_strchr(exec->command[0], '/'))
-		{
-			err_code = get_path_error(exec->command[0]);
-			if (err_code == 126)
-				execve_error(exec->command[0], ": Permission denied");
-			else
-				execve_error(exec->command[0], ": No such file or directory");
-			free_exec_failed(exec, err_code);
-		}
-		else
-		{
-			execve_error(exec->command[0], ": command not found");
-			free_exec_failed(exec, 127);
-		}
-	}
+		fonctionbbb(exec, &err_code);
 	if (exec->w_path)
-	{
-		free_data_split(exec);
-		execve(exec->w_path, exec->command, exec->env);
-		execve_error(exec->command[0], ": Permission denied");
-		free_exec_failed(exec, 126);
-	}
+		fonctionccc(exec);
 	free_exec_failed(exec, 127);
 }
 
@@ -138,6 +152,22 @@ static void	end_fork_created(t_exec *exec, int cmd_index, int cmd_count)
 	}
 }
 
+void	fonction6000(t_exec *exec, int cmd_index, int cmd_count)
+{
+	if (cmd_index > 0)
+		dup2(exec->fd[cmd_index - 1][0], STDIN_FILENO);
+	if (cmd_index < cmd_count - 1)
+		dup2(exec->fd[cmd_index][1], STDOUT_FILENO);
+	close_fd(exec, cmd_count);
+	if (apply_redirs(exec) != 0)
+	{
+		free_redir(exec);
+		free_exec_failed(exec, 1);
+	}
+	exec_command(exec);
+	free_split_exec(exec);
+}
+
 void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 {
 	exec->pid[cmd_index] = fork();
@@ -151,22 +181,23 @@ void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		if (cmd_index > 0)
-			dup2(exec->fd[cmd_index - 1][0], STDIN_FILENO);
-		if (cmd_index < cmd_count - 1)
-			dup2(exec->fd[cmd_index][1], STDOUT_FILENO);
-		close_fd(exec, cmd_count);
-		if (apply_redirs(exec) != 0)
-		{
-			free_redir(exec);
-			free_exec_failed(exec, 1);
-		}
-		exec_command(exec);
-		free_split_exec(exec);
+		fonction6000(exec, cmd_index, cmd_count);
 		exit(1);
 	}
 	else
 		end_fork_created(exec, cmd_index, cmd_count);
+}
+
+int	fonctionbca(int *had_real_pid, t_exec_ctx *ctx, int i, int *status)
+{
+	int	last_pid_status;
+
+	last_pid_status = 0;
+	*had_real_pid = 1;
+	waitpid(ctx->exec->pid[i], status, 0);
+	if (i == ctx->cmd_count - 1)
+		last_pid_status = *status;
+	return (last_pid_status);
 }
 
 int	end_exec(t_exec_ctx *ctx, int exit_code, int status, int i)
@@ -180,12 +211,7 @@ int	end_exec(t_exec_ctx *ctx, int exit_code, int status, int i)
 	while (i < ctx->cmd_count)
 	{
 		if (ctx->exec->pid[i] > 0)
-		{
-			had_real_pid = 1;
-			waitpid(ctx->exec->pid[i], &status, 0);
-			if (i == ctx->cmd_count - 1)
-				last_pid_status = status;
-		}
+			last_pid_status = fonctionbca(&had_real_pid, ctx, i, &status);
 		i++;
 	}
 	if (!had_real_pid)
