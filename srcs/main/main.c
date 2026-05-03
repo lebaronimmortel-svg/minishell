@@ -93,8 +93,7 @@ int	main(int argc, char **argv, char **envp)
 	char	**split;
 	t_data	*data;
 
-	signal(SIGINT, handler0);
-	signal(SIGQUIT, SIG_IGN);
+	set_signal_dfl();
 	(void) argv;
 	if (argc != 1)
 		return (1);

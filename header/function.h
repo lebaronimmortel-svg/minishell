@@ -129,6 +129,7 @@ char	*change_var_hd(char *str, char **envp);
 int		is_path(char **env);
 
 void	exit_cleanly(int code, t_data *data, char **split);
+void	set_signal_dfl(void);
 
 
 #endif
