@@ -191,12 +191,13 @@ t_token	*lexer(char *str, t_data *data)
 		return (NULL);
 	token = malloc((split_len(split) + 1) * sizeof(t_token));
 	if (!token)
-	{
 		free_split(split, 0);
+	if (!token)
 		return (NULL);
-	}
 	if (!lex_convert(split, token, data))
 	{
+		free_split(split, 0);
+		free_lexer(token);
 		return (NULL);
 	}
 	free_split(split, 0);
