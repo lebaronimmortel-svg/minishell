@@ -77,3 +77,39 @@ echo -
 ==799439==    by 0x10AC47: ??? (in /usr/bin/cat)
 ==799439==    by 0x48A1D8F: (below main) (libc_start_call_main.h:58)
 
+$> </ d/, d ,/
+d/,: No such file or directory
+==821812== 
+==821812== FILE DESCRIPTORS: 3 open (3 std) at exit.
+==821812== 
+==821812== HEAP SUMMARY:
+==821812==     in use at exit: 208,311 bytes in 230 blocks
+==821812==   total heap usage: 755 allocs, 525 frees, 244,159 bytes allocated
+==821812== 
+==821812== 2 bytes in 1 blocks are still reachable in loss record 1 of 68
+==821812==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==821812==    by 0x40D5F8: ft_strdup (in /home/alexfuen/cadet/minish/MINISHELL/minishell)
+==821812==    by 0x4027C1: end_redir_sequel (redir.c:25)
+==821812==    by 0x40B366: handle_redir_sequel (redir_utils_third.c:103)
+==821812==    by 0x4028BE: collect_redirs_sequel (redir.c:49)
+==821812==    by 0x402950: collect_redirs (redir.c:93)
+==821812==    by 0x401CBC: exec_main_sequel (exec.c:121)
+==821812==    by 0x408D51: process_exec_loop (exec_utils_third.c:178)
+==821812==    by 0x402061: exec_main (exec.c:200)
+==821812==    by 0x4017C6: execute_prompt (main_loop.c:65)
+==821812==    by 0x401418: fonction_x (main.c:76)
+==821812==    by 0x40147F: main_loop (main.c:87)
+==821812== 
+==821812== 24 bytes in 1 blocks are still reachable in loss record 13 of 68
+==821812==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==821812==    by 0x40ACCB: init_redirs (redir_utils_bis.c:87)
+==821812==    by 0x402920: collect_redirs (redir.c:90)
+==821812==    by 0x401CBC: exec_main_sequel (exec.c:121)
+==821812==    by 0x408D51: process_exec_loop (exec_utils_third.c:178)
+==821812==    by 0x402061: exec_main (exec.c:200)
+==821812==    by 0x4017C6: execute_prompt (main_loop.c:65)
+==821812==    by 0x401418: fonction_x (main.c:76)
+==821812==    by 0x40147F: main_loop (main.c:87)
+==821812==    by 0x40152C: main (main.c:107)
+
+

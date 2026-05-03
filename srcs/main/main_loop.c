@@ -38,10 +38,12 @@ static char	**print_order(t_token *lexer)
 	return (split);
 }
 
-static void	free_lexer(t_token *lex)
+void	free_lexer(t_token *lex)
 {
 	int	i;
 
+	if (!lex)
+		return ;
 	i = 0;
 	while (lex[i].type)
 	{
