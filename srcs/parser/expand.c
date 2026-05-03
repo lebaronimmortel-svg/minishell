@@ -53,12 +53,36 @@ char	*expand_code(char *str, t_data *data)
 			str = transpose(str, i, code_str, 0);
 			free(old_str);
 			free(code_str);
+			if (!str)
+				return (NULL);
 			i = 0;
 		}
 		else
 			i++;
 	}
 	return (str);
+}
+
+void	assign_begin(char *buffer, int flag)
+{
+	if (!flag)
+	{
+		buffer[0] = '\2';
+		buffer[1] = '\0';
+	}
+}
+
+void	fonction20(char *buffer)
+{
+	int	j;
+
+	j = 0;
+	while (buffer[j])
+	{
+		if (buffer[j] == ' ')
+			buffer[j] = '\x1f';
+		j++;
+	}
 }
 
 static void	var_search(char *buffer, char **envp)
@@ -80,22 +104,12 @@ static void	var_search(char *buffer, char **envp)
 				j++;
 			j++;
 			ft_strlcpy(buffer, &envp[i][j], ft_strlen(envp[i]) - j + 1);
-			j = 0;
-			while (buffer[j])
-			{
-				if (buffer[j] == ' ')
-					buffer[j] = '\x1f';
-				j++;
-			}
+			fonction20(buffer);
 			break ;
 		}
 		i++;
 	}
-	if (!flag)
-	{
-		buffer[0] = '\2';
-		buffer[1] = '\0';
-	}
+	assign_begin(buffer, flag);
 }
 
 static int	is_in_dquote(char *str, int index)
@@ -120,12 +134,24 @@ static int	is_in_dquote(char *str, int index)
 	return (in_dq);
 }
 
+void	fonction11(char *buffer)
+{
+	int	j;
+
+	j = 0;
+	while (buffer[j])
+	{
+		if (buffer[j] == '\x1f')
+			buffer[j] = '\1';
+		j++;
+	}
+}
+
 char	*convert_var(char *str, int index, char **envp)
 {
 	int		i;
 	char	buffer[2048];
 	int		in_dq;
-	int		j;
 
 	if (str[index] != '$')
 		return (NULL);
@@ -141,15 +167,7 @@ char	*convert_var(char *str, int index, char **envp)
 	buffer[i - index - 1] = '\0';
 	var_search(buffer, envp);
 	if (in_dq)
-	{
-		j = 0;
-		while (buffer[j])
-		{
-			if (buffer[j] == '\x1f')
-				buffer[j] = '\1';
-			j++;
-		}
-	}
+		fonction11(buffer);
 	str = transpose(str, index, buffer, 1);
 	return (str);
 }

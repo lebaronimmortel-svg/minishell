@@ -21,6 +21,8 @@ char	*my_get_pid(void)
 	int		bytes;
 
 	fd = open("/proc/self/stat", O_RDONLY);
+	if (fd == -1)
+		return (NULL);
 	bytes = read(fd, buf, sizeof(buf));
 	close(fd);
 	buf[bytes] = '\0';

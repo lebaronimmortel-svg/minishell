@@ -58,14 +58,61 @@ void	export_single(t_data *data)
 	print_split(data->env_bis);
 }
 
+int fonction_un_milliard(char **split, t_data *data, int *status)
+{
+	char 	*tmp;
+	char 	*tmp2;
+	char 	*tmp3;
+
+	tmp = ft_strjoin("export ", split[0]);
+	if (!tmp)
+		return (1);
+	tmp2 = ft_strjoin("=", &split[1][1]);
+	if (!tmp2)
+	{
+		free(tmp);
+		return (1);
+	}
+	tmp3 = ft_strjoin(tmp, tmp2);
+	if (!tmp3)
+	{
+		free(tmp);
+		free(tmp2);
+		return (1);
+	}
+	*status = ft_export(tmp3, data);
+	free(tmp);
+	free(tmp2);
+	free(tmp3);
+	return (0);
+}
+
+int	fonction_deux_milliards(char **split, t_data *data, int *status)
+{
+	char *tmp;
+	char *tmp2;
+
+	tmp = ft_strjoin("export ", split[0]);
+	if (!tmp)
+		return (1);
+	tmp2 = ft_strjoin(tmp, "=");
+	if (!tmp2)
+	{
+		free(tmp);
+		return (1);
+	}
+	*status = ft_export(tmp2, data);
+	free(tmp);
+	free(tmp2);
+	return (0);
+}
+
 int	export_plus(char **split, t_data *data)
 {
 	int		i;
 	int		j;
 	int		flag;
 	char	*tmp;
-	char	*tmp2;
-	char	*tmp3;
 	int		status;
 
 	flag = 0;
@@ -103,34 +150,14 @@ int	export_plus(char **split, t_data *data)
 			{
 				if (my_memlen(split) >= 2)
 				{
-					tmp = ft_strjoin("export ", split[0]);
-					if (!tmp)
+					if(fonction_un_milliard(split, data, &status))
 						return (1);
-					tmp2 = ft_strjoin("=", &split[1][1]);
-					if (!tmp2)
-						return (1);
-					tmp3 = ft_strjoin(tmp, tmp2);
-					if (!tmp3)
-						return (1);
-					status = ft_export(tmp3, data, 0, 0);
-					free(tmp);
-					free(tmp2);
-					free(tmp3);
 				}
 				else if (*split[0] == '=')
 					return (status);
 				else
-				{
-					tmp = ft_strjoin("export ", split[0]);
-					if (!tmp)
+					if (fonction_deux_milliards(split, data, &status))
 						return (1);
-					tmp2 = ft_strjoin(tmp, "=");
-					if (!tmp2)
-						return (1);
-					status = ft_export(tmp2, data, 0, 0);
-					free(tmp);
-					free(tmp2);
-				}
 			}
 			flag = 1;
 			break ;
@@ -141,49 +168,22 @@ int	export_plus(char **split, t_data *data)
 	{
 		if (my_memlen(split) >= 2)
 		{
-			tmp = ft_strjoin("export ", split[0]);
-			if (!tmp)
+			if (fonction_un_milliard(split, data, &status))
 				return (1);
-			tmp2 = ft_strjoin("=", &split[1][1]);
-			if (!tmp2)
-				return (1);
-			tmp3 = ft_strjoin(tmp, tmp2);
-			if (!tmp3)
-				return (1);
-			status = ft_export(tmp3, data, 0, 0);
-			free(tmp);
-			free(tmp2);
-			free(tmp3);
 		}
 		else if (*split[0] == '=')
 			return (0);
 		else
-		{
-			tmp = ft_strjoin("export ", split[0]);
-			if (!tmp)
+			if (fonction_deux_milliards(split, data, &status))
 				return (1);
-			tmp2 = ft_strjoin(tmp, "=");
-			if (!tmp2)
-				return (1);
-			status = ft_export(tmp2, data, 0, 0);
-			free(tmp);
-			free(tmp2);
-		}
 	}
 	return (status);
 }
 
-int	ft_export(char *input, t_data *data, int j, int i)
+void	fonction3000000(char **split, int i)
 {
-	char	**split;
-	char	**split_plus;
-	int		len;
-	char	*chr;
-	int		status;
+	int j;
 
-	split = ft_split(input, ' ');
-	if (!split)
-		return (1);
 	while (split && split[i])
 	{
 		j = 0;
@@ -206,42 +206,71 @@ int	ft_export(char *input, t_data *data, int j, int i)
 		}
 		i++;
 	}
-	i = 0;
-	while (split && split[i])
-	{
-		chr = ft_strchr(split[i], '+');
-		if (chr && chr[1] && chr[1] == '=')
-		{
-			split_plus = ft_split(split[i], '+');
-			if (!split_plus)
-			{
-				free_split(split, 0);
-				return (1);
-			}
-			chr = 0;
-			status = export_plus(split_plus, data);
-			free_split(split, 0);
-			free_split(split_plus, 0);
-			free(chr);
-			return (status);
-		}
-		i++;
-	}
+}
+
+int fonction_samere(char **split, t_data *data)
+{
+	int len;
+	int	i;
+
 	len = my_memlen(split);
 	if (len < 2)
-	{
-		free_split(split, 0);
 		return (1);
-	}
 	i = 1;
 	while (split[i])
 	{
 		if (add_var(split[i++], data))
 		{
 			ft_putstr_fd("Error : invalid identifier\n", 2);
-			free_split(split, 0);
 			return (1);
 		}
+	}
+	return (0);
+}
+
+int fonction3000001(char **split, char *chr, t_data *data, int i)
+{
+	char 	**split_plus;
+	int		status;
+
+	split_plus = ft_split(split[i], '+');
+	if (!split_plus)
+		return (1);
+	chr = 0;
+	status = export_plus(split_plus, data);
+	free_split(split_plus, 0);
+	free(chr);
+	return (status);
+}
+
+int	ft_export(char *input, t_data *data)
+{
+	char	**split;
+	char	*chr;
+	int		i;
+
+	split = ft_split(input, ' ');
+	if (!split)
+		return (1);
+	fonction3000000(split, 0);
+	i = 0;
+	while (split && split[i])
+	{
+		chr = ft_strchr(split[i], '+');
+		if (chr && chr[1] && chr[1] == '=')
+		{
+			if (fonction3000001(split, chr, data, i))
+			{
+				free_split(split, 0);
+				return (1);
+			}
+		}
+		i++;
+	}
+	if (fonction_samere(split, data))
+	{
+		free_split(split, 0);
+		return (1);
 	}
 	free_split(split, 0);
 	return (0);
