@@ -12,10 +12,8 @@
 
 #include "../../header/header.h"
 
-int	is_built_in(char *input)
+int	is_built_in1(char *input)
 {
-	if (!input)
-		return (0);
 	if (!ft_strncmp(input, "pwd", 3) && ft_strlen(input) == 3)
 		return (1);
 	if (!ft_strncmp(input, "pwd ", 4))
@@ -28,7 +26,13 @@ int	is_built_in(char *input)
 		return (1);
 	if (!ft_strncmp(input, "unset ", 6))
 		return (1);
-	if (!ft_strncmp(input, "echo ", 5) || (!ft_strncmp(input, "echo", 4) && ft_strlen(input) == 4))
+	return (0);
+}
+
+int	is_built_in2(char *input)
+{
+	if (!ft_strncmp(input, "echo ", 5)
+		|| (!ft_strncmp(input, "echo", 4) && ft_strlen(input) == 4))
 		return (1);
 	if (!ft_strncmp(input, "exit", 4) && ft_strlen(input) == 4)
 		return (1);
@@ -43,6 +47,17 @@ int	is_built_in(char *input)
 	if (!ft_strncmp(input, "export", 6) && ft_strlen(input) == 6)
 		return (1);
 	if (!ft_strncmp(input, "export ", 7))
+		return (1);
+	return (0);
+}
+
+int	is_built_in(char *input)
+{
+	if (!input)
+		return (0);
+	if (is_built_in1(input))
+		return (1);
+	if (is_built_in2(input))
 		return (1);
 	return (0);
 }
