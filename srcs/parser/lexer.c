@@ -76,11 +76,51 @@ static char	*expand_double(char *str)
 	return (str);
 }
 
+void	fonction_void(t_token *token, int i, int quoted)
+{
+	int	k;
+
+	k = 0;
+	while (token[i].value[k])
+	{
+		if (token[i].value[k] == '\2')
+			move_one(&token[i].value[k]);
+		else
+			k++;
+	}
+	if (token[i].value[0] == '\0' && quoted)
+	{
+		token[i].value[0] = '\6';
+		token[i].value[1] = '\0';
+	}
+}
+
+int	fonction_viande(t_token *token, char *str, t_data *data, int i)
+{
+	token[i].type = convert_type(str);
+	token[i].value = ft_strdup(str);
+	if (!token[i].value)
+		return (0);
+	handle_single(token[i].value);
+	token[i].value = expand_double(token[i].value);
+	if (!token[i].value)
+		return (0);
+	while (!are_var_handled(token[i].value))
+	{
+		token[i].value = change_var(token[i].value, data->env);
+		if (!token[i].value)
+			return (0);
+	}
+	token[i].value = expand_code(token[i].value, data);
+	if (!token[i].value)
+		return (0);
+	return (1);
+}
+
 static int	lex_convert(char **split, t_token *token, t_data *data)
 {
 	int	i;
 	int	j;
-	int	k;
 	int	quoted;
 
 	i = 0;
@@ -88,38 +128,11 @@ static int	lex_convert(char **split, t_token *token, t_data *data)
 	while (split[j])
 	{
 		quoted = (ft_strchr(split[j], '"') || ft_strchr(split[j], '\''));
-		token[i].type = convert_type(split[j]);
-		token[i].value = ft_strdup(split[j]);
-		if (!token[i].value)
-			return (0);
-		handle_single(token[i].value);
-		token[i].value = expand_double(token[i].value);
-		if (!token[i].value)
-			return (0);
-		while (!are_var_handled(token[i].value))
-		{
-			token[i].value = change_var(token[i].value, data->env);
-			if (!token[i].value)
-				return (0);
-		}
-		token[i].value = expand_code(token[i].value, data);
-		if (!token[i].value)
+		if (!fonction_viande(token, split[j], data, i))
 			return (0);
 		if (i == 0 || token[i - 1].type != 'h')
 			remove_quotes(token[i].value);
-		k = 0;
-		while (token[i].value[k])
-		{
-			if (token[i].value[k] == '\2')
-				move_one(&token[i].value[k]);
-			else
-				k++;
-		}
-		if (token[i].value[0] == '\0' && quoted)
-		{
-			token[i].value[0] = '\6';
-			token[i].value[1] = '\0';
-		}
+		fonction_void(token, i, quoted);
 		i++;
 		j++;
 	}
