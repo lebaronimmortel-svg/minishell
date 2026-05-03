@@ -136,11 +136,7 @@ static int	handle_special(char *str, char *res, int *i, int *j)
 		return (1);
 	}
 	if (str[*i] == '<' || str[*i] == '>' || str[*i] == '|')
-	{&& str[*i + 1] != ' ')
-			res[(*j)++] = ' ';
-		return (1);
-	}
-	return (0);
+	{
 		if (*j > 0 && res[*j - 1] != ' ')
 			res[(*j)++] = ' ';
 		res[(*j)++] = str[*i];
