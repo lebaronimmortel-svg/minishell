@@ -136,6 +136,46 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 	return (result);
 }
 
+int	fonction47(char **split, t_data *data)
+{
+	if (split && split[0] && ft_strchr(split[0], '\6'))
+	{
+		ft_putstr_fd("Command '' not found\n", 2);
+		data->error_code = 127;
+		return (127);
+	}
+	if (split && split[0] && (split[0][0] == '\0'
+		|| ft_strcmp(split[0], " ") == 0))
+	{
+		data->error_code = 0;
+		return (0);
+	}
+	return (1);
+}
+
+int	fonction48(t_data *data)
+{
+	if (data->signal)
+	{
+		data->signal = 0;
+		data->error_code = 130;
+		return (130);
+	}
+	return (data->error_code);
+}
+
+void	set_signal_ign(void)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+void	set_signal_dfl(void)
+{
+	signal(SIGINT, handler0);
+	signal(SIGQUIT, SIG_IGN);
+}
+
 int	exec_main(char **split, int i, t_data *data, int cmd_count)
 {
 	t_exec		exec;
@@ -147,36 +187,19 @@ int	exec_main(char **split, int i, t_data *data, int cmd_count)
 	exec.split = split;
 	if (cmd_count == 0)
 	{
-		if (split && split[0] && ft_strchr(split[0], '\6'))
-		{
-			ft_putstr_fd("Command '' not found\n", 2);
-			data->error_code = 127;
-			return (127);
-		}
-		if (split && split[0] && (split[0][0] == '\0' || ft_strcmp(split[0], " ") == 0))
-		{
-			data->error_code = 0;
-			return (0);
-		}
+		if (fonction47(split, data) != 1)
+			return (data->error_code);
 		data->error_code = exec_cmd(&exec, data, split);
 		free_redir(&exec);
-		if (data->signal)
-		{
-			data->signal = 0;
-			data->error_code = 130;
-			return (130);
-		}
-		return (data->error_code);
+		return (fonction48(data));
 	}
 	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)
 		return (1);
 	ctx_innit(&ctx, &exec, data, cmd_count);
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	set_signal_ign();
 	process_exec_loop(split, &i, &ctx);
 	exit_code = end_exec(&ctx, 0, 0, 0);
-	signal(SIGINT, handler0);
-	signal(SIGQUIT, SIG_IGN);
+	set_signal_dfl();
 	free_redir(&exec);
 	return (exit_code);
 }
