@@ -31,46 +31,51 @@ static char	convert_type(char *str)
 	return (c);
 }
 
+char	*fonction_blob(char *str, int i)
+{
+	char	*ret;
+	char	*tmp;
+	char	*tmp2;
+	char	*result;
+	char	*pid;
+
+	tmp2 = str;
+	tmp = &str[i + 1];
+	str[i - 1] = '\0';
+	pid = my_get_pid();
+	result = ft_strjoin(str, pid);
+	if (!result)
+		return (NULL);
+	ret = ft_strjoin(result, tmp);
+	if (!str)
+	{
+		free(result);
+		return (NULL);
+	}
+	free(result);
+	free(tmp2);
+	free(pid);
+	return (ret);
+}
+
 static char	*expand_double(char *str)
 {
 	int		i;
-	char	*tmp;
-	char	*pid;
-	char	*result;
-	char	*tmp2;
 
 	i = 1;
 	while (str[i])
 	{
 		if (str[i] == '$' && str[i - 1] == '$')
 		{
-			tmp2 = str;
-			tmp = &str[i + 1];
-			str[i - 1] = '\0';
-			pid = my_get_pid();
-			result = ft_strjoin(str, pid);
-			if (!result)
-			{
-				free(pid);
-				return (NULL);
-			}
-			str = ft_strjoin(result, tmp);
+			str = fonction_blob(str, i);
 			if (!str)
-			{
-				free(pid);
-				free(result);
 				return (NULL);
-			}
-			free(result);
-			free(pid);
-			free(tmp2);
 		}
 		i++;
 	}
 	return (str);
 }
 
-// free le reste du lexer en cas d'echec d'alloc ?
 static int	lex_convert(char **split, t_token *token, t_data *data)
 {
 	int	i;
@@ -131,7 +136,11 @@ static int	handle_special(char *str, char *res, int *i, int *j)
 		return (1);
 	}
 	if (str[*i] == '<' || str[*i] == '>' || str[*i] == '|')
-	{
+	{&& str[*i + 1] != ' ')
+			res[(*j)++] = ' ';
+		return (1);
+	}
+	return (0);
 		if (*j > 0 && res[*j - 1] != ' ')
 			res[(*j)++] = ' ';
 		res[(*j)++] = str[*i];
@@ -174,6 +183,26 @@ static char	*preprocess_operators(char *str, int i, int j)
 	return (result);
 }
 
+t_token	*fonction879(char **split, t_data *data)
+{
+	t_token	*token;
+
+	token = malloc((split_len(split) + 1) * sizeof(t_token));
+	if (!token)
+	{
+		free_split(split, 0);
+		return (NULL);
+	}
+	if (!lex_convert(split, token, data))
+	{
+		free_split(split, 0);
+		free_lexer(token);
+		return (NULL);
+	}
+	free_split(split, 0);
+	return (token);
+}
+
 t_token	*lexer(char *str, t_data *data)
 {
 	char	**split;
@@ -190,17 +219,8 @@ t_token	*lexer(char *str, t_data *data)
 	free(processed);
 	if (!split)
 		return (NULL);
-	token = malloc((split_len(split) + 1) * sizeof(t_token));
-	if (!token)
-		free_split(split, 0);
+	token = fonction879(split, data);
 	if (!token)
 		return (NULL);
-	if (!lex_convert(split, token, data))
-	{
-		free_split(split, 0);
-		free_lexer(token);
-		return (NULL);
-	}
-	free_split(split, 0);
 	return (token);
 }
