@@ -12,9 +12,27 @@
 
 #include "../../header/header.h"
 
-int	pipe_and_pid_init(t_exec *exec, int cmd_count)
+int	fonction_1234(t_exec *exec, int *i)
 {
-	int	i;
+	exec->fd[*i] = malloc(sizeof(int) * 2);
+	if (!exec->fd[*i])
+	{
+		while (--(*i) >= 0)
+			free(exec->fd[*i]);
+		free(exec->fd);
+		exec->fd = NULL;
+		free(exec->pid);
+		exec->pid = NULL;
+		return (1);
+	}
+	exec->fd[*i][0] = -1;
+	exec->fd[*i][1] = -1;
+	(*i)++;
+	return (0);
+}
+
+int	pipe_and_pid_init(t_exec *exec, int cmd_count, int i)
+{
 	int	pipe_count;
 
 	exec->pid = NULL;
@@ -23,7 +41,6 @@ int	pipe_and_pid_init(t_exec *exec, int cmd_count)
 	exec->pid = malloc(sizeof(pid_t) * cmd_count);
 	if (!exec->pid)
 		return (1);
-	i = 0;
 	while (i < cmd_count)
 		exec->pid[i++] = -1;
 	pipe_count = cmd_count - 1;
@@ -31,29 +48,13 @@ int	pipe_and_pid_init(t_exec *exec, int cmd_count)
 		return (0);
 	exec->fd = malloc(sizeof(int *) * pipe_count);
 	if (!exec->fd)
-	{
 		free(exec->pid);
-		exec->pid = NULL;
+	if (!exec->fd)
 		return (1);
-	}
 	i = 0;
 	while (i < pipe_count)
-	{
-		exec->fd[i] = malloc(sizeof(int) * 2);
-		if (!exec->fd[i])
-		{
-			while (--i >= 0)
-				free(exec->fd[i]);
-			free(exec->fd);
-			exec->fd = NULL;
-			free(exec->pid);
-			exec->pid = NULL;
+		if (fonction_1234(exec, &i))
 			return (1);
-		}
-		exec->fd[i][0] = -1;
-		exec->fd[i][1] = -1;
-		i++;
-	}
 	exec->pipe_count = pipe_count;
 	return (0);
 }
@@ -114,7 +115,7 @@ void	infile_redir(char **split, int *i, int check)
 	{
 		split[*i][0] = 0;
 		return ;
-	}char *delimiter,
+	}
 	z = 0;
 	while (split[*i] && split[*i][j + z])
 	{

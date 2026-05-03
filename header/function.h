@@ -107,7 +107,7 @@ int		second_part_apply_redir(char type, t_exec *exec, int i);
 int		apply_redirs(t_exec *exec);
 
 /* ========================== redir_utils_bis.c ========================== */
-int		pipe_and_pid_init(t_exec *exec, int cmd_count);
+int		pipe_and_pid_init(t_exec *exec, int cmd_count, int i);
 int		count_redirs(char **split, int cmd_pos);
 int		init_redirs(t_exec *exec, int count);
 void	infile_redir(char **split, int *i, int check);

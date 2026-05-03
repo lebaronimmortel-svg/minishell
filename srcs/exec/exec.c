@@ -68,7 +68,7 @@ static int	exec_init(t_exec *exec, int i)
 int	pipe_and_pid(t_exec *exec, int cmd_count, char **envp)
 {
 	exec->env = envp;
-	if (pipe_and_pid_init(exec, cmd_count) == 1)
+	if (pipe_and_pid_init(exec, cmd_count, 0) == 1)
 		return (1);
 	return (0);
 }
