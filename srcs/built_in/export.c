@@ -107,6 +107,21 @@ int	fonction_deux_milliards(char **split, t_data *data, int *status)
 	return (0);
 }
 
+int fonction_alpha(char **split, t_data *data, int *status)
+{
+	if (my_memlen(split) >= 2)
+	{
+		if(fonction_un_milliard(split, data, status))
+			return (1);
+	}
+	else if (*split[0] == '=')
+		return (1);
+	else
+		if (fonction_deux_milliards(split, data, status))
+			return (1);
+	return (0);
+}
+
 int	export_plus(char **split, t_data *data)
 {
 	int		i;
@@ -147,18 +162,8 @@ int	export_plus(char **split, t_data *data)
 				}
 			}
 			else
-			{
-				if (my_memlen(split) >= 2)
-				{
-					if(fonction_un_milliard(split, data, &status))
-						return (1);
-				}
-				else if (*split[0] == '=')
-					return (status);
-				else
-					if (fonction_deux_milliards(split, data, &status))
-						return (1);
-			}
+				if (fonction_alpha(split, data, &status))
+					return (1);
 			flag = 1;
 			break ;
 		}
@@ -166,16 +171,8 @@ int	export_plus(char **split, t_data *data)
 	}
 	if (!flag)
 	{
-		if (my_memlen(split) >= 2)
-		{
-			if (fonction_un_milliard(split, data, &status))
-				return (1);
-		}
-		else if (*split[0] == '=')
-			return (0);
-		else
-			if (fonction_deux_milliards(split, data, &status))
-				return (1);
+		if (fonction_alpha(split, data, &status))
+			return (1);
 	}
 	return (status);
 }
