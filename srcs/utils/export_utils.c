@@ -141,6 +141,8 @@ int	add_var(char *str, t_data *data)
 
 	i = 0;
 	j = 0;
+	if (ft_strchr(str, '+'))
+		return (0);
 	if (!is_valid_export_var(str))
 		return (1);
 	if (ft_strchr(str, '='))

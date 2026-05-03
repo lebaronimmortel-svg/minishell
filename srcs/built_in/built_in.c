@@ -342,7 +342,7 @@ static void	handle_export(int *status, char *input, t_data *data)
 	if ((!ft_strncmp(input, "export", 6)) && ft_strlen(input) == 6)
 		export_single(data);
 	else if ((!ft_strncmp(input, "export ", 7)))
-		*status = ft_export(input, data, 0, 0);
+		*status = ft_export(input, data);
 }
 
 static void	handle_cd(int *status, char *input, t_data *data)

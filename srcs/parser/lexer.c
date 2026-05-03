@@ -50,10 +50,17 @@ static char	*expand_double(char *str)
 			pid = my_get_pid();
 			result = ft_strjoin(str, pid);
 			if (!result)
+			{
+				free(pid);
 				return (NULL);
+			}
 			str = ft_strjoin(result, tmp);
 			if (!str)
+			{
+				free(pid);
+				free(result);
 				return (NULL);
+			}
 			free(result);
 			free(pid);
 			free(tmp2);
@@ -63,7 +70,8 @@ static char	*expand_double(char *str)
 	return (str);
 }
 
-static void	lex_convert(char **split, t_token *token, t_data *data)
+// free le reste du lexer en cas d'echec d'alloc ?
+static int	lex_convert(char **split, t_token *token, t_data *data)
 {
 	int	i;
 	int	j;
@@ -77,15 +85,21 @@ static void	lex_convert(char **split, t_token *token, t_data *data)
 		quoted = (ft_strchr(split[j], '"') || ft_strchr(split[j], '\''));
 		token[i].type = convert_type(split[j]);
 		token[i].value = ft_strdup(split[j]);
+		if (!token[i].value)
+			return (0);
 		handle_single(token[i].value);
 		token[i].value = expand_double(token[i].value);
+		if (!token[i].value)
+			return (0);
 		while (!are_var_handled(token[i].value))
 		{
 			token[i].value = change_var(token[i].value, data->env);
 			if (!token[i].value)
-				return ;
+				return (0);
 		}
 		token[i].value = expand_code(token[i].value, data);
+		if (!token[i].value)
+			return (0);
 		if (i == 0 || token[i - 1].type != 'h')
 			remove_quotes(token[i].value);
 		k = 0;
@@ -106,6 +120,7 @@ static void	lex_convert(char **split, t_token *token, t_data *data)
 	}
 	token[i].type = 0;
 	token[i].value = NULL;
+	return (1);
 }
 
 static int	handle_special(char *str, char *res, int *i, int *j)
@@ -181,7 +196,11 @@ t_token	*lexer(char *str, t_data *data)
 		free_split(split, 0);
 		return (NULL);
 	}
-	lex_convert(split, token, data);
+	if (!lex_convert(split, token, data))
+	{
+		//free les champs de token
+		return (NULL);
+	}
 	free_split(split, 0);
 	return (token);
 }
