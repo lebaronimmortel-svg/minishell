@@ -12,6 +12,23 @@
 
 #include "../../header/header.h"
 
+void	fonction_hehe(t_exec_ctx *ctx, int ret)
+{
+	if (ret == 2 && !ctx->data->end)
+		ctx->data->error_code = 127;
+	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
+	{
+		close(ctx->exec->fd[ctx->cmd_index - 1][0]);
+		ctx->exec->fd[ctx->cmd_index - 1][0] = -1;
+	}
+	if (ctx->cmd_index < ctx->cmd_count - 1
+		&& ctx->exec->fd[ctx->cmd_index][1] != -1)
+	{
+		close(ctx->exec->fd[ctx->cmd_index][1]);
+		ctx->exec->fd[ctx->cmd_index][1] = -1;
+	}
+}
+
 int	handle_exec_result(int ret, int built_in, t_exec_ctx *ctx)
 {
 	if (!ctx->data->signal)
@@ -25,18 +42,7 @@ int	handle_exec_result(int ret, int built_in, t_exec_ctx *ctx)
 	}
 	if (ret == 1 || (ret == 2 && !ctx->data->end))
 	{
-		if (ret == 2 && !ctx->data->end)
-			ctx->data->error_code = 127;
-		if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
-		{
-			close(ctx->exec->fd[ctx->cmd_index - 1][0]);
-			ctx->exec->fd[ctx->cmd_index - 1][0] = -1;
-		}
-		if (ctx->cmd_index < ctx->cmd_count - 1 && ctx->exec->fd[ctx->cmd_index][1] != -1)
-		{
-			close(ctx->exec->fd[ctx->cmd_index][1]);
-			ctx->exec->fd[ctx->cmd_index][1] = -1;
-		}
+		fonction_hehe(ctx, ret);
 		ctx->cmd_index++;
 		return (1);
 	}

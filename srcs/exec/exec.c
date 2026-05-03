@@ -86,31 +86,8 @@ static int	setup_empty_cmd(t_exec *exec)
 	return (0);
 }
 
-int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
+int	fonction8001(t_exec *exec, int *i)
 {
-	t_exec	*exec;
-	t_data	*data;
-	int		status;
-
-	exec = ctx->exec;
-	data = ctx->data;
-	exec->redir_count = 0;
-	exec->redir = NULL;
-	collect_redirs(exec, split, *i, exec->env);
-	if (data->signal)
-	{
-		free_redir(exec);
-		(*i)++;
-		return (1);
-	}
-	if (*i >= 1 && (split[(*i) - 1][0] == '<' || split[(*i) - 1][0] == '>'))
-		infile_redir(split, i, 0);
-	exec->input = split[*i];
-	if (is_built_in(exec->input))
-	{
-		status = do_built_in_part(split, i, ctx);
-		return (status);
-	}
 	if (!exec->input[0] && exec->redir_count > 0)
 	{
 		if (setup_empty_cmd(exec))
@@ -128,6 +105,35 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 		return (2);
 	}
 	return (0);
+}
+
+int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
+{
+	t_exec	*exec;
+	t_data	*data;
+	int		status;
+	int		result;
+
+	exec = ctx->exec;
+	data = ctx->data;
+	exec->redir_count = 0;
+	exec->redir = NULL;
+	collect_redirs(exec, split, *i, exec->env);
+	if (data->signal)
+	{
+		free_redir(exec);
+		(*i)++;
+		return (1);
+	}
+	if (*i >= 1 && (split[(*i) - 1][0] == '<' || split[(*i) - 1][0] == '>'))
+		infile_redir(split, i, 0);
+	exec->input = split[*i];
+	if (is_built_in(exec->input))
+		status = do_built_in_part(split, i, ctx);
+	if (is_built_in(exec->input))
+		return (status);
+	result = fonction8001(exec, i);
+	return (result);
 }
 
 int	exec_main(char **split, int i, t_data *data, int cmd_count)
