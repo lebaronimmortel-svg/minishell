@@ -34,6 +34,83 @@ void	free_son_heredoc(t_exec *exec, char *delim, int pipe_fd[2], int code)
 	exit_cleanly(code, exec->data, exec->split);
 }
 
+void	fonction_hfc(t_exec *exec)
+{
+	int	j;
+
+	j = 0;
+	while (j < exec->pipe_count)
+	{
+		if (exec->fd[j][0] != -1)
+			close(exec->fd[j][0]);
+		if (exec->fd[j][1] != -1)
+			close(exec->fd[j][1]);
+		j++;
+	}
+	j = 0;
+	while (j < exec->redir_count)
+	{
+		if (exec->redir[j].fd >= 0)
+			close(exec->redir[j].fd);
+		j++;
+	}
+}
+
+void	fonction_mfc(int expand, char *line, int *pipefd, char **envp)
+{
+	if (expand)
+	{
+		while (!are_var_hd(line))
+			line = change_var_hd(line, envp);
+		unmask_spaces(line);
+	}
+	write(pipefd[1], line, ft_strlen(line));
+	write(pipefd[1], "\n", 1);
+	free(line);
+}
+
+void	fonction33(int *pipefd, int *status, t_exec *exec, pid_t pid)
+{
+	close(pipefd[1]);
+	signal(SIGINT, SIG_IGN);
+	waitpid(pid, status, 0);
+	signal(SIGINT, handler0);
+	if (*status)
+		exec->data->signal = 1;
+}
+
+char	*fonction_abcdef(t_exec *exec, char *delim, int *pipefd)
+{
+	char	*line;
+
+	line = readline("heredoc> ");
+	if (g_ack == SIGINT)
+	{
+		if (line)
+			free(line);
+		free_son_heredoc(exec, delim, pipefd, 130);
+	}
+	return (line);
+}
+
+int	fonction_kfc(int *normal_exit, char *line, char *delim)
+{
+	if (!line)
+	{
+		ft_putstr_fd("minishell: warning: here-document delimited"
+			" by end-of-file\n", 2);
+		*normal_exit = 1;
+		return (1);
+	}
+	if (ft_strcmp(line, delim) == 0)
+	{
+		free(line);
+		*normal_exit = 1;
+		return (1);
+	}
+	return (0);
+}
+
 static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand,
 							char **envp, int *pipefd)
 {
@@ -41,78 +118,43 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim, int expand,
 	int		status;
 	char	*line;
 	int		normal_exit;
-	int		j;
 
 	normal_exit = 0;
 	pid = fork();
 	if (pid == 0)
 	{
-		j = 0;
-		while (j < exec->pipe_count)
-		{
-			if (exec->fd[j][0] != -1)
-				close(exec->fd[j][0]);
-			if (exec->fd[j][1] != -1)
-				close(exec->fd[j][1]);
-			j++;
-		}
-		j = 0;
-		while (j < exec->redir_count)
-		{
-			if (exec->redir[j].fd >= 0)
-				close(exec->redir[j].fd);
-			j++;
-		}
+		fonction_hfc(exec);
 		g_ack = 0;
 		signal(SIGINT, handle_sigint_son);
 		while (1)
 		{
-			line = readline("heredoc> ");
-			if (g_ack == SIGINT)
-			{
-				if (line)
-					free(line);
-				free_son_heredoc(exec, delim, pipefd, 130);
-			}
-			if (!line)
-			{
-				ft_putstr_fd("minishell: warning: here-document delimited"
-					" by end-of-file\n", 2);
-				normal_exit = 1;
+			line = fonction_abcdef(exec, delim, pipefd);
+			if (fonction_kfc(&normal_exit, line, delim))
 				break ;
-			}
-			if (ft_strcmp(line, delim) == 0)
-			{
-				free(line);
-				normal_exit = 1;
-				break ;
-			}
-			if (expand)
-			{
-				while (!are_var_hd(line))
-					line = change_var_hd(line, envp);
-				unmask_spaces(line);
-			}
-			write(pipefd[1], line, ft_strlen(line));
-			write(pipefd[1], "\n", 1);
-			free(line);
+			fonction_mfc(expand, line, pipefd, envp);
 		}
 		free_son_heredoc(exec, delim, pipefd, 0);
 	}
-	close(pipefd[1]);
-	signal(SIGINT, SIG_IGN);
-	waitpid(pid, &status, 0);
-	signal(SIGINT, handler0);
-	if (status)
-		exec->data->signal = 1;
+	fonction33(pipefd, &status, exec, pid);
 	return (WEXITSTATUS(status));
 }
 
-int	handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand, int len)
+void	fonction2008(t_exec *exec, char *delim, int expand, char **envp, int *pipefd)
+{
+	int	ret;
+
+	ret = handle_hdoc_bis(exec, delim, expand, envp, pipefd);
+	if (ret)
+		exec->data->error_code = ret;
+	free(delim);
+	close(pipefd[1]);
+}
+
+int	handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand)
 {
 	int		pipefd[2];
 	char	*delim;
-	int		ret;
+	int		len;
 
 	if (delimiter[0] == 34 || delimiter[0] == 39)
 	{
@@ -132,11 +174,7 @@ int	handle_heredoc(t_exec *exec, char *delimiter, char **envp, int expand, int l
 		free(delim);
 		return (-1);
 	}
-	ret = handle_hdoc_bis(exec, delim, expand, envp, pipefd);
-	if (ret)
-		exec->data->error_code = ret;
-	free(delim);
-	close(pipefd[1]);
+	fonction2008(exec, delim, expand, envp, pipefd);
 	return (pipefd[0]);
 }
 
