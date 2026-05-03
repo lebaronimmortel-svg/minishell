@@ -58,11 +58,11 @@ void	export_single(t_data *data)
 	print_split(data->env_bis);
 }
 
-int fonction_un_milliard(char **split, t_data *data, int *status)
+int	fonction_un_milliard(char **split, t_data *data, int *status)
 {
-	char 	*tmp;
-	char 	*tmp2;
-	char 	*tmp3;
+	char	*tmp;
+	char	*tmp2;
+	char	*tmp3;
 
 	tmp = ft_strjoin("export ", split[0]);
 	if (!tmp)
@@ -89,8 +89,8 @@ int fonction_un_milliard(char **split, t_data *data, int *status)
 
 int	fonction_deux_milliards(char **split, t_data *data, int *status)
 {
-	char *tmp;
-	char *tmp2;
+	char	*tmp;
+	char	*tmp2;
 
 	tmp = ft_strjoin("export ", split[0]);
 	if (!tmp)
@@ -107,11 +107,11 @@ int	fonction_deux_milliards(char **split, t_data *data, int *status)
 	return (0);
 }
 
-int fonction_alpha(char **split, t_data *data, int *status)
+int	fonction_alpha(char **split, t_data *data, int *status)
 {
 	if (my_memlen(split) >= 2)
 	{
-		if(fonction_un_milliard(split, data, status))
+		if (fonction_un_milliard(split, data, status))
 			return (1);
 	}
 	else if (*split[0] == '=')
@@ -122,12 +122,51 @@ int fonction_alpha(char **split, t_data *data, int *status)
 	return (0);
 }
 
+int	fonction_beta(char **split, t_data *data, char *tmp, int i)
+{
+	int	j;
+
+	data->env_bis[i] = ft_strjoin(data->env_bis[i], &split[1][1]);
+	free(tmp);
+	if (!data->env_bis[i])
+		return (1);
+	j = 0;
+	while (data->env[j])
+	{
+		if (!ft_strncmp(split[0], data->env[j],
+				ft_strlen(split[0])))
+		{
+			tmp = data->env[j];
+			data->env[j] = ft_strjoin(data->env[j], &split[1][1]);
+			free(tmp);
+			if (!data->env[j])
+				return (1);
+		}
+		j++;
+	}
+	return (0);
+}
+
+int	fonction_omega(char **split, t_data *data, int *status, int i)
+{
+	char	*tmp;
+
+	tmp = data->env_bis[i];
+	if (ft_strchr(data->env_bis[i], '='))
+	{
+		if (fonction_beta(split, data, tmp, i))
+			return (1);
+	}
+	else
+		if (fonction_alpha(split, data, status))
+			return (1);
+	return (0);
+}
+
 int	export_plus(char **split, t_data *data)
 {
-	int		i;
-	int		j;
 	int		flag;
-	char	*tmp;
+	int		i;
 	int		status;
 
 	flag = 0;
@@ -139,47 +178,22 @@ int	export_plus(char **split, t_data *data)
 			&& (data->env_bis[i][ft_strlen(split[0])] == '='
 			|| data->env_bis[i][ft_strlen(split[0])] == '\0'))
 		{
-			tmp = data->env_bis[i];
-			if (ft_strchr(data->env_bis[i], '='))
-			{
-				data->env_bis[i] = ft_strjoin(data->env_bis[i], &split[1][1]);
-				free(tmp);
-				if (!data->env_bis[i])
-					return (1);
-				j = 0;
-				while (data->env[j])
-				{
-					if (!ft_strncmp(split[0], data->env[j],
-							ft_strlen(split[0])))
-					{
-						tmp = data->env[j];
-						data->env[j] = ft_strjoin(data->env[j], &split[1][1]);
-						free(tmp);
-						if (!data->env[j])
-							return (1);
-					}
-					j++;
-				}
-			}
-			else
-				if (fonction_alpha(split, data, &status))
-					return (1);
+			if (fonction_omega(split, data, &status, i))
+				return (1);
 			flag = 1;
 			break ;
 		}
 		i++;
 	}
 	if (!flag)
-	{
 		if (fonction_alpha(split, data, &status))
 			return (1);
-	}
 	return (status);
 }
 
 void	fonction3000000(char **split, int i)
 {
-	int j;
+	int	j;
 
 	while (split && split[i])
 	{
@@ -205,9 +219,9 @@ void	fonction3000000(char **split, int i)
 	}
 }
 
-int fonction_samere(char **split, t_data *data)
+int	fonction_samere(char **split, t_data *data)
 {
-	int len;
+	int	len;
 	int	i;
 
 	len = my_memlen(split);
@@ -225,9 +239,9 @@ int fonction_samere(char **split, t_data *data)
 	return (0);
 }
 
-int fonction3000001(char **split, char *chr, t_data *data, int i)
+int	fonction3000001(char **split, char *chr, t_data *data, int i)
 {
-	char 	**split_plus;
+	char	**split_plus;
 	int		status;
 
 	split_plus = ft_split(split[i], '+');
