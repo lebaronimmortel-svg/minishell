@@ -114,7 +114,7 @@ void	infile_redir(char **split, int *i, int check)
 	{
 		split[*i][0] = 0;
 		return ;
-	}
+	}char *delimiter,
 	z = 0;
 	while (split[*i] && split[*i][j + z])
 	{
@@ -132,7 +132,7 @@ void	end_collect_redir(t_exec *exec, char **envp)
 	{
 		if (exec->redir[k].type == 'h' && exec->redir[k].fd == -1)
 			exec->redir[k].fd = handle_heredoc(exec, exec->redir[k].file,
-					envp, 1, 0);
+					envp, 1);
 		k++;
 	}
 }
