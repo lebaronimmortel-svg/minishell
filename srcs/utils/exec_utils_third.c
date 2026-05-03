@@ -55,6 +55,31 @@ int	find_env_loop(t_exec *exec, int i)
 	return (1);
 }
 
+void	fonction18(t_exec_ctx *ctx)
+{
+	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
+	{
+		close(ctx->exec->fd[ctx->cmd_index - 1][0]);
+		ctx->exec->fd[ctx->cmd_index - 1][0] = -1;
+	}
+	if (ctx->cmd_index < ctx->cmd_count - 1
+		&& ctx->exec->fd[ctx->cmd_index][1] != -1)
+	{
+		close(ctx->exec->fd[ctx->cmd_index][1]);
+		ctx->exec->fd[ctx->cmd_index][1] = -1;
+	}
+	free_redir(ctx->exec);
+}
+
+void	fonction19(t_exec_ctx *ctx)
+{
+	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
+		dup2(ctx->exec->fd[ctx->cmd_index - 1][0], STDIN_FILENO);
+	if (ctx->cmd_index < ctx->cmd_count - 1
+		&& ctx->exec->fd[ctx->cmd_index][1] != -1)
+		dup2(ctx->exec->fd[ctx->cmd_index][1], STDOUT_FILENO);
+}
+
 int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 {
 	int	saved_stdin;
@@ -63,10 +88,7 @@ int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
-	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
-		dup2(ctx->exec->fd[ctx->cmd_index - 1][0], STDIN_FILENO);
-	if (ctx->cmd_index < ctx->cmd_count - 1 && ctx->exec->fd[ctx->cmd_index][1] != -1)
-		dup2(ctx->exec->fd[ctx->cmd_index][1], STDOUT_FILENO);
+	fonction19(ctx);
 	status = 0;
 	if (ctx->exec->redir_count > 0)
 	{
@@ -80,22 +102,12 @@ int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdin);
 	close(saved_stdout);
-	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
-	{
-		close(ctx->exec->fd[ctx->cmd_index - 1][0]);
-		ctx->exec->fd[ctx->cmd_index - 1][0] = -1;
-	}
-	if (ctx->cmd_index < ctx->cmd_count - 1 && ctx->exec->fd[ctx->cmd_index][1] != -1)
-	{
-		close(ctx->exec->fd[ctx->cmd_index][1]);
-		ctx->exec->fd[ctx->cmd_index][1] = -1;
-	}
-	free_redir(ctx->exec);
+	fonction18(ctx);
 	(*i)++;
 	return (status);
 }
 
-int	should_skip_token(char **split, int *i)
+int	fonctionlisse(char **split, int *i)
 {
 	if (is_pipe(split[*i]))
 	{
@@ -112,6 +124,11 @@ int	should_skip_token(char **split, int *i)
 		(*i)++;
 		return (1);
 	}
+	return (0);
+}
+
+int	fonctiondure(char **split, int *i)
+{
 	if (split[*i][0] == '\0' && !has_redir_after_empty(split, *i))
 	{
 		(*i)++;
@@ -127,6 +144,15 @@ int	should_skip_token(char **split, int *i)
 		(*i)++;
 		return (1);
 	}
+	return (0);
+}
+
+int	should_skip_token(char **split, int *i)
+{
+	if (fonctionlisse(split, i))
+		return (1);
+	if (fonctiondure(split, i))
+		return (1);
 	return (0);
 }
 
