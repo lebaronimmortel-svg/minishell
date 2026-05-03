@@ -12,10 +12,22 @@
 
 #include "../../header/header.h"
 
+void	fonction_abc(char **split, int cmd_pos, int i, int sp)
+{
+	char	*extra;
+
+	extra = ft_strdup(&split[i + 1][sp + 1]);
+	if (extra)
+	{
+		append_to_cmd(split, cmd_pos, extra);
+		free(extra);
+	}
+	split[i + 1][sp] = '\0';
+}
+
 void	preprocess_split(char **split, int i, int cmd_pos)
 {
 	int		sp;
-	char	*extra;
 
 	while (split && split[i])
 	{
@@ -27,15 +39,7 @@ void	preprocess_split(char **split, int i, int cmd_pos)
 			{
 				sp = space_pos(split[i + 1]);
 				if (sp != -1)
-				{
-					extra = ft_strdup(&split[i + 1][sp + 1]);
-					if (extra)
-					{
-						append_to_cmd(split, cmd_pos, extra);
-						free(extra);
-					}
-					split[i + 1][sp] = '\0';
-				}
+					fonction_abc(split, cmd_pos, i, sp);
 				i++;
 			}
 		}
