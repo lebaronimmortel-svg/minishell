@@ -34,7 +34,7 @@ void	free_son_heredoc(t_exec *exec, char *delim, int pipe_fd[2], int code)
 	exit_cleanly(code, exec->data, exec->split);
 }
 
-void	fonction_hfc(t_exec *exec)
+void	check_exec(t_exec *exec)
 {
 	int	j;
 
@@ -69,7 +69,7 @@ void	fonction_mfc(int expand, char *line, int *pipefd, char **envp)
 	free(line);
 }
 
-void	fonction33(int *pipefd, int *status, t_exec *exec, pid_t pid)
+void	wait_son(int *pipefd, int *status, t_exec *exec, pid_t pid)
 {
 	close(pipefd[1]);
 	signal(SIGINT, SIG_IGN);
@@ -79,7 +79,7 @@ void	fonction33(int *pipefd, int *status, t_exec *exec, pid_t pid)
 		exec->data->signal = 1;
 }
 
-char	*fonction_abcdef(t_exec *exec, char *delim, int *pipefd)
+char	*get_line_heredoc(t_exec *exec, char *delim, int *pipefd)
 {
 	char	*line;
 
@@ -93,7 +93,7 @@ char	*fonction_abcdef(t_exec *exec, char *delim, int *pipefd)
 	return (line);
 }
 
-int	fonction_kfc(int *normal_exit, char *line, char *delim)
+int	handle_heredoc_end(int *normal_exit, char *line, char *delim)
 {
 	if (!line)
 	{
@@ -123,24 +123,24 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim,
 	pid = fork();
 	if (pid == 0)
 	{
-		fonction_hfc(exec);
+		check_exec(exec);
 		g_ack = 0;
 		signal(SIGINT, handle_sigint_son);
 		while (1)
 		{
-			line = fonction_abcdef(exec, delim, pipefd);
-			if (fonction_kfc(&normal_exit, line, delim))
+			line = get_line_heredoc(exec, delim, pipefd);
+			if (handle_heredoc_end(&normal_exit, line, delim))
 				break ;
 			fonction_mfc(exec->data->expand, line, pipefd, envp);
 			exec->data->expand = 1;
 		}
 		free_son_heredoc(exec, delim, pipefd, 0);
 	}
-	fonction33(pipefd, &status, exec, pid);
+	wait_son(pipefd, &status, exec, pid);
 	return (WEXITSTATUS(status));
 }
 
-void	fonction2008(t_exec *exec, char *delim, char **envp, int *pipefd)
+void	update_status_code(t_exec *exec, char *delim, char **envp, int *pipefd)
 {
 	int	ret;
 
@@ -175,7 +175,7 @@ int	handle_heredoc(t_exec *exec, char *delimiter, char **envp)
 		free(delim);
 		return (-1);
 	}
-	fonction2008(exec, delim, envp, pipefd);
+	update_status_code(exec, delim, envp, pipefd);
 	return (pipefd[0]);
 }
 
