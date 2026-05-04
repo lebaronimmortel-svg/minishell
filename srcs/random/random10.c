@@ -1,16 +1,31 @@
 #include "../../header/header.h"
 
-long long	calculation_atoll(const char *str, int i, int signe, long long *result)
+long long	atoll_loop(const char *str, int i, int signe, long long *result)
 {
+	int	digit;
+
 	while (str[i])
 	{
+		digit = str[i] - '0';
+		if (digit < 0 || digit > 9)
+			return (0);
+		if (signe == 1)
+		{
+			if (*result > (LLONG_MAX - digit) / 10)
+				return (0);
+		}
+		if (signe == -1)
+		{
+			if (*result * (-1) < (LLONG_MIN + digit) / 10)
+				return (0);
+		}
 		if (str[i] >= '0' && str[i] <= '9')
 			*result = *result * 10 + str[i] - '0';
 		else
-			return (*result * signe);
+			return (1);
 		i++;
 	}
-	return (*result * signe);
+	return (1);
 }
 
 long long	ft_atoll(const char *nptr, long long *result)
@@ -28,35 +43,10 @@ long long	ft_atoll(const char *nptr, long long *result)
 			signe = -1;
 		i++;
 	}
-	if (!calculation_atoll(nptr, i, signe, result))
+	if (!atoll_loop(nptr, i, signe, result))
 		return (0);
 	*result = *result * signe;
 	return (1);
-}
-
-char	*get_user(t_data *data)
-{
-	int		i;
-	char	*result;
-	char	**split;
-
-	i = 0;
-	while (data->env[i])
-	{
-		if (!ft_strncmp(data->env[i], "USER=", 5))
-		{
-			split = ft_split(data->env[i], '=');
-			if (!split)
-				return (NULL);
-			result = ft_strdup(split[1]);
-			if (!result)
-				return (NULL);
-			free_split(split, 0);
-			return (result);
-		}
-		i++;
-	}
-	return (NULL);
 }
 
 int	get_home_path(char *path, t_data *data)
