@@ -12,6 +12,17 @@
 
 #include "../../header/header.h"
 
+int	update_status(t_data *data)
+{
+	if (data->signal)
+	{
+		data->signal = 0;
+		data->error_code = 130;
+		return (130);
+	}
+	return (data->error_code);
+}
+
 int	handle_input_redir(t_exec *exec, int i)
 {
 	int	fd;
