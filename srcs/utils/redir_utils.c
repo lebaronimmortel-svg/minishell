@@ -56,7 +56,7 @@ void	check_exec(t_exec *exec)
 	}
 }
 
-void	fonction_mfc(int expand, char *line, int *pipefd, char **envp)
+void	expand_heredoc(int expand, char *line, int *pipefd, char **envp)
 {
 	if (expand)
 	{
@@ -131,7 +131,7 @@ static int	handle_hdoc_bis(t_exec *exec, char *delim,
 			line = get_line_heredoc(exec, delim, pipefd);
 			if (handle_heredoc_end(&normal_exit, line, delim))
 				break ;
-			fonction_mfc(exec->data->expand, line, pipefd, envp);
+			expand_heredoc(exec->data->expand, line, pipefd, envp);
 			exec->data->expand = 1;
 		}
 		free_son_heredoc(exec, delim, pipefd, 0);
