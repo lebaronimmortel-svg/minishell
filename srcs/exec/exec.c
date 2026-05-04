@@ -86,7 +86,7 @@ static int	setup_empty_cmd(t_exec *exec)
 	return (0);
 }
 
-int	fonction8001(t_exec *exec, int *i)
+int	retrieve_status(t_exec *exec, int *i)
 {
 	if (!exec->input[0] && exec->redir_count > 0)
 	{
@@ -132,7 +132,7 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 		status = do_built_in_part(split, i, ctx);
 	if (is_built_in(exec->input))
 		return (status);
-	result = fonction8001(exec, i);
+	result = retrieve_status(exec, i);
 	return (result);
 }
 

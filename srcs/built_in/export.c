@@ -147,7 +147,7 @@ int	add_to_var_equal(char **split, t_data *data, char *tmp, int i)
 	return (0);
 }
 
-int	fonction_omega(char **split, t_data *data, int *status, int i)
+int	add_to_var(char **split, t_data *data, int *status, int i)
 {
 	char	*tmp;
 
@@ -178,7 +178,7 @@ int	export_plus(char **split, t_data *data)
 			&& (data->env_bis[i][ft_strlen(split[0])] == '='
 			|| data->env_bis[i][ft_strlen(split[0])] == '\0'))
 		{
-			if (fonction_omega(split, data, &status, i))
+			if (add_to_var(split, data, &status, i))
 				return (1);
 			flag = 1;
 			break ;
@@ -191,7 +191,7 @@ int	export_plus(char **split, t_data *data)
 	return (status);
 }
 
-void	replace_filling(char **split, int i)
+void	replace_fill(char **split, int i)
 {
 	int	j;
 
@@ -278,7 +278,7 @@ int	ft_export(char *input, t_data *data)
 	split = ft_split(input, ' ');
 	if (!split)
 		return (1);
-	replace_filling(split, 0);
+	replace_fill(split, 0);
 	i = 0;
 	while (split && split[i])
 	{

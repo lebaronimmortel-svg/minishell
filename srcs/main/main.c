@@ -50,7 +50,7 @@ static int	init(t_data *data, char **envp)
 	return (1);
 }
 
-void	fonction_x(t_data *data, int *status, char **split, t_token *lex)
+void	prompt_loop(t_data *data, int *status, char **split, t_token *lex)
 {
 	int		flag;
 	char	*str;
@@ -85,7 +85,7 @@ void	main_loop(char **split, t_token *lex, t_data *data)
 
 	status = 0;
 	while (1)
-		fonction_x(data, &status, split, lex);
+		prompt_loop(data, &status, split, lex);
 }
 
 int	main(int argc, char **argv, char **envp)
