@@ -195,7 +195,7 @@ int	exec_main(char **split, int i, t_data *data, int cmd_count)
 	}
 	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)
 		return (1);
-	ctx_innit(&ctx, &exec, data, cmd_count);
+	ctx_init(&ctx, &exec, data, cmd_count);
 	set_signal_ign();
 	process_exec_loop(split, &i, &ctx);
 	exit_code = end_exec(&ctx, 0, 0, 0);

@@ -63,7 +63,7 @@ int		should_skip_token(char **split, int *i);
 void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx);
 
 char	*get_path(char **env);
-void	ctx_innit(t_exec_ctx *ctx, t_exec *exec, t_data *data, int cmd_count);
+void	ctx_init(t_exec_ctx *ctx, t_exec *exec, t_data *data, int cmd_count);
 void	process_built_in(t_exec_ctx *ctx);
 int		handle_exec_result(int ret, int built_in, t_exec_ctx *ctx);
 
