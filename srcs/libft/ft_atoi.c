@@ -24,36 +24,36 @@ static int	check_space(const char *str, int i)
 	return (0);
 }
 
-int	calculation_atoi(const char *str, int i, int signe, int result)
+int	calculation_atoi(const char *str, int i, int sign, int result)
 {
 	while (str[i])
 	{
 		if (str[i] >= '0' && str[i] <= '9')
 			result = result * 10 + str[i] - '0';
 		else
-			return (result * signe);
+			return (result * sign);
 		i++;
 	}
-	return (result * signe);
+	return (result * sign);
 }
 
 int	ft_atoi(const char *nptr)
 {
 	int	result;
 	int	i;
-	int	signe;
+	int	sign;
 
 	i = 0;
 	result = 0;
-	signe = 1;
+	sign = 1;
 	while (check_space(nptr, i))
 		i++;
 	if (nptr[i] == '+' || nptr[i] == '-')
 	{
 		if (nptr[i] == '-')
-			signe = -1;
+			sign = -1;
 		i++;
 	}
-	result = calculation_atoi(nptr, i, signe, result);
+	result = calculation_atoi(nptr, i, sign, result);
 	return (result);
 }

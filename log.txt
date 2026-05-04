@@ -1,0 +1,3962 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   function.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/16 09:37:38 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/04/16 09:37:39 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef FUNCTION_H
+# define FUNCTION_H
+
+/* =============================== lexer.c =============================== */
+t_token	*lexer(char *str, t_data *data);
+
+/* =============================== parser.c ============================== */
+int		parser(t_token *lexer);
+void	handle_single(char *str);
+void	check_quote(char *str);
+int		is_ok_quote(char *str, int index);
+
+/* =============================== expand.c ============================== */
+char	*expand_code(char *str, t_data *data);
+char	*change_var(char *str, char **envp);
+char	*convert_var(char *str, int index, char **envp);
+
+/* ============================ expand_utils.c =========================== */
+int		is_valid_var(char *str, int flag);
+int		is_ok_quote(char *str, int index);
+
+/* =============================== built_in.c ============================ */
+int		exec_built_in(char *input, t_data *data, char **split, int i);
+int		echo(char *input, int k);
+int		cd(char *input, t_data *data);
+
+/* ============================ unset.c =========================== */
+int		unset(char **split, t_data *data);
+
+/* ================================ export.c ============================= */
+int		does_var_exist(char *str, char **env, int *i);
+int		ft_export(char *input, t_data *data);
+void	export_single(t_data *data);
+
+/* ============================ export_utils.c =========================== */
+int		add_var(char *str, t_data *data);
+int		change_path(int flag, char *path, t_data *data);
+
+/* ================================ exec.c =============================== */
+int		exec_main(char **split, int i, t_data *data, int cmd_count);
+int		exec_main_sequel(char **split, int *i, t_exec_ctx *ctx);
+
+/* ============================= exec_error.c ============================ */
+void	execve_error(char *str, char *command);
+
+/* ============================== exec_utils.c =========================== */
+void	fork_created(t_exec *exec, int cmd_index, int cmd_count);
+int		end_exec(t_exec_ctx *ctx, int exit_code, int status, int i);
+int		end_exec_sig(t_exec_ctx *ctx, int exit_code, int last_pid_status);
+
+/* =========================== exec_utils_bis.c ========================== */
+int		is_pipe(char *s);
+int		skip_redirection(char **split, int i);
+int		should_skip_empty(char **split, int i);
+int		is_redir_argument(char **split, int i);
+int		has_redir_after_empty(char **split, int i);
+int		count_cmds(char **split, int i, int count);
+
+/* ========================== exec_utils_third.c ========================= */
+void	check_dir(t_exec *exec);
+int		find_env_loop(t_exec *exec, int i);
+int		do_built_in_part( char **split, int *i, t_exec_ctx *ctx);
+int		should_skip_token(char **split, int *i);
+void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx);
+
+/* ================================ exec_utils_fourth.c ================== */
+char	*get_path(char **env);
+void	ctx_init(t_exec_ctx *ctx, t_exec *exec, t_data *data, int cmd_count);
+void	process_built_in(t_exec_ctx *ctx);
+int		handle_exec_result(int ret, int built_in, t_exec_ctx *ctx);
+
+/* ================================ exec_utils_fifth.c ================== */
+void	preprocess_split(char **split, int i, int cmd_pos);
+int		exec_cmd(t_exec *exec, t_data *data, char **split);
+
+/* =============================== free_exec.c =========================== */
+void	free_data_split(t_exec *exec);
+void	free_split_exec(t_exec *exec);
+void	free_redir(t_exec *exec);
+void	free_fd(t_exec *exec);
+
+/* =========================== free_exec_utils.c ========================= */
+void	free_exec_failed(t_exec *exec, int exit_code);
+void	free_exec_cmd(t_exec *exec);
+void	fork_and_free_exec(t_exec *exec, int *cmd_index, int cmd_count);
+
+/* ================================ redir.c ============================== */
+void	collect_redirs(t_exec *exec, char **split, int cmd_pos, char **envp);
+void	end_redir_sequel(t_exec *exec, char **split, int i, char type);
+void	free_lexer(t_token *lex);
+
+/* ============================= redir_utils.c =========================== */
+int		handle_heredoc(t_exec *exec, char *delimiter, char **envp);
+int		first_part_apply_redir(char type, t_exec *exec, int i, int fd);
+int		second_part_apply_redir(char type, t_exec *exec, int i);
+int		apply_redirs(t_exec *exec);
+
+/* ========================== redir_utils_bis.c ========================== */
+int		pipe_and_pid_init(t_exec *exec, int cmd_count, int i);
+int		count_redirs(char **split, int cmd_pos);
+int		init_redirs(t_exec *exec, int count);
+void	infile_redir(char **split, int *i, int check);
+void	end_collect_redir(t_exec *exec, char **envp);
+
+/* ========================== redir_utils_third.c ========================== */
+int		handle_input_redir(t_exec *exec, int i);
+int		handle_output_redir(t_exec *exec, int i);
+void	append_to_cmd(char **split, int cmd_pos, char *extra);
+void	handle_redir_sequel(t_exec *exec, char **split, int cmd_pos, int i);
+int		execute_prompt(char **split, t_token *lex, t_data *data);
+
+/* ================================ main.c =============================== */
+void	main_loop(char **split, t_token *lex, t_data *data);
+void	handler0(int sig);
+
+/* =========================== main_loop_utils.c ========================= */
+void	loop(t_token *lexer, char **split);
+
+/* ================================ utils.c ============================== */
+int		split_len(char **split);
+int		update_flag(int flag);
+void	move_one(char *str);
+void	remove_quotes(char *str);
+void	free_split(char **split, int flag);
+
+/* ================================ utils_bis.c ========================== */
+int		ft_strcmp(char *s1, char *s2);
+int		print_split(char **split);
+char	**split_dup(char **envp);
+int		my_memlen(char **split);
+int		is_alphanum(char c);
+
+/* ================================ utils_third.c ======================== */
+int		is_built_in(char *input);
+int		are_var_hd(char *str);
+int		are_var_handled(char *str);
+int		space_pos(char *str);
+void	close_fd(t_exec *exec, int cmd_count);
+
+/* ================================ utils_third_bis.c ==================== */
+char	*my_get_pid(void);
+void	unmask_spaces(char *str);
+char	**quote_clean(char **split);
+char	*change_var_hd(char *str, char **envp);
+int		is_path(char **env);
+
+/* ================================ free.c =============================== */
+void	exit_cleanly(int code, t_data *data, char **split);
+void	set_signal_dfl(void);
+
+/* ============================ random ============================= */
+int		is_end_input(char **split, t_data *data);
+int		update_status(t_data *data);
+void	set_signal_ign(void);
+int		exec_init(t_exec *exec, int i);
+int		setup_empty_cmd(t_exec *exec);
+void	dup_exec_fds(t_exec *exec, int cmd_index, int cmd_count);
+void	end_fork_created(t_exec *exec, int cmd_index, int cmd_count);
+void	check_exec(t_exec *exec);
+void	handle_sigint_son(int sig);
+char	*get_line_heredoc(t_exec *exec, char *delim, int *pipefd);
+int		handle_heredoc_end(int *normal_exit, char *line, char *delim);
+void	expand_heredoc(int expand, char *line, int *pipefd, char **envp);
+void	free_son_heredoc(t_exec *exec, char *delim, int pipe_fd[2], int code);
+void	wait_son(int *pipefd, int *status, t_exec *exec, pid_t pid);
+void	var_search(char *buffer, char **envp);
+int		expand_input(t_token *token, char *str, t_data *data, int i);
+void	delete_spaces(t_token *token, int i, int quoted);
+int		has_cmd_after_pipe(t_token *lexer, int i);
+void	exec_command(t_exec *exec);
+int		handle_hdoc_bis(t_exec *exec, char *delim, char **envp, int *pipefd);
+char	*transpose_var(char *str, int index, char *buffer, int flag);
+int		end_of_string(char *input);
+int		has_more_n_flag(char *str);
+int		is_valid_flag(char *str);
+int		has_n_flag(char *input);
+int		add_to_var_equal(char **split, t_data *data, char *tmp, int i);
+int		add_to_var_null(char **split, t_data *data, int *status);
+int		append_env_var(char **split, t_data *data, int *status);
+int		create_env_var(char **split, t_data *data, int *status);
+int		export_plus(char **split, t_data *data);
+void	replace_fill(char **split, int i);
+int		export_basic(char **split, t_data *data);
+int		retrieve_status(t_exec *exec, int *i);
+void	handle_pwd(int *status, char *input);
+void	handle_unset(int *status, char *input, t_data *data);
+void	handle_env(int *status, char *input, t_data *data);
+void	handle_exit(int *status, char *input, t_data *data, int flag);
+int		finish_program(t_data *data, char **args);
+int		is_numeric_arg(char *str);
+long long   ft_atoll(const char *nptr, long long *result);
+int		err_msg_2(t_data *data, char **args);
+int		err_msg_1(char **args);
+int		pwd(void);
+int		env(char **envp);
+int		check_space(const char *str, int i);
+int		calculation_atoi(const char *str, int i, int signe, long long result);
+char	**my_realloc(char **split, int old_size);
+int		replace(char *str, char **env, int i);
+int		replace_both_env(t_data *data, char *str);
+int		is_valid_export_var(char *str);
+int		replace_export_env(t_data *data, char *str);
+int		get_path_error(char *path);
+int		find_env(t_exec *exec, int i);
+char	*get_user(t_data *data);
+#endif
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   header.h                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/22 07:23:44 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/01/22 07:23:48 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef HEADER_H
+# define HEADER_H
+
+# include <stdio.h>
+# include <limits.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <signal.h>
+# include <sys/types.h>
+# include <dirent.h>
+# include <string.h>
+# include <termios.h>
+# include <sys/ioctl.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include "../srcs/libft/libft.h"
+# include "./typedef.h"
+# include "./function.h"
+
+extern int	g_ack;
+
+#endif
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   typedef.h                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/08 13:34:35 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/03/08 13:34:37 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef TYPEDEF_H
+# define TYPEDEF_H
+
+typedef struct s_token
+{
+	char	type;
+	char	*value;
+
+}	t_token;
+
+typedef struct s_redir
+{
+	char	type;
+	char	*file;
+	int		malloced;
+	int		fd;
+
+}	t_redir;
+
+typedef struct s_data
+{
+	int		error_code;
+	int		end;
+	int		signal;
+	char	**env;
+	char	**env_bis;
+	int		expand;
+}	t_data;
+
+typedef struct s_exec
+{
+	char	**all_path;
+	char	**command;
+	char	*w_path;
+	char	*path;
+	char	*input;
+	char	**env;
+	pid_t	*pid;
+	int		**fd;
+	int		pipe_count;
+	t_redir	*redir;
+	int		redir_count;
+	char	**split;
+	t_data	*data;
+}	t_exec;
+
+typedef struct s_exec_ctx
+{
+	t_exec	*exec;
+	t_data	*data;
+	int		cmd_index;
+	int		cmd_count;
+}	t_exec_ctx;
+
+#endif
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_third.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/13 08:42:51 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/04/13 08:43:07 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+int	is_built_in1(char *input)
+{
+	if (!ft_strncmp(input, "pwd", 3) && ft_strlen(input) == 3)
+		return (1);
+	if (!ft_strncmp(input, "pwd ", 4))
+		return (1);
+	if (!ft_strncmp(input, "env", 3) && ft_strlen(input) == 3)
+		return (1);
+	if (!ft_strncmp(input, "env ", 4))
+		return (1);
+	if (!ft_strncmp(input, "unset", 5) && ft_strlen(input) == 5)
+		return (1);
+	if (!ft_strncmp(input, "unset ", 6))
+		return (1);
+	return (0);
+}
+
+int	is_built_in2(char *input)
+{
+	if (!ft_strncmp(input, "echo ", 5)
+		|| (!ft_strncmp(input, "echo", 4) && ft_strlen(input) == 4))
+		return (1);
+	if (!ft_strncmp(input, "exit", 4) && ft_strlen(input) == 4)
+		return (1);
+	if (!ft_strncmp(input, "exit ", 5))
+		return (1);
+	if (!ft_strncmp(input, ".", 1) && ft_strlen(input) == 1)
+		return (1);
+	if (!ft_strncmp(input, "cd ", 3))
+		return (1);
+	if (!ft_strncmp(input, "cd", 2) && ft_strlen(input) == 2)
+		return (1);
+	if (!ft_strncmp(input, "export", 6) && ft_strlen(input) == 6)
+		return (1);
+	if (!ft_strncmp(input, "export ", 7))
+		return (1);
+	return (0);
+}
+
+int	is_built_in(char *input)
+{
+	if (!input)
+		return (0);
+	if (is_built_in1(input))
+		return (1);
+	if (is_built_in2(input))
+		return (1);
+	return (0);
+}
+
+int	are_var_hd(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' && is_valid_var(&str[i], 0))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	are_var_handled(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '$' && is_valid_var(&str[i], 0) && is_ok_quote(str, i))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_in.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/09 02:51:24 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/04/09 02:51:26 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+int	check_space(const char *str, int i)
+{
+	while (str[i] == '\t'
+		|| str[i] == '\n'
+		|| str[i] == '\v'
+		|| str[i] == '\f'
+		|| str[i] == '\r'
+		|| str[i] == ' ')
+		return (1);
+	return (0);
+}
+
+int	calculation(const char *str, int i, int signe, long long *result)
+{
+	int	digit;
+
+	while (str[i])
+	{
+		digit = str[i] - '0';
+		if (digit < 0 || digit > 9)
+			return (0);
+		if (signe == 1)
+		{
+			if (*result > (LLONG_MAX - digit) / 10)
+				return (0);
+		}
+		if (signe == -1)
+		{
+			if (*result * (-1) < (LLONG_MIN + digit) / 10)
+				return (0);
+		}
+		if (str[i] >= '0' && str[i] <= '9')
+			*result = *result * 10 + str[i] - '0';
+		else
+			return (1);
+		i++;
+	}
+	return (1);
+}
+
+int	pwd(void)
+{
+	char	buffer[1024];
+
+	if (getcwd(buffer, sizeof(buffer)) != NULL)
+	{
+		ft_putstr_fd(buffer, 1);
+		write(1, "\n", 1);
+		return (0);
+	}
+	else
+	{
+		perror("getcwd");
+		return (1);
+	}
+}
+
+int	env(char **envp)
+{
+	int	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		ft_putstr_fd(envp[i], 1);
+		write(1, "\n", 1);
+		i++;
+	}
+	return (0);
+}
+#include "../../header/header.h"
+
+long long	atoll_loop(const char *str, int i, int signe, long long *result)
+{
+	int	digit;
+
+	while (str[i])
+	{
+		digit = str[i] - '0';
+		if (digit < 0 || digit > 9)
+			return (0);
+		if (signe == 1)
+		{
+			if (*result > (LLONG_MAX - digit) / 10)
+				return (0);
+		}
+		if (signe == -1)
+		{
+			if (*result * (-1) < (LLONG_MIN + digit) / 10)
+				return (0);
+		}
+		if (str[i] >= '0' && str[i] <= '9')
+			*result = *result * 10 + str[i] - '0';
+		else
+			return (1);
+		i++;
+	}
+	return (1);
+}
+
+long long	ft_atoll(const char *nptr, long long *result)
+{
+	int	i;
+	int	signe;
+
+	i = 0;
+	signe = 1;
+	while (check_space(nptr, i))
+		i++;
+	if (nptr[i] == '+' || nptr[i] == '-')
+	{
+		if (nptr[i] == '-')
+			signe = -1;
+		i++;
+	}
+	if (!atoll_loop(nptr, i, signe, result))
+		return (0);
+	*result = *result * signe;
+	return (1);
+}
+
+int	get_home_path(char *path, t_data *data)
+{
+	char	*user;
+
+	user = get_user(data);
+	if (!user)
+		return (1);
+	path = ft_strjoin("cd /home/", user);
+	if (!path)
+		return (1);
+	free(user);
+	cd(path, data);
+	free(path);
+	return (0);
+}
+
+int	display_cd_error_msg(int flag)
+{
+	if (flag == 1)
+		ft_putstr_fd("cd: too many arguments\n", 2);
+	else if (flag == 2)
+		ft_putstr_fd("cd: no such file or directory\n", 2);
+	else if (flag == 3)
+		ft_putstr_fd("cd: permission denied\n", 2);
+	else if (flag == 4)
+		ft_putstr_fd("cd: error retrieving current directory\n", 2);
+	return (1);
+}
+
+int	cd(char *input, t_data *data)
+{
+	char		*path;
+	char		buffer[1024];
+	struct stat	info;
+
+	path = &input[3];
+	unmask_spaces(path);
+	if (ft_strchr(path, ' '))
+		return (display_cd_error_msg(1));
+	if (!(*path) || (ft_strlen(path) == 1 && path[0] == '~'))
+		return (get_home_path(path, data));
+	if (stat(path, &info) != 0)
+		return (display_cd_error_msg(2));
+	if (access(path, X_OK) != 0)
+		return (display_cd_error_msg(3));
+	if (!getcwd(buffer, sizeof(buffer)))
+		buffer[0] = '\0';
+	change_path(0, buffer, data);
+	if (chdir(path))
+		return (1);
+	if (!getcwd(buffer, sizeof(buffer)))
+		return (display_cd_error_msg(4));
+	change_path(1, buffer, data);
+	return (0);
+}
+#include "../../header/header.h"
+
+int	export_env_env(t_data *data, char *str)
+{
+	int	len;
+
+	len = my_memlen(data->env);
+	data->env = my_realloc(data->env, len);
+	if (!data->env)
+		return (1);
+	data->env[len] = ft_strdup(str);
+	if (!data->env[len])
+		return (1);
+	return (0);
+}
+
+int	add_var_equal(t_data *data, char *str, int *i, int *j)
+{
+	if (does_var_exist(str, data->env_bis, j))
+	{
+		(replace(str, data->env_bis, *j));
+		if (does_var_exist(str, data->env, i))
+			(replace(str, data->env, *j));
+		else
+			if (export_env_env(data, str))
+				return (1);
+		return (0);
+	}
+	else
+	{
+		if (replace_both_env(data, str))
+			return (1);
+		return (0);
+	}
+}
+
+int	add_var(char *str, t_data *data)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	if (ft_strchr(str, '+'))
+		return (0);
+	if (!is_valid_export_var(str))
+		return (1);
+	if (ft_strchr(str, '='))
+	{
+		if (add_var_equal(data, str, &i, &j))
+			return (1);
+		return (0);
+	}
+	j = 0;
+	if (does_var_exist(str, data->env_bis, &j))
+		return (0);
+	else
+		if (replace_export_env(data, str))
+			return (1);
+	return (0);
+}
+
+static	int	update_var(t_data *data, char *prefix, char *path, int i)
+{
+	free(data->env[i]);
+	free(data->env_bis[i]);
+	data->env[i] = ft_strjoin(prefix, path);
+	data->env_bis[i] = ft_strjoin(prefix, path);
+	free(prefix);
+	if (!data->env[i] || !data->env_bis[i])
+		return (1);
+	return (0);
+}
+
+int	change_path(int flag, char *path, t_data *data)
+{
+	int		i;
+	char	*prefix;
+	char	*tmp;
+
+	prefix = ft_strdup("PWD=\0");
+	if (prefix && !flag)
+	{
+		tmp = prefix;
+		prefix = ft_strjoin("OLD\0", tmp);
+		free(tmp);
+	}
+	if (!prefix)
+		return (1);
+	i = 0;
+	while (data->env[i])
+	{
+		if (!ft_strncmp(data->env[i], prefix, ft_strlen(prefix)))
+			return (update_var(data, prefix, path, i));
+		i++;
+	}
+	free(prefix);
+	return (1);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   echo.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/08 19:10:33 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/04/08 19:10:35 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+static int	assign_flag(int flag, char *input, int *i)
+{
+	while (input[*i] && is_alphanum((int)input[*i]))
+	{
+		if (input[*i] == 'n' && flag)
+			flag = 2;
+		if (input[*i] != 'n')
+			flag = 0;
+		(*i)++;
+	}
+	return (flag);
+}
+
+int	return_status(int flag)
+{
+	if (flag == 2)
+		return (1);
+	else
+		return (0);
+}
+
+int	has_n_flag(char *input)
+{
+	int	i;
+	int	flag;
+	int	flag2;
+
+	i = 0;
+	flag = 1;
+	flag2 = 0;
+	while (1)
+	{
+		while (input[i] && !(input[i] == '-' && input[i - 1] == ' '))
+		{
+			if (i && input[i] != ' ' && input[i] != '-' && input[i - 1] == ' ')
+			{
+				flag2 = 1;
+				break ;
+			}
+			i++;
+		}
+		if (!input[i++] || flag2)
+			break ;
+		flag = assign_flag(flag, input, &i);
+		if (flag == 2)
+			break ;
+	}
+	return (return_status(flag));
+}
+
+int	is_valid_flag(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str[i] || str[i] == ' ')
+		return (0);
+	while (str[i] && str[i] != ' ')
+	{
+		if (str[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int	has_more_n_flag(char *str)
+{
+	int	i;
+	int	flag;
+
+	i = 0;
+	flag = 0;
+	while (str[i])
+	{
+		if (!str[i] || str[i] != '-')
+			break ;
+		i++;
+		while (str[i] && str[i] != ' ')
+		{
+			if (str[i] != 'n')
+				return (0);
+			i++;
+		}
+		flag = 1;
+	}
+	return (flag);
+}
+#include "../../header/header.h"
+
+void	replace_fill_basic(char *input, int k)
+{
+	while (input[k])
+	{
+		if (input[k] == '\1' || input[k] == '\x1f')
+			input[k] = ' ';
+		else if (input[k] == '\3')
+			input[k] = '|';
+		else if (input[k] == '\4')
+			input[k] = '<';
+		else if (input[k] == '\5')
+			input[k] = '>';
+		else if (input[k] == '\6')
+		{
+			move_one(&input[k]);
+			continue ;
+		}
+		k++;
+	}
+}
+
+void	skip_spaces(char *input, int i)
+{
+	while (input[i] == ' ')
+		i++;
+	if (input[i])
+		ft_putstr_fd(" ", 1);
+}
+
+void	skip_all_spaces(char *input, int *i)
+{
+	if (input[*i] == ' ')
+		skip_spaces(input, *i);
+	while (input[*i] && input[*i] == ' ')
+		(*i)++;
+}
+
+int	echo_status(char *input, int i, int k)
+{
+	replace_fill_basic(input, k);
+	ft_putstr_fd(&input[i], 1);
+	return (end_of_string(input));
+}
+
+int	echo(char *input, int k)
+{
+	int	i;
+	int	flag;
+
+	i = 0;
+	flag = 0;
+	while (1)
+	{
+		while (input[i] && input[i] != ' ')
+			i++;
+		if (!input[i])
+			return (end_of_string(input));
+		i++;
+		if (!input[i])
+			return (end_of_string(input));
+		skip_all_spaces(input, &i);
+		if (!input[i])
+			return (end_of_string(input));
+		if (flag && !has_more_n_flag(&input[i]))
+			break ;
+		if (input[i] != '-' || !is_valid_flag(&input[i + 1]))
+			break ;
+		else
+			flag = 1;
+	}
+	return (echo_status(input, i, k));
+}
+#include "../../header/header.h"
+
+int	add_to_var_null(char **split, t_data *data, int *status)
+{
+	if (my_memlen(split) >= 2)
+	{
+		if (append_env_var(split, data, status))
+			return (1);
+	}
+	else if (*split[0] == '=')
+		return (1);
+	else
+		if (create_env_var(split, data, status))
+			return (1);
+	return (0);
+}
+
+int	add_to_var_equal(char **split, t_data *data, char *tmp, int i)
+{
+	int	j;
+
+	data->env_bis[i] = ft_strjoin(data->env_bis[i], &split[1][1]);
+	free(tmp);
+	if (!data->env_bis[i])
+		return (1);
+	j = 0;
+	while (data->env[j])
+	{
+		if (!ft_strncmp(split[0], data->env[j],
+				ft_strlen(split[0])))
+		{
+			tmp = data->env[j];
+			data->env[j] = ft_strjoin(data->env[j], &split[1][1]);
+			free(tmp);
+			if (!data->env[j])
+				return (1);
+		}
+		j++;
+	}
+	return (0);
+}
+
+int	export_add(char **split, char *chr, t_data *data, int i)
+{
+	char	**split_plus;
+	int		status;
+
+	split_plus = ft_split(split[i], '+');
+	if (!split_plus)
+		return (1);
+	chr = 0;
+	status = export_plus(split_plus, data);
+	free_split(split_plus, 0);
+	free(chr);
+	return (status);
+}
+
+int	add_to_env_var(char **split, int i, t_data *data)
+{
+	char	*chr;
+
+	chr = ft_strchr(split[i], '+');
+	if (chr && chr[1] && chr[1] == '=')
+	{
+		if (export_add(split, chr, data, i))
+		{
+			free_split(split, 0);
+			return (1);
+		}
+	}
+	return (0);
+}
+
+int	ft_export(char *input, t_data *data)
+{
+	char	**split;
+	int		i;
+
+	split = ft_split(input, ' ');
+	if (!split)
+		return (1);
+	replace_fill(split, 0);
+	i = 0;
+	while (split && split[i])
+	{
+		if (add_to_env_var(split, i, data))
+			return (1);
+		i++;
+	}
+	if (export_basic(split, data))
+	{
+		free_split(split, 0);
+		return (1);
+	}
+	free_split(split, 0);
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/09 02:39:57 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/04/09 02:39:59 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+int	does_var_exist(char *str, char **env, int *i)
+{
+	int	len;
+
+	len = 0;
+	while (str[len] && str[len] != '=')
+		len++;
+	while (env[*i])
+	{
+		if (!ft_strncmp(str, env[*i], len) && env[*i][len] == '=')
+			return (1);
+		if (!ft_strncmp(str, env[*i], len) && !env[*i][len])
+			return (1);
+		(*i)++;
+	}
+	return (0);
+}
+
+static void	sort_split(char **split)
+{
+	int		i;
+	char	*tmp;
+
+	if (!split || !(*split))
+		return ;
+	i = 1;
+	while (split[i])
+	{
+		if (ft_strncmp(split[i - 1], split[i], ft_strlen(split[i] + 1)) > 0)
+		{
+			tmp = split[i];
+			split[i] = split[i - 1];
+			split[i - 1] = tmp;
+			i = 1;
+		}
+		else
+			i++;
+	}
+}
+
+void	export_single(t_data *data)
+{
+	sort_split(data->env_bis);
+	print_split(data->env_bis);
+}
+
+int	append_env_var(char **split, t_data *data, int *status)
+{
+	char	*tmp;
+	char	*tmp2;
+	char	*tmp3;
+
+	tmp = ft_strjoin("export ", split[0]);
+	if (!tmp)
+		return (1);
+	tmp2 = ft_strjoin("=", &split[1][1]);
+	if (!tmp2)
+	{
+		free(tmp);
+		return (1);
+	}
+	tmp3 = ft_strjoin(tmp, tmp2);
+	if (!tmp3)
+	{
+		free(tmp);
+		free(tmp2);
+		return (1);
+	}
+	*status = ft_export(tmp3, data);
+	free(tmp);
+	free(tmp2);
+	free(tmp3);
+	return (0);
+}
+
+int	create_env_var(char **split, t_data *data, int *status)
+{
+	char	*tmp;
+	char	*tmp2;
+
+	tmp = ft_strjoin("export ", split[0]);
+	if (!tmp)
+		return (1);
+	tmp2 = ft_strjoin(tmp, "=");
+	if (!tmp2)
+	{
+		free(tmp);
+		return (1);
+	}
+	*status = ft_export(tmp2, data);
+	free(tmp);
+	free(tmp2);
+	return (0);
+}
+#include "../../header/header.h"
+
+int	end_of_string(char *input)
+{
+	if (!has_n_flag(input))
+		ft_putstr_fd("\n", 1);
+	return (0);
+}
+
+int	add_to_var(char **split, t_data *data, int *status, int i)
+{
+	char	*tmp;
+
+	tmp = data->env_bis[i];
+	if (ft_strchr(data->env_bis[i], '='))
+	{
+		if (add_to_var_equal(split, data, tmp, i))
+			return (1);
+	}
+	else
+		if (add_to_var_null(split, data, status))
+			return (1);
+	return (0);
+}
+
+int	export_plus(char **split, t_data *data)
+{
+	int		flag;
+	int		i;
+	int		status;
+
+	flag = 0;
+	i = 0;
+	status = 0;
+	while (data->env_bis[i])
+	{
+		if (!ft_strncmp(split[0], data->env_bis[i], ft_strlen(split[0]))
+			&& (data->env_bis[i][ft_strlen(split[0])] == '='
+			|| data->env_bis[i][ft_strlen(split[0])] == '\0'))
+		{
+			if (add_to_var(split, data, &status, i))
+				return (1);
+			flag = 1;
+			break ;
+		}
+		i++;
+	}
+	if (!flag)
+		if (add_to_var_null(split, data, &status))
+			return (1);
+	return (status);
+}
+
+void	replace_fill(char **split, int i)
+{
+	int	j;
+
+	while (split && split[i])
+	{
+		j = 0;
+		while (split[i][j])
+		{
+			if (split[i][j] == '\1' || split[i][j] == '\x1f')
+				split[i][j] = ' ';
+			else if (split[i][j] == '\3')
+				split[i][j] = '|';
+			else if (split[i][j] == '\4')
+				split[i][j] = '<';
+			else if (split[i][j] == '\5')
+				split[i][j] = '>';
+			else if (split[i][j] == '\6')
+			{
+				move_one(&split[i][j]);
+				continue ;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+int	export_basic(char **split, t_data *data)
+{
+	int	len;
+	int	i;
+
+	len = my_memlen(split);
+	if (len < 2)
+		return (1);
+	i = 1;
+	while (split[i])
+	{
+		if (add_var(split[i++], data))
+		{
+			ft_putstr_fd("Error : invalid identifier\n", 2);
+			return (1);
+		}
+	}
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/11 18:25:30 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/04/11 18:25:31 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+char	**my_realloc(char **split, int old_size)
+{
+	char	**new_split;
+	int		i;
+
+	if (!split)
+		return (NULL);
+	new_split = calloc(old_size + 2, sizeof(char *));
+	if (!new_split)
+		return (NULL);
+	i = 0;
+	while (i < old_size)
+	{
+		new_split[i] = ft_strdup(split[i]);
+		if (!new_split[i])
+		{
+			free_split(new_split, 0);
+			return (NULL);
+		}
+		i++;
+	}
+	free_split(split, 0);
+	return (new_split);
+}
+
+int	replace(char *str, char **env, int i)
+{
+	free(env[i]);
+	env[i] = ft_strdup(str);
+	if (!env[i])
+		return (0);
+	return (1);
+}
+
+int	is_valid_export_var(char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!ft_isalpha(str[i]))
+		return (0);
+	while (str[i] && str[i] != ' ' && str[i] != '=')
+	{
+		if (!ft_isalpha(str[i]) && str[i] != '_'
+			&& (str[i] < '0' || str[i] > '9'))
+			return (0);
+		i++;
+	}
+	if (!i)
+		return (0);
+	return (1);
+}
+
+int	replace_both_env(t_data *data, char *str)
+{
+	int	len;
+
+	len = my_memlen(data->env);
+	data->env = my_realloc(data->env, len);
+	if (!data->env)
+		return (1);
+	data->env[len] = ft_strdup(str);
+	if (!data->env[len])
+		return (1);
+	len = my_memlen(data->env_bis);
+	data->env_bis = my_realloc(data->env_bis, len);
+	if (!data->env_bis)
+		return (1);
+	data->env_bis[len] = ft_strdup(str);
+	if (!data->env_bis[len])
+		return (1);
+	return (0);
+}
+
+int	replace_export_env(t_data *data, char *str)
+{
+	int	len;
+
+	len = my_memlen(data->env_bis);
+	data->env_bis = my_realloc(data->env_bis, len);
+	if (!data->env_bis)
+		return (1);
+	data->env_bis[len] = ft_strdup(str);
+	if (!data->env_bis[len])
+		return (1);
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_in_bis.c                                      :+:      :+:    :+:  */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/09 19:30:13 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/04/09 19:30:16 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+static int	is_var(char *str, char **envp)
+{
+	int	i;
+	int	len;
+
+	if (!envp || !(*envp))
+		return (0);
+	i = 0;
+	while (envp[i])
+	{
+		len = ft_strlen(str);
+		if (!ft_strncmp(str, envp[i], len)
+			&& envp[i][len] == '=')
+			return (2);
+		if (!ft_strncmp(str, envp[i], len) && !envp[i][len])
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+static void	free_line(char **envp, char **split, int i)
+{
+	int		j;
+
+	j = 0;
+	while (envp[j] && ft_strncmp(split[i], envp[j], ft_strlen(split[i])))
+		j++;
+	if (!envp[j])
+		return ;
+	free(envp[j]);
+	while (envp[j + 1])
+	{
+		envp[j] = envp[j + 1];
+		j++;
+	}
+	envp[j] = envp[j + 1];
+}
+
+int	unset(char **split, t_data *data)
+{
+	int		i;
+
+	i = 0;
+	while (split[i])
+	{
+		if (is_var(split[i], data->env_bis))
+		{
+			free_line(data->env, split, i);
+			free_line(data->env_bis, split, i);
+		}
+		i++;
+	}
+	return (0);
+}
+#include "../../header/header.h"
+
+void	handle_echo(int *status, char *input)
+{
+	char	**split;
+
+	if (!ft_strncmp(input, "echo ", 5) || (!ft_strncmp(input, "echo", 4)
+			&& ft_strlen(input) == 4))
+	{
+		split = ft_split(input, ' ');
+		if (!split)
+		{
+			*status = 139;
+			return ;
+		}
+		*status = echo(input, 0);
+		free_split(split, 0);
+	}
+}
+
+void	handle_export(int *status, char *input, t_data *data)
+{
+	if ((!ft_strncmp(input, "export", 6)) && ft_strlen(input) == 6)
+		export_single(data);
+	else if ((!ft_strncmp(input, "export ", 7)))
+		*status = ft_export(input, data);
+}
+
+void	handle_cd(int *status, char *input, t_data *data)
+{
+	if (!ft_strncmp(input, "cd ", 3)
+		|| (!ft_strncmp(input, "cd", 2)
+			&& ft_strlen(input) == 2))
+		*status = cd(input, data);
+}
+
+void	handle_dot(int *status, char *input)
+{
+	if (!ft_strncmp(input, ".", 1) && ft_strlen(input) == 1)
+	{
+		ft_putstr_fd(" filename argument required . filename [arguments]\n", 2);
+		*status = 2;
+	}
+}
+
+int	exec_built_in(char *input, t_data *data, char **cmd_split, int i)
+{
+	int		status;
+	int		flag;
+
+	flag = my_memlen(cmd_split) > i + 1;
+	status = 0;
+	handle_pwd(&status, input);
+	handle_unset(&status, input, data);
+	handle_env(&status, input, data);
+	handle_exit(&status, input, data, flag);
+	handle_echo(&status, input);
+	handle_export(&status, input, data);
+	handle_cd(&status, input, data);
+	handle_dot(&status, input);
+	return (status);
+}
+#include "../../header/header.h"
+
+void	check_dir(t_exec *exec)
+{
+	struct stat	info;
+
+	if (stat(exec->command[0], &info) != 0)
+		return ;
+	if (S_ISDIR(info.st_mode))
+	{
+		ft_putstr_fd(exec->command[0], 2);
+		ft_putstr_fd(": Is a directory\n", 2);
+		free_exec_failed(exec, 126);
+	}
+}
+
+int	find_env_loop(t_exec *exec, int i)
+{
+	char		*tmp;
+	struct stat	info;
+
+	tmp = NULL;
+	while (exec->all_path && exec->all_path[i])
+	{
+		tmp = ft_strjoin(exec->all_path[i], "/");
+		exec->w_path = ft_strjoin(tmp, exec->command[0]);
+		free(tmp);
+		if (exec->w_path && access(exec->w_path, X_OK) == 0)
+		{
+			if (stat(exec->w_path, &info) == 0 && S_ISDIR(info.st_mode))
+			{
+				free(exec->w_path);
+				exec->w_path = NULL;
+				i++;
+				continue ;
+			}
+			return (0);
+		}
+		free(exec->w_path);
+		exec->w_path = NULL;
+		i++;
+	}
+	return (1);
+}
+
+void	close_fds_built_in(t_exec_ctx *ctx)
+{
+	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
+	{
+		close(ctx->exec->fd[ctx->cmd_index - 1][0]);
+		ctx->exec->fd[ctx->cmd_index - 1][0] = -1;
+	}
+	if (ctx->cmd_index < ctx->cmd_count - 1
+		&& ctx->exec->fd[ctx->cmd_index][1] != -1)
+	{
+		close(ctx->exec->fd[ctx->cmd_index][1]);
+		ctx->exec->fd[ctx->cmd_index][1] = -1;
+	}
+	free_redir(ctx->exec);
+}
+
+void	dup_fds_built_in(t_exec_ctx *ctx)
+{
+	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
+		dup2(ctx->exec->fd[ctx->cmd_index - 1][0], STDIN_FILENO);
+	if (ctx->cmd_index < ctx->cmd_count - 1
+		&& ctx->exec->fd[ctx->cmd_index][1] != -1)
+		dup2(ctx->exec->fd[ctx->cmd_index][1], STDOUT_FILENO);
+}
+
+int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
+{
+	int	saved_stdin;
+	int	saved_stdout;
+	int	status;
+
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
+	dup_fds_built_in(ctx);
+	status = 0;
+	if (ctx->exec->redir_count > 0)
+	{
+		if (apply_redirs(ctx->exec) != 0)
+			status = 1;
+	}
+	if (status == 0)
+		status = exec_built_in(ctx->exec->input, ctx->data, split, *i);
+	ctx->exec->env = ctx->data->env;
+	dup2(saved_stdin, STDIN_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
+	close(saved_stdin);
+	close(saved_stdout);
+	close_fds_built_in(ctx);
+	(*i)++;
+	return (status);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/05 11:02:16 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/04/09 02:44:52 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+static void	fill_input(char **command, int *i)
+{
+	int	j;
+
+	j = 0;
+	while (command[*i][j])
+	{
+		if (command[*i][j] == '\1' || command[*i][j] == '\x1f')
+			command[*i][j] = ' ';
+		else if (command[*i][j] == '\3')
+			command[*i][j] = '|';
+		else if (command[*i][j] == '\4')
+			command[*i][j] = '<';
+		else if (command[*i][j] == '\5')
+			command[*i][j] = '>';
+		else if (command[*i][j] == '\6')
+		{
+			move_one(&command[*i][j]);
+			continue ;
+		}
+		j++;
+	}
+	(*i)++;
+}
+
+int	exec_init(t_exec *exec, int i)
+{
+	size_t	len;
+	char	*p;
+
+	exec->all_path = NULL;
+	exec->command = NULL;
+	exec->w_path = NULL;
+	exec->path = get_path(exec->data->env);
+	len = ft_strlen(exec->input);
+	if (len > 0 && exec->input[len - 1] == '\n')
+		exec->input[len - 1] = '\0';
+	p = exec->input;
+	while (*p)
+	{
+		if (*p == '\x1f')
+			*p = ' ';
+		p++;
+	}
+	exec->command = ft_split(exec->input, ' ');
+	exec->all_path = ft_split(exec->path, ':');
+	if (!exec->command || !exec->all_path || !exec->command[0])
+		return (1);
+	while (exec->command && exec->command[i])
+		fill_input(exec->command, &i);
+	return (0);
+}
+
+int	pipe_and_pid(t_exec *exec, int cmd_count, char **envp)
+{
+	exec->env = envp;
+	if (pipe_and_pid_init(exec, cmd_count, 0) == 1)
+		return (1);
+	return (0);
+}
+
+int	setup_empty_cmd(t_exec *exec)
+{
+	exec->all_path = ft_calloc(1, sizeof(char *));
+	exec->command = ft_calloc(2, sizeof(char *));
+	if (!exec->all_path || !exec->command)
+		return (1);
+	exec->command[0] = ft_strdup("");
+	if (!exec->command[0])
+		return (1);
+	exec->w_path = NULL;
+	return (0);
+}
+
+int	exec_main(char **split, int i, t_data *data, int cmd_count)
+{
+	t_exec		exec;
+	t_exec_ctx	ctx;
+	int			exit_code;
+
+	ft_memset(&exec, 0, sizeof(t_exec));
+	exec.data = data;
+	exec.split = split;
+	if (cmd_count == 0)
+	{
+		if (is_end_input(split, data) != 1)
+			return (data->error_code);
+		data->error_code = exec_cmd(&exec, data, split);
+		free_redir(&exec);
+		return (update_status(data));
+	}
+	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)
+		return (1);
+	ctx_init(&ctx, &exec, data, cmd_count);
+	set_signal_ign();
+	process_exec_loop(split, &i, &ctx);
+	exit_code = end_exec(&ctx, 0, 0, 0);
+	set_signal_dfl();
+	free_redir(&exec);
+	return (exit_code);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils_fifth.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/27 12:08:51 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/04/27 12:08:53 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+void	set_end_split(char **split, int cmd_pos, int i, int sp)
+{
+	char	*extra;
+
+	extra = ft_strdup(&split[i + 1][sp + 1]);
+	if (extra)
+	{
+		append_to_cmd(split, cmd_pos, extra);
+		free(extra);
+	}
+	split[i + 1][sp] = '\0';
+}
+
+void	preprocess_split(char **split, int i, int cmd_pos)
+{
+	int		sp;
+
+	while (split && split[i])
+	{
+		if (is_pipe(split[i]))
+			cmd_pos = i + 1;
+		else if (split[i][0] == '<' || split[i][0] == '>')
+		{
+			if (split[i + 1])
+			{
+				sp = space_pos(split[i + 1]);
+				if (sp != -1)
+					set_end_split(split, cmd_pos, i, sp);
+				i++;
+			}
+		}
+		i++;
+	}
+}
+
+int	exec_cmd(t_exec *exec, t_data *data, char **split)
+{
+	int	saved_stdin;
+	int	saved_stdout;
+	int	result;
+
+	exec->env = data->env;
+	exec->redir_count = 0;
+	exec->redir = NULL;
+	collect_redirs(exec, split, 0, data->env);
+	result = 0;
+	if (exec->redir_count > 0)
+	{
+		saved_stdin = dup(STDIN_FILENO);
+		saved_stdout = dup(STDOUT_FILENO);
+		result = apply_redirs(exec);
+		dup2(saved_stdin, STDIN_FILENO);
+		dup2(saved_stdout, STDOUT_FILENO);
+		close(saved_stdin);
+		close(saved_stdout);
+	}
+	return (result);
+}
+#include "../../header/header.h"
+
+void	handle_invalid(t_exec *exec, int *err_code)
+{
+	if (ft_strchr(exec->command[0], '/'))
+	{
+		*err_code = get_path_error(exec->command[0]);
+		if (*err_code == 126)
+			execve_error(exec->command[0], ": Permission denied");
+		else
+			execve_error(exec->command[0], ": No such file or directory");
+		free_exec_failed(exec, *err_code);
+	}
+	else
+	{
+		execve_error(exec->command[0], ": command not found");
+		free_exec_failed(exec, 127);
+	}
+}
+
+void	handle_perm(t_exec *exec)
+{
+	free_data_split(exec);
+	execve(exec->w_path, exec->command, exec->env);
+	execve_error(exec->command[0], ": Permission denied");
+	free_exec_failed(exec, 126);
+}
+
+void	handle_unknown(t_exec *exec)
+{
+	if (ft_strchr(exec->input, '\6'))
+	{
+		ft_putstr_fd("Command '' not found\n", 2);
+		free_redir(exec);
+		free_exec_failed(exec, 127);
+	}
+	free_redir(exec);
+	free_exec_failed(exec, 0);
+}
+
+void	exec_command(t_exec *exec)
+{
+	int	err_code;
+
+	if (!exec->command || !exec->command[0])
+	{
+		free_redir(exec);
+		free_exec_failed(exec, 0);
+	}
+	if (exec->command[0][0] == '\0')
+		handle_unknown(exec);
+	if (find_env(exec, 0) == 1)
+		handle_invalid(exec, &err_code);
+	if (exec->w_path)
+		handle_perm(exec);
+	free_exec_failed(exec, 127);
+}
+
+void	end_fork_created(t_exec *exec, int cmd_index, int cmd_count)
+{
+	if (cmd_index > 0 && exec->fd[cmd_index - 1][0] != -1)
+	{
+		close(exec->fd[cmd_index - 1][0]);
+		exec->fd[cmd_index - 1][0] = -1;
+	}
+	if (cmd_index < cmd_count - 1 && exec->fd[cmd_index][1] != -1)
+	{
+		close(exec->fd[cmd_index][1]);
+		exec->fd[cmd_index][1] = -1;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_error.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/16 08:31:09 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/03/16 08:31:10 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+void	execve_error(char *str, char *command)
+{
+	ft_putstr_fd(str, 2);
+	ft_putstr_fd(command, 2);
+	ft_putstr_fd("\n", 2);
+}
+
+void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
+{
+	exec->pid[cmd_index] = fork();
+	if (exec->pid[cmd_index] < 0)
+	{
+		execve_error("Fork error", "");
+		close_fd(exec, cmd_count);
+		return ;
+	}
+	if (exec->pid[cmd_index] == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+		dup_exec_fds(exec, cmd_index, cmd_count);
+		exit(1);
+	}
+	else
+		end_fork_created(exec, cmd_index, cmd_count);
+}
+
+int	wait_son_status(int *had_real_pid, t_exec_ctx *ctx, int i, int *status)
+{
+	int	last_pid_status;
+
+	last_pid_status = 0;
+	*had_real_pid = 1;
+	waitpid(ctx->exec->pid[i], status, 0);
+	if (i == ctx->cmd_count - 1)
+		last_pid_status = *status;
+	return (last_pid_status);
+}
+
+int	end_exec(t_exec_ctx *ctx, int exit_code, int status, int i)
+{
+	int	last_pid_status;
+	int	had_real_pid;
+
+	close_fd(ctx->exec, ctx->cmd_count);
+	last_pid_status = 0;
+	had_real_pid = 0;
+	while (i < ctx->cmd_count)
+	{
+		if (ctx->exec->pid[i] > 0)
+			last_pid_status = wait_son_status(&had_real_pid, ctx, i, &status);
+		i++;
+	}
+	if (!had_real_pid)
+	{
+		free_fd(ctx->exec);
+		if (ctx->exec->pid)
+			free(ctx->exec->pid);
+		ctx->data->signal = 0;
+		return (ctx->data->error_code);
+	}
+	exit_code = end_exec_sig(ctx, exit_code, last_pid_status);
+	return (exit_code);
+}
+
+int	handle_hdoc_bis(t_exec *exec, char *delim,
+							char **envp, int *pipefd)
+{
+	pid_t	pid;
+	int		status;
+	char	*line;
+	int		normal_exit;
+
+	normal_exit = 0;
+	pid = fork();
+	if (pid == 0)
+	{
+		check_exec(exec);
+		g_ack = 0;
+		signal(SIGINT, handle_sigint_son);
+		while (1)
+		{
+			line = get_line_heredoc(exec, delim, pipefd);
+			if (handle_heredoc_end(&normal_exit, line, delim))
+				break ;
+			expand_heredoc(exec->data->expand, line, pipefd, envp);
+			exec->data->expand = 1;
+		}
+		free_son_heredoc(exec, delim, pipefd, 0);
+	}
+	wait_son(pipefd, &status, exec, pid);
+	return (WEXITSTATUS(status));
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_loop.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/10 22:57:33 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/03/18 18:03:52 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+void	exit_cleanly(int code, t_data *data, char **split)
+{
+	free_split(split, 0);
+	free_split(data->env, 0);
+	free_split(data->env_bis, 0);
+	free(data);
+	rl_clear_history();
+	exit(code);
+}
+
+static char	**print_order(t_token *lexer)
+{
+	int		i;
+	char	**split;
+
+	i = 0;
+	while (lexer[i].type)
+		i++;
+	split = ft_calloc(2 * (i + 1), sizeof(char *));
+	if (!split)
+		return (NULL);
+	split[0] = ft_strdup("");
+	loop(lexer, split);
+	return (split);
+}
+
+void	free_lexer(t_token *lex)
+{
+	int	i;
+
+	if (!lex)
+		return ;
+	i = 0;
+	while (lex[i].type)
+	{
+		free(lex[i].value);
+		i++;
+	}
+	free(lex[i].value);
+	free(lex);
+}
+
+int	execute_prompt(char **split, t_token *lex, t_data *data)
+{
+	int	status_code;
+
+	if (parser(lex))
+	{
+		split = print_order(lex);
+		free_lexer(lex);
+		preprocess_split(split, 0, 0);
+		status_code = exec_main(split, 0, data, count_cmds(split, 0, 0));
+		free_split(split, 0);
+	}
+	else
+	{
+		free_lexer(lex);
+		status_code = 2;
+		data->error_code = 2;
+		ft_putstr_fd("minishell: syntax error\n", 2);
+	}
+	return (status_code);
+}
+
+char	*get_user(t_data *data)
+{
+	int		i;
+	char	*result;
+	char	**split;
+
+	i = 0;
+	while (data->env[i])
+	{
+		if (!ft_strncmp(data->env[i], "USER=", 5))
+		{
+			split = ft_split(data->env[i], '=');
+			if (!split)
+				return (NULL);
+			result = ft_strdup(split[1]);
+			if (!result)
+				return (NULL);
+			free_split(split, 0);
+			return (result);
+		}
+		i++;
+	}
+	return (NULL);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_exec.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/09 08:37:42 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/03/09 08:37:44 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+void	free_fd(t_exec *exec)
+{
+	int	i;
+
+	if (!exec->fd)
+		return ;
+	i = 0;
+	while (i < exec->pipe_count)
+	{
+		if (exec->fd[i])
+			free(exec->fd[i]);
+		i++;
+	}
+	free(exec->fd);
+	exec->fd = NULL;
+	exec->pipe_count = 0;
+}
+
+void	free_data_split(t_exec *exec)
+{
+	int	i;
+
+	i = 0;
+	if (!exec->data)
+		return ;
+	while (exec->split && exec->split[i])
+	{
+		free(exec->split[i]);
+		exec->split[i] = NULL;
+		i++;
+	}
+	free(exec->split);
+	exec->split = NULL;
+	if (exec->data->env_bis)
+	{
+		free_split(exec->data->env_bis, 0);
+		exec->data->env_bis = NULL;
+	}
+}
+
+void	free_redir(t_exec *exec)
+{
+	int	i;
+
+	if (!exec->redir)
+		return ;
+	i = 0;
+	while (i < exec->redir_count)
+	{
+		if (exec->redir[i].malloced && exec->redir[i].file)
+			free(exec->redir[i].file);
+		if (exec->redir[i].fd >= 0)
+			close(exec->redir[i].fd);
+		i++;
+	}
+	if (exec->redir)
+		free(exec->redir);
+	exec->redir = NULL;
+	exec->redir_count = 0;
+}
+
+static void	free_var(t_exec *exec)
+{
+	if (exec->all_path)
+		free(exec->all_path);
+	if (exec->command)
+		free(exec->command);
+	if (exec->w_path)
+		free(exec->w_path);
+	exec->w_path = NULL;
+	exec->all_path = NULL;
+	exec->command = NULL;
+	exec->input = NULL;
+}
+
+void	free_split_exec(t_exec *exec)
+{
+	int	i;
+
+	i = 0;
+	while (exec->all_path && exec->all_path[i])
+	{
+		free(exec->all_path[i]);
+		i++;
+	}
+	i = 0;
+	while (exec->command && exec->command[i])
+	{
+		free(exec->command[i]);
+		i++;
+	}
+	if (exec->data->env)
+	{
+		free_split(exec->data->env, 0);
+		exec->data->env = NULL;
+	}
+	free_data_split(exec);
+	free_fd(exec);
+	free_var(exec);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_exec_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/14 14:12:06 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/04/14 14:12:07 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+void	free_exec_failed(t_exec *exec, int exit_code)
+{
+	free_split_exec(exec);
+	if (exec->split)
+		free(exec->split);
+	if (exec->data)
+		free(exec->data);
+	if (exec->pid)
+		free(exec->pid);
+	exec->pid = NULL;
+	exec->data = NULL;
+	exec->split = NULL;
+	exit(exit_code);
+}
+
+void	free_exec_cmd(t_exec *exec)
+{
+	int	i;
+
+	i = 0;
+	while (exec->all_path && exec->all_path[i])
+		free(exec->all_path[i++]);
+	free(exec->all_path);
+	exec->all_path = NULL;
+	i = 0;
+	while (exec->command && exec->command[i])
+		free(exec->command[i++]);
+	free(exec->command);
+	exec->command = NULL;
+	if (exec->w_path)
+		free(exec->w_path);
+	exec->w_path = NULL;
+	exec->input = NULL;
+}
+
+void	fork_and_free_exec(t_exec *exec, int *cmd_index, int cmd_count)
+{
+	fork_created(exec, *cmd_index, cmd_count);
+	free_exec_cmd(exec);
+	free_redir(exec);
+	(*cmd_index)++;
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils_third.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/11 09:07:45 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/04/11 09:07:46 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+int	skip_token1(char **split, int *i)
+{
+	if (is_pipe(split[*i]))
+	{
+		(*i)++;
+		return (1);
+	}
+	if (split[*i][0] == '<' || split[*i][0] == '>')
+	{
+		*i = skip_redirection(split, *i);
+		return (1);
+	}
+	if (should_skip_empty(split, *i))
+	{
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
+int	skip_token2(char **split, int *i)
+{
+	if (split[*i][0] == '\0' && !has_redir_after_empty(split, *i))
+	{
+		(*i)++;
+		return (1);
+	}
+	if (ft_strcmp(split[*i], " ") == 0 && !has_redir_after_empty(split, *i))
+	{
+		(*i)++;
+		return (1);
+	}
+	if (is_redir_argument(split, *i))
+	{
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
+int	should_skip_token(char **split, int *i)
+{
+	if (skip_token1(split, i))
+		return (1);
+	if (skip_token2(split, i))
+		return (1);
+	return (0);
+}
+
+void	process_exec_loop(char **split, int *i, t_exec_ctx *ctx)
+{
+	int	ret;
+	int	built_in;
+
+	while (split && split[*i])
+	{
+		if (should_skip_token(split, i))
+			continue ;
+		if (ctx->cmd_index < ctx->cmd_count - 1)
+		{
+			if (pipe(ctx->exec->fd[ctx->cmd_index]) == -1)
+			{
+				perror("pipe");
+				ctx->data->error_code = 1;
+				break ;
+			}
+		}
+		built_in = is_built_in(split[*i]);
+		ret = exec_main_sequel(split, i, ctx);
+		if (handle_exec_result(ret, built_in, ctx))
+			continue ;
+		fork_and_free_exec(ctx->exec, &ctx->cmd_index, ctx->cmd_count);
+		(*i)++;
+	}
+}
+#include "../../header/header.h"
+
+int	status_code(char *input, t_data *data)
+{
+	char		**args;
+	long long	code;
+	int			i;
+	int			len;
+
+	args = ft_split(input, ' ');
+	if (!args)
+		return (data->error_code);
+	i = 0;
+	while (args[i])
+		unmask_spaces(args[i++]);
+	len = i;
+	if (len == 1)
+		return (finish_program(data, args));
+	code = 0;
+	if (!is_numeric_arg(args[1]) || !ft_atoll(args[1], &code))
+		return (err_msg_2(data, args));
+	if (len > 2)
+		return (err_msg_1(args));
+	free_split(args, 0);
+	data->end = 1;
+	return ((code % 256 + 256) % 256);
+}
+
+void	handle_pwd(int *status, char *input)
+{
+	if (!ft_strncmp(input, "pwd", 3) && ft_strlen(input) == 3)
+		*status = pwd();
+	else if (!ft_strncmp(input, "pwd ", 4))
+		*status = pwd();
+}
+
+void	handle_unset(int *status, char *input, t_data *data)
+{
+	char	**split;
+
+	if (!ft_strncmp(input, "unset", 5) && ft_strlen(input) == 5)
+		*status = 0;
+	else if (!ft_strncmp(input, "unset ", 6))
+	{
+		split = ft_split(input, ' ');
+		if (!split)
+		{
+			*status = 139;
+			return ;
+		}
+		split = quote_clean(split);
+		*status = unset(&split[1], data);
+		free_split(split, 0);
+	}
+}
+
+void	handle_env(int *status, char *input, t_data *data)
+{
+	if (!ft_strncmp(input, "env", 3) && ft_strlen(input) == 3)
+		*status = env(data->env);
+	else if (!ft_strncmp(input, "env ", 4))
+		*status = env(data->env);
+}
+
+void	handle_exit(int *status, char *input, t_data *data, int flag)
+{
+	if (!ft_strncmp(input, "exit", 4)
+		&& ft_strlen(input) == 4)
+	{
+		*status = status_code(input, data);
+		data->end = 1;
+	}
+	else if (!ft_strncmp(input, "exit ", 5))
+	{
+		if (flag)
+			*status = status_code(input, data);
+		else
+		{
+			*status = status_code(input, data);
+			if (*status != 1)
+				data->end = 1;
+		}
+	}
+}
+#include "../../header/header.h"
+
+int	is_numeric_arg(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n'
+		|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
+		i++;
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	if (str[i] < '0' || str[i] > '9')
+		return (0);
+	while (str[i] >= '0' && str[i] <= '9')
+		i++;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n'
+		|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
+		i++;
+	if (str[i] != '\0')
+		return (0);
+	return (1);
+}
+
+void	display_error_msg(t_data *data, char **args)
+{
+	ft_putstr_fd("minishell: exit: ", 2);
+	ft_putstr_fd(args[1], 2);
+	ft_putstr_fd(": numeric argument required\n", 2);
+	free_split(args, 0);
+	data->end = 1;
+}
+
+int	err_msg_1(char **args)
+{
+	ft_putstr_fd("minishell: exit: too many arguments\n", 2);
+	free_split(args, 0);
+	return (1);
+}
+
+int	finish_program(t_data *data, char **args)
+{
+	free_split(args, 0);
+	data->end = 1;
+	return (data->error_code);
+}
+
+int	err_msg_2(t_data *data, char **args)
+{
+	display_error_msg(data, args);
+	return (2);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/17 06:44:34 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/02/17 06:44:36 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+int	g_ack = 0;
+
+void	handler0(int sig)
+{
+	(void) sig;
+	g_ack = sig + 128;
+	printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+static int	init(t_data *data, char **envp)
+{
+	data->error_code = 0;
+	data->end = 0;
+	data->expand = 1;
+	data->signal = 0;
+	data->env = split_dup(envp);
+	if (!data->env)
+	{
+		data->env = ft_calloc(1, sizeof(char *));
+		if (!data->env)
+			return (0);
+	}
+	data->env_bis = split_dup(data->env);
+	if (!data->env_bis)
+	{
+		data->env_bis = ft_calloc(1, sizeof(char *));
+		if (!data->env_bis)
+		{
+			free_split(data->env, 0);
+			return (0);
+		}
+	}
+	return (1);
+}
+
+void	prompt_loop(t_data *data, int *status, char **split, t_token *lex)
+{
+	int		flag;
+	char	*str;
+
+	flag = 0;
+	str = readline("$> ");
+	if (g_ack)
+	{
+		flag = g_ack;
+		g_ack = 0;
+	}
+	if (flag)
+	{
+		data->error_code = flag;
+		flag = 0;
+	}
+	if (str == NULL)
+		exit_cleanly(*status, data, split);
+	else if (ft_strlen(str) != 0)
+		add_history(str);
+	lex = lexer(str, data);
+	free(str);
+	if (lex)
+		*status = execute_prompt(split, lex, data);
+	if (data->end)
+		exit_cleanly(data->error_code, data, split);
+}
+
+void	main_loop(char **split, t_token *lex, t_data *data)
+{
+	int		status;
+
+	status = 0;
+	while (1)
+		prompt_loop(data, &status, split, lex);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_token	*lex;
+	char	**split;
+	t_data	*data;
+
+	set_signal_dfl();
+	(void) argv;
+	if (argc != 1)
+		return (1);
+	data = malloc(sizeof(t_data));
+	if (!data)
+		return (139);
+	if (!init(data, envp))
+		return (139);
+	lex = NULL;
+	split = NULL;
+	main_loop(split, lex, data);
+	return (0);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main_loop_utils.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/12 23:41:09 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/03/12 23:41:11 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+static void	my_memmove(char *str)
+{
+	int	i;
+
+	if (!str || !(*str) || *str != ' ')
+		return ;
+	i = 0;
+	while (str[i + 1])
+	{
+		str[i] = str[i + 1];
+		i++;
+	}
+	str[i] = 0;
+}
+
+static void	join_symbol(char **split, int *j, t_token *lexer, int i)
+{
+	(*j)++;
+	split[*j] = ft_strdup(lexer[i].value);
+	(*j)++;
+	split[*j] = ft_strdup("");
+}
+
+static void	join_cmd(char **split, t_token *lexer, int *i, int j)
+{
+	char	*tmp;
+
+	if (lexer[*i].value[0] == '\0')
+	{
+		(*i)++;
+		return ;
+	}
+	if (lexer[*i].value[0] == ' ' && !lexer[*i].value[1])
+		tmp = ft_strjoin(split[j], " ");
+	else
+	{
+		tmp = ft_strjoin(split[j], " ");
+		if (!tmp)
+			return ;
+		free(split[j]);
+		split[j] = tmp;
+		tmp = ft_strjoin(split[j], lexer[*i].value);
+	}
+	if (!tmp)
+		return ;
+	free(split[j]);
+	split[j] = tmp;
+	(*i)++;
+}
+
+void	loop(t_token *lexer, char **split)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (1)
+	{
+		while (lexer[i].type == 'w')
+			join_cmd(split, lexer, &i, j);
+		my_memmove(split[j]);
+		if (lexer[i].type)
+			join_symbol(split, &j, lexer, i);
+		else if (lexer[i].type == 0)
+		{
+			if (i)
+				split[j + 1] = NULL;
+			else
+			{
+				free(split[0]);
+				split[0] = NULL;
+			}
+			break ;
+		}
+		i++;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/08 13:32:29 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/03/08 13:32:31 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+void	handle_single(char *str)
+{
+	int	i;
+	int	flag1;
+	int	flag2;
+
+	i = 0;
+	flag1 = 0;
+	flag2 = 0;
+	while (str[i])
+	{
+		if (str[i] == 39 && flag1 == 0)
+			flag2 = update_flag(flag2);
+		else if (str[i] == 34 && flag2 == 0)
+			flag1 = update_flag(flag1);
+		if (str[i] == '$')
+		{
+			if (flag1 == 0 && flag2 == 0
+				&& (str[i + 1] == 39 || str[i + 1] == 34))
+				move_one(&str[i]);
+			else
+				i++;
+		}
+		else
+			i++;
+	}
+}
+
+int	has_cmd_after_pipe(t_token *lexer, int i)
+{
+	while (lexer[i].type && lexer[i].type != 'p')
+	{
+		if (lexer[i].type == 'w')
+			return (1);
+		if (lexer[i].type == 'r' || lexer[i].type == 'a'
+			|| lexer[i].type == 's' || lexer[i].type == 'h')
+			return (1);
+		i += 2;
+	}
+	return (0);
+}
+
+void	fill_space(char *str, int *i, char c)
+{
+	(*i)++;
+	while (str[*i] != c)
+	{
+		if (str[*i] == ' ')
+			str[*i] = '\1';
+		else if (str[*i] == '|')
+			str[*i] = '\3';
+		else if (str[*i] == '<')
+			str[*i] = '\4';
+		else if (str[*i] == '>')
+			str[*i] = '\5';
+		(*i)++;
+	}
+	(*i)++;
+}
+
+static void	check(char *str, int *i, int *flag, char *c)
+{
+	while (str[*i])
+	{
+		while (str[*i] && str[*i] != 39 && str[*i] != 34)
+			(*i)++;
+		if (str[*i] && ft_strchr(&str[*i + 1], str[*i]))
+		{
+			*c = str[*i];
+			*flag = 1;
+			break ;
+		}
+		else
+		{
+			if (str[*i] && str[*i + 1])
+				(*i)++;
+			else
+				break ;
+		}
+	}
+}
+
+void	check_quote(char *str)
+{
+	int		i;
+	char	c;
+	int		flag;
+
+	i = 0;
+	c = 0;
+	while (1)
+	{
+		flag = 0;
+		check(str, &i, &flag, &c);
+		if (flag)
+			fill_space(str, &i, c);
+		else
+			break ;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/17 16:25:02 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/03/17 21:45:19 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+int	is_valid_var(char *str, int flag)
+{
+	int	i;
+
+	i = 0;
+	if (str[0] == '$')
+	{
+		if (!str[1] || (!ft_isalnum((unsigned char)str[1]) && str[1] != '_'))
+			return (0);
+	}
+	while (str[i] && str[i] != ' ' && str[i] != 39 && str[i] != 34)
+	{
+		if (flag && str[i] == '=')
+			break ;
+		if (i != 0 && !is_alphanum(str[i]) && str[i] != '_')
+			break ;
+		i++;
+	}
+	return (1);
+}
+
+static int	quote_type(char *str, int *i, int index)
+{
+	char	c;
+	int		flag;
+
+	flag = 0;
+	c = str[*i];
+	(*i)++;
+	while (str[*i] != c)
+	{
+		if (*i == index)
+			flag = 1;
+		(*i)++;
+	}
+	if (flag)
+	{
+		if (c == 39)
+			return (0);
+		if (c == 34)
+			return (1);
+	}
+	return (2);
+}
+
+static int	check_quote_var(char *str, int index)
+{
+	int		i;
+	int		ret;
+
+	i = 0;
+	while (str[i])
+	{
+		if ((str[i] == 39 && ft_strchr(&str[i + 1], 39))
+			|| (str[i] == 34 && ft_strchr(&str[i + 1], 34)))
+		{
+			ret = quote_type(str, &i, index);
+			if (ret != 2)
+				return (ret);
+		}
+		i++;
+	}
+	return (1);
+}
+
+int	is_ok_quote(char *str, int index)
+{
+	if (!ft_strchr(str, '$'))
+		return (1);
+	if (!ft_strchr(str, 39))
+		return (1);
+	return (check_quote_var(str, index));
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/14 16:16:04 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/03/14 16:16:06 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+char	*transpose_var(char *str, int index, char *buffer, int flag)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	i++;
+	if (flag)
+	{
+		while (ft_isalnum(str[index + i]) || str[index + i] == '_')
+			i++;
+	}
+	else
+		i++;
+	tmp = ft_strjoin(buffer, &str[index + i]);
+	if (!tmp)
+		return (NULL);
+	str[index] = '\0';
+	str = ft_strjoin(str, tmp);
+	free(tmp);
+	return (str);
+}
+
+void	empty_prompt_spaces(char *buffer)
+{
+	int	j;
+
+	j = 0;
+	while (buffer[j])
+	{
+		if (buffer[j] == '\x1f')
+			buffer[j] = '\1';
+		j++;
+	}
+}
+
+static int	is_in_dquote(char *str, int index)
+{
+	int	i;
+	int	in_dq;
+
+	i = 0;
+	in_dq = 0;
+	while (i < index)
+	{
+		if (str[i] == 39 && !in_dq)
+		{
+			i++;
+			while (str[i] && str[i] != 39)
+				i++;
+		}
+		else if (str[i] == 34)
+			in_dq = !in_dq;
+		i++;
+	}
+	return (in_dq);
+}
+
+char	*convert_var(char *str, int index, char **envp)
+{
+	int		i;
+	char	buffer[2048];
+	int		in_dq;
+
+	if (str[index] != '$')
+		return (NULL);
+	in_dq = is_in_dquote(str, index);
+	i = index;
+	i++;
+	while ((ft_isalnum(str[i]) || str[i] == '_')
+		&& str[i] != 39 && str[i] != 34)
+	{
+		buffer[i - index - 1] = str[i];
+		i++;
+	}
+	buffer[i - index - 1] = '\0';
+	var_search(buffer, envp);
+	if (in_dq)
+		empty_prompt_spaces(buffer);
+	str = transpose_var(str, index, buffer, 1);
+	return (str);
+}
+
+char	*change_var(char *str, char **envp)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	while (!(str[i] == '$' && is_valid_var(&str[i], 0) && is_ok_quote(str, i)))
+		i++;
+	tmp = convert_var(str, i, envp);
+	free(str);
+	if (!tmp)
+		return (NULL);
+	return (tmp);
+}
+#include "../../header/header.h"
+
+char	convert_type(char *str)
+{
+	char	c;
+
+	if (str[0] == '|' && !str[1])
+		c = 'p';
+	else if (str[0] == '>' && str[1] == '>' && !str[2])
+		c = 'a';
+	else if (str[0] == '<' && str[1] == '<' && !str[2])
+		c = 'h';
+	else if (str[0] == '>' && !str[1])
+		c = 'r';
+	else if (str[0] == '<' && !str[1])
+		c = 's';
+	else
+		c = 'w';
+	return (c);
+}
+
+char	*append_pid(char *str, int i)
+{
+	char	*ret;
+	char	*tmp;
+	char	*tmp2;
+	char	*result;
+	char	*pid;
+
+	tmp2 = str;
+	tmp = &str[i + 1];
+	str[i - 1] = '\0';
+	pid = my_get_pid();
+	result = ft_strjoin(str, pid);
+	if (!result)
+		return (NULL);
+	ret = ft_strjoin(result, tmp);
+	if (!str)
+	{
+		free(result);
+		return (NULL);
+	}
+	free(result);
+	free(tmp2);
+	free(pid);
+	return (ret);
+}
+
+static char	*expand_double(char *str)
+{
+	int		i;
+
+	i = 1;
+	while (str[i])
+	{
+		if (str[i] == '$' && str[i - 1] == '$')
+		{
+			str = append_pid(str, i);
+			if (!str)
+				return (NULL);
+		}
+		i++;
+	}
+	return (str);
+}
+
+void	delete_spaces(t_token *token, int i, int quoted)
+{
+	int	k;
+
+	k = 0;
+	while (token[i].value[k])
+	{
+		if (token[i].value[k] == '\2')
+			move_one(&token[i].value[k]);
+		else
+			k++;
+	}
+	if (token[i].value[0] == '\0' && quoted)
+	{
+		token[i].value[0] = '\6';
+		token[i].value[1] = '\0';
+	}
+}
+
+int	expand_input(t_token *token, char *str, t_data *data, int i)
+{
+	token[i].type = convert_type(str);
+	token[i].value = ft_strdup(str);
+	if (!token[i].value)
+		return (0);
+	handle_single(token[i].value);
+	token[i].value = expand_double(token[i].value);
+	if (!token[i].value)
+		return (0);
+	while (!are_var_handled(token[i].value))
+	{
+		token[i].value = change_var(token[i].value, data->env);
+		if (!token[i].value)
+			return (0);
+	}
+	token[i].value = expand_code(token[i].value, data);
+	if (!token[i].value)
+		return (0);
+	return (1);
+}
+#include "../../header/header.h"
+
+int	retrieve_status(t_exec *exec, int *i)
+{
+	if (!exec->input[0] && exec->redir_count > 0)
+	{
+		if (setup_empty_cmd(exec))
+		{
+			free_redir(exec);
+			return (1);
+		}
+		return (0);
+	}
+	if (exec_init(exec, 0))
+	{
+		free_redir(exec);
+		free_exec_cmd(exec);
+		(*i)++;
+		return (2);
+	}
+	return (0);
+}
+
+void	end_collect_redir(t_exec *exec, char **envp)
+{
+	int	k;
+
+	k = 0;
+	while (k < exec->redir_count)
+	{
+		if (exec->redir[k].type == 'h' && exec->redir[k].fd == -1)
+			exec->redir[k].fd = handle_heredoc(exec, exec->redir[k].file,
+					envp);
+		k++;
+	}
+}
+
+char	*my_get_pid(void)
+{
+	char	**split;
+	char	*result;
+	int		fd;
+	char	buf[1024];
+	int		bytes;
+
+	fd = open("/proc/self/stat", O_RDONLY);
+	if (fd == -1)
+		return (NULL);
+	bytes = read(fd, buf, sizeof(buf));
+	close(fd);
+	buf[bytes] = '\0';
+	split = ft_split(buf, ' ');
+	if (!split)
+		return (NULL);
+	result = ft_strdup(split[0]);
+	if (!result)
+		return (NULL);
+	free_split(split, 0);
+	return (result);
+}
+
+int	space_pos(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str && str[i])
+	{
+		if (str[i] == ' ')
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+void	close_fd(t_exec *exec, int cmd_count)
+{
+	int	j;
+
+	(void)cmd_count;
+	if (!exec->fd)
+		return ;
+	j = 0;
+	while (j < exec->pipe_count)
+	{
+		if (exec->fd[j][0] != -1)
+		{
+			close(exec->fd[j][0]);
+			exec->fd[j][0] = -1;
+		}
+		if (exec->fd[j][1] != -1)
+		{
+			close(exec->fd[j][1]);
+			exec->fd[j][1] = -1;
+		}
+		j++;
+	}
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_third_bis.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/16 08:55:08 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/04/16 08:55:09 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+void	unmask_spaces(char *str)
+{
+	int	i;
+
+	if (!str)
+		return ;
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\1' || str[i] == '\x1f')
+			str[i] = ' ';
+		else if (str[i] == '\3')
+			str[i] = '|';
+		else if (str[i] == '\4')
+			str[i] = '<';
+		else if (str[i] == '\5')
+			str[i] = '>';
+		else if (str[i] == '\6')
+		{
+			move_one(&str[i]);
+			continue ;
+		}
+		i++;
+	}
+}
+
+void	mask_spaces(char **split, int i)
+{
+	int	j;
+
+	j = 0;
+	while (split[i][j])
+	{
+		if (split[i][j] == '\1' || split[i][j] == '\x1f')
+			split[i][j] = ' ';
+		else if (split[i][j] == '\3')
+			split[i][j] = '|';
+		else if (split[i][j] == '\4')
+			split[i][j] = '<';
+		else if (split[i][j] == '\5')
+			split[i][j] = '>';
+		else if (split[i][j] == '\6')
+		{
+			move_one(&split[i][j]);
+			continue ;
+		}
+		j++;
+	}
+}
+
+char	**quote_clean(char **split)
+{
+	int	i;
+
+	i = 0;
+	while (split && split[i])
+	{
+		mask_spaces(split, i);
+		i++;
+	}
+	return (split);
+}
+
+char	*change_var_hd(char *str, char **envp)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	while (!(str[i] == '$' && is_valid_var(&str[i], 0)))
+		i++;
+	tmp = convert_var(str, i, envp);
+	free(str);
+	return (tmp);
+}
+
+int	is_path(char **env)
+{
+	int	i;
+
+	i = 0;
+	while (env[i] && ft_strncmp(env[i], "PATH=", 5))
+		i++;
+	if (!env[i])
+		return (0);
+	return (1);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/08 13:27:20 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/03/08 13:27:23 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+//OK
+static int	lex_convert(char **split, t_token *token, t_data *data)
+{
+	int	i;
+	int	j;
+	int	quoted;
+
+	i = 0;
+	j = 0;
+	while (split[j])
+	{
+		quoted = (ft_strchr(split[j], '"') || ft_strchr(split[j], '\''));
+		if (!expand_input(token, split[j], data, i))
+			return (0);
+		if (i == 0 || token[i - 1].type != 'h')
+			remove_quotes(token[i].value);
+		delete_spaces(token, i, quoted);
+		i++;
+		j++;
+	}
+	token[i].type = 0;
+	token[i].value = NULL;
+	return (1);
+}
+//OK
+static int	handle_special(char *str, char *res, int *i, int *j)
+{
+	if (str[*i] == '\t')
+	{
+		res[(*j)++] = ' ';
+		return (1);
+	}
+	if (str[*i] == '<' || str[*i] == '>' || str[*i] == '|')
+	{
+		if (*j > 0 && res[*j - 1] != ' ')
+			res[(*j)++] = ' ';
+		res[(*j)++] = str[*i];
+		if ((str[*i] == '<' || str[*i] == '>')
+			&& str[*i + 1] == str[*i])
+			res[(*j)++] = str[++(*i)];
+		if (str[*i + 1] && str[*i + 1] != ' ')
+			res[(*j)++] = ' ';
+		return (1);
+	}
+	return (0);
+}
+//OK
+static char	*preprocess_operators(char *str, int i, int j)
+{
+	char	*result;
+	int		in_sq;
+	int		in_dq;
+
+	in_sq = 0;
+	in_dq = 0;
+	result = malloc(ft_strlen(str) * 3 + 1);
+	if (!result)
+		return (NULL);
+	while (str[i])
+	{
+		if (str[i] == 39 && !in_dq)
+			in_sq = !in_sq;
+		else if (str[i] == 34 && !in_sq)
+			in_dq = !in_dq;
+		if (!in_sq && !in_dq && handle_special(str, result, &i, &j))
+		{
+			i++;
+			continue ;
+		}
+		result[j++] = str[i];
+		i++;
+	}
+	result[j] = '\0';
+	return (result);
+}
+//OK
+t_token	*assign_lexer(char **split, t_data *data)
+{
+	t_token	*token;
+
+	token = malloc((split_len(split) + 1) * sizeof(t_token));
+	if (!token)
+	{
+		free_split(split, 0);
+		return (NULL);
+	}
+	if (!lex_convert(split, token, data))
+	{
+		free_split(split, 0);
+		free_lexer(token);
+		return (NULL);
+	}
+	free_split(split, 0);
+	return (token);
+}
+//OK
+t_token	*lexer(char *str, t_data *data)
+{
+	char	**split;
+	t_token	*token;
+	char	*processed;
+
+	if (!str)
+		return (NULL);
+	processed = preprocess_operators(str, 0, 0);
+	if (!processed)
+		return (NULL);
+	check_quote(processed);
+	split = ft_split(processed, ' ');
+	free(processed);
+	if (!split)
+		return (NULL);
+	token = assign_lexer(split, data);
+	if (!token)
+		return (NULL);
+	return (token);
+}
+#include "../../header/header.h"
+
+char	*expand_code(char *str, t_data *data)
+{
+	int		i;
+	char	*code_str;
+	char	*old_str;
+
+	if (!str)
+		return (NULL);
+	i = 0;
+	while (str[i] && str[i + 1])
+	{
+		if (str[i] == '$' && str[i + 1] == '?' && is_ok_quote(str, i))
+		{
+			code_str = ft_itoa(data->error_code);
+			old_str = str;
+			str = transpose_var(str, i, code_str, 0);
+			free(old_str);
+			free(code_str);
+			if (!str)
+				return (NULL);
+			i = 0;
+		}
+		else
+			i++;
+	}
+	return (str);
+}
+
+void	assign_begin(char *buffer, int flag)
+{
+	if (!flag)
+	{
+		buffer[0] = '\2';
+		buffer[1] = '\0';
+	}
+}
+
+void	fill_input_spaces(char *buffer)
+{
+	int	j;
+
+	j = 0;
+	while (buffer[j])
+	{
+		if (buffer[j] == ' ')
+			buffer[j] = '\x1f';
+		j++;
+	}
+}
+
+void	var_search(char *buffer, char **envp)
+{
+	int	flag;
+	int	i;
+	int	j;
+
+	flag = 0;
+	i = 0;
+	while (envp[i])
+	{
+		if (!ft_strncmp(envp[i], buffer, ft_strlen(buffer))
+			&& envp[i][ft_strlen(buffer)] == '=')
+		{
+			flag = 1;
+			j = 0;
+			while (envp[i][j] != '=')
+				j++;
+			j++;
+			ft_strlcpy(buffer, &envp[i][j], ft_strlen(envp[i]) - j + 1);
+			fill_input_spaces(buffer);
+			break ;
+		}
+		i++;
+	}
+	assign_begin(buffer, flag);
+}
+
+int	parser(t_token *lexer)
+{
+	int	i;
+
+	if (lexer[0].type == 'p')
+		return (0);
+	i = 0;
+	while (lexer[i].type)
+	{
+		if ((lexer[i].type == 's' || lexer[i].type == 'h'
+				|| lexer[i].type == 'r' || lexer[i].type == 'a')
+			&& lexer[i + 1].type != 'w')
+			return (0);
+		if (lexer[i].type == 'p' && !has_cmd_after_pipe(lexer, i + 1))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/20 08:48:18 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/03/20 08:48:19 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+int	check_access(t_exec *exec)
+{
+	struct stat	info;
+
+	if (access(exec->command[0], X_OK) == 0
+		&& stat(exec->command[0], &info) == 0
+		&& S_ISREG(info.st_mode))
+	{
+		exec->w_path = ft_strdup(exec->command[0]);
+		if (exec->w_path)
+			return (0);
+	}
+	return (1);
+}
+
+int	find_env(t_exec *exec, int i)
+{
+	if (!exec->command || !exec->command[0])
+		return (1);
+	if (access(exec->command[0], X_OK) == 0 && ft_strchr(exec->command[0], '/'))
+	{
+		check_dir(exec);
+		exec->w_path = ft_strdup(exec->command[0]);
+		if (!exec->w_path)
+			return (1);
+		return (0);
+	}
+	if (exec->command[0][0] == '/' || exec->command[0][0] == '.')
+	{
+		if (exec->command[0][0] == '/')
+			check_dir(exec);
+		exec->w_path = NULL;
+		return (1);
+	}
+	if (find_env_loop(exec, i) == 0)
+		return (0);
+	if (!check_access(exec))
+		return (0);
+	return (1);
+}
+
+int	get_path_error(char *path)
+{
+	int		i;
+	char	c;
+
+	i = 0;
+	while (path[i])
+	{
+		while (path[i] == '/')
+			i++;
+		while (path[i] && path[i] != '/')
+			i++;
+		if (i == 0)
+			break ;
+		c = path[i];
+		path[i] = '\0';
+		if (access(path, F_OK) != 0)
+			path[i] = c;
+		if (access(path, F_OK) != 0)
+			return (127);
+		if (access(path, X_OK) != 0)
+			path[i] = c;
+		if (access(path, X_OK) != 0)
+			return (126);
+		path[i] = c;
+	}
+	return (127);
+}
+
+void	dup_exec_fds(t_exec *exec, int cmd_index, int cmd_count)
+{
+	if (cmd_index > 0)
+		dup2(exec->fd[cmd_index - 1][0], STDIN_FILENO);
+	if (cmd_index < cmd_count - 1)
+		dup2(exec->fd[cmd_index][1], STDOUT_FILENO);
+	close_fd(exec, cmd_count);
+	if (apply_redirs(exec) != 0)
+	{
+		free_redir(exec);
+		free_exec_failed(exec, 1);
+	}
+	exec_command(exec);
+	free_split_exec(exec);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils_fourth.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/27 09:25:11 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/04/27 09:25:14 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+void	close_exec_fds(t_exec_ctx *ctx, int ret)
+{
+	if (ret == 2 && !ctx->data->end)
+		ctx->data->error_code = 127;
+	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
+	{
+		close(ctx->exec->fd[ctx->cmd_index - 1][0]);
+		ctx->exec->fd[ctx->cmd_index - 1][0] = -1;
+	}
+	if (ctx->cmd_index < ctx->cmd_count - 1
+		&& ctx->exec->fd[ctx->cmd_index][1] != -1)
+	{
+		close(ctx->exec->fd[ctx->cmd_index][1]);
+		ctx->exec->fd[ctx->cmd_index][1] = -1;
+	}
+}
+
+int	handle_exec_result(int ret, int built_in, t_exec_ctx *ctx)
+{
+	if (!ctx->data->signal)
+	{
+		ctx->data->error_code = ret;
+	}
+	if (built_in)
+	{
+		process_built_in(ctx);
+		return (1);
+	}
+	if (ret == 1 || (ret == 2 && !ctx->data->end))
+	{
+		close_exec_fds(ctx, ret);
+		ctx->cmd_index++;
+		return (1);
+	}
+	return (0);
+}
+
+void	process_built_in(t_exec_ctx *ctx)
+{
+	ctx->cmd_index++;
+	free_exec_cmd(ctx->exec);
+	free_redir(ctx->exec);
+}
+
+int	end_exec_sig(t_exec_ctx *ctx, int exit_code, int last_pid_status)
+{
+	free_fd(ctx->exec);
+	if (ctx->exec->pid)
+		free(ctx->exec->pid);
+	if (ctx->data->end)
+		return (ctx->data->error_code);
+	if (WIFEXITED(last_pid_status))
+		exit_code = WEXITSTATUS(last_pid_status);
+	else if (WIFSIGNALED(last_pid_status))
+		exit_code = 128 + WTERMSIG(last_pid_status);
+	else
+		exit_code = ctx->data->error_code;
+	ctx->data->error_code = exit_code;
+	return (exit_code);
+}
+
+char	*get_path(char **env)
+{
+	int		i;
+	char	*result;
+
+	i = 0;
+	result = NULL;
+	while (env[i])
+	{
+		if (!ft_strncmp("PATH=", env[i], 5))
+		{
+			result = &env[i][5];
+			if (!result)
+				return (NULL);
+			return (result);
+		}
+		i++;
+	}
+	return (NULL);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/08 13:54:45 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/03/08 13:54:47 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+int	update_flag(int flag)
+{
+	if (flag)
+		return (0);
+	return (1);
+}
+
+void	move_one(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		str[i] = str[i + 1];
+		if (!str[i])
+			break ;
+		i++;
+	}
+}
+
+void	remove_quotes(char *str)
+{
+	int		i;
+	char	c;
+	char	*chr;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == 39 || str[i] == 34)
+		{
+			c = str[i];
+			chr = ft_strchr(&str[i + 1], c);
+			if (chr)
+			{
+				move_one(&str[i]);
+				chr--;
+				while (&str[i] != chr)
+					i++;
+				move_one(&str[i]);
+			}
+			else
+				i++;
+		}
+		else
+			i++;
+	}
+}
+
+int	split_len(char **split)
+{
+	int	i;
+
+	i = 0;
+	if (!split || !(*split))
+		return (0);
+	while (split[i])
+		i++;
+	return (i);
+}
+
+void	free_split(char **split, int flag)
+{
+	int	i;
+
+	if (!split)
+		return ;
+	if (!flag)
+		i = 0;
+	else
+		i = 1;
+	while (split && split[i])
+		free(split[i++]);
+	if (split)
+		free(split);
+}
+#include "../../header/header.h"
+
+int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
+{
+	t_exec	*exec;
+	t_data	*data;
+	int		status;
+	int		result;
+
+	exec = ctx->exec;
+	data = ctx->data;
+	exec->redir_count = 0;
+	exec->redir = NULL;
+	collect_redirs(exec, split, *i, exec->env);
+	if (data->signal)
+	{
+		free_redir(exec);
+		(*i)++;
+		return (1);
+	}
+	if (*i >= 1 && (split[(*i) - 1][0] == '<' || split[(*i) - 1][0] == '>'))
+		infile_redir(split, i, 0);
+	exec->input = split[*i];
+	if (is_built_in(exec->input))
+		status = do_built_in_part(split, i, ctx);
+	if (is_built_in(exec->input))
+		return (status);
+	result = retrieve_status(exec, i);
+	return (result);
+}
+
+int	is_end_input(char **split, t_data *data)
+{
+	if (split && split[0] && ft_strchr(split[0], '\6'))
+	{
+		ft_putstr_fd("Command '' not found\n", 2);
+		data->error_code = 127;
+		return (127);
+	}
+	if (split && split[0] && (split[0][0] == '\0'
+		|| ft_strcmp(split[0], " ") == 0))
+	{
+		data->error_code = 0;
+		return (0);
+	}
+	return (1);
+}
+
+int	update_status(t_data *data)
+{
+	if (data->signal)
+	{
+		data->signal = 0;
+		data->error_code = 130;
+		return (130);
+	}
+	return (data->error_code);
+}
+
+void	set_signal_ign(void)
+{
+	signal(SIGINT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
+}
+
+void	set_signal_dfl(void)
+{
+	signal(SIGINT, handler0);
+	signal(SIGQUIT, SIG_IGN);
+}
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_bis.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lukrodri <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/04/02 10:05:00 by lukrodri          #+#    #+#             */
+/*   Updated: 2026/04/02 10:05:01 by lukrodri         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../header/header.h"
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+int	print_split(char **split)
+{
+	int		i;
+	char	**word_split;
+
+	if (!split || !(*split))
+		return (1);
+	i = 0;
+	while (split[i])
+	{
+		if (ft_strchr(split[i], '='))
+		{
+			word_split = ft_split(split[i], '=');
+			if (!word_split)
+				return (1);
+			if (word_split[1])
+				printf("declare -x %s=\"%s\"\n", word_split[0], word_split[1]);
+			else
+				printf("declare -x %s=\"\"\n", word_split[0]);
+			free_split(word_split, 0);
+		}
+		else
+			printf("declare -x %s\n", split[i]);
+		i++;
+	}
+	return (0);
+}
+
+char	**split_dup(char **envp)
+{
+	char	**new_split;
+	int		i;
+	int		len;
+
+	len = my_memlen(envp);
+	if (!len)
+		return (NULL);
+	new_split = ft_calloc(len + 1, sizeof(char *));
+	if (!new_split)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		new_split[i] = ft_strdup(envp[i]);
+		if (!new_split[i])
+		{
+			free_split(new_split, 0);
+			return (NULL);
+		}
+		i++;
+	}
+	return (new_split);
+}
+
+int	my_memlen(char **split)
+{
+	int	i;
+
+	if (!split)
+		return (0);
+	i = 0;
+	while (split[i])
+		i++;
+	return (i);
+}
+
+int	is_alphanum(char c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	if (c >= 'a' && c <= 'z')
+		return (1);
+	if (c >= 'A' && c <= 'Z')
+		return (1);
+	return (0);
+}
+NAME        = minishell
+
+# --- Directories ---
+SRC_DIR     = srcs
+OBJ_DIR     = objs
+LIBFT_DIR   = srcs/libft
+HEADER_DIR  = header
+
+# --- Files ---
+SRC         = srcs/main/main.c \
+              srcs/main/finish_program.c \
+              srcs/main/prompt_loop.c \
+              srcs/exec/exec_prompt.c \
+              srcs/exec/exec.c \
+              srcs/exec/exec_built_in.c \
+              srcs/exec/exec_built_in_utils.c \
+              srcs/exec/exec_cmd.c \
+              srcs/exec/exec_cmd_utils.c \
+              srcs/exec/exec_error.c \
+              srcs/exec/free_exec.c \
+              srcs/exec/free_exec_utils.c \
+              srcs/exec/process_exec.c \
+              srcs/exec/status_code.c \
+              srcs/built_in/built_in.c \
+              srcs/built_in/built_in_utils.c \
+              srcs/built_in/cd_utils.c \
+              srcs/built_in/change_path.c \
+              srcs/built_in/echo.c \
+              srcs/built_in/echo_utils.c \
+              srcs/built_in/export.c \
+              srcs/built_in/export_add.c \
+              srcs/built_in/export_utils.c \
+              srcs/built_in/replace_env_var.c \
+              srcs/built_in/unset.c \
+              srcs/parser/check_quote.c \
+              srcs/parser/check_quote_utils.c \
+              srcs/parser/expand.c \
+              srcs/parser/expand_utils.c \
+              srcs/parser/get_pid.c \
+              srcs/parser/handle_spaces.c \
+              srcs/parser/lexer.c \
+              srcs/parser/parser.c \
+              srcs/redir/expand_heredoc \
+              srcs/redir/handle_heredoc \
+              srcs/redir/handle_redir \
+              srcs/redir/heredoc \
+              srcs/redir/infile_redir \
+              srcs/redir/redir \
+              srcs/redir/skip_redir \
+              srcs/utils/find_env.c \
+              srcs/utils/get_path.c \
+              srcs/utils/remove_quote.c \
+              srcs/utils/set_signal.c \
+              srcs/utils/split_dup.c \
+              
+              
+OBJ         = $(SRC:%.c=$(OBJ_DIR)/%.o)
+HEADERS = header/typedef.h header/function.h header/header.h
+LIBFT       = $(LIBFT_DIR)/libft.a
+CC          = cc
+FLAGS       = -Wall -Wextra -Werror -g
+RM          = rm -rf
+
+all: $(NAME)
+
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) $(FLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline
+
+$(OBJ_DIR)/%.o: %.c $(HEADER)
+	@mkdir -p $(dir $@)
+	$(CC) $(FLAGS) -I $(HEADER_DIR) -I $(LIBFT_DIR) -c $< -o $@
+
+$(LIBFT):
+	make -C $(LIBFT_DIR)
+
+clean:
+	make clean -C $(LIBFT_DIR)
+	$(RM) $(OBJ_DIR)
+
+fclean: clean
+	make fclean -C $(LIBFT_DIR)
+	$(RM) $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re
