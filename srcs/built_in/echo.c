@@ -33,7 +33,7 @@ int	return_status(int flag)
 		return (0);
 }
 
-static int	has_n_flag(char *input)
+int	has_n_flag(char *input)
 {
 	int	i;
 	int	flag;
@@ -62,7 +62,7 @@ static int	has_n_flag(char *input)
 	return (return_status(flag));
 }
 
-static int	is_valid_flag(char *str)
+int	is_valid_flag(char *str)
 {
 	int	i;
 
@@ -78,7 +78,7 @@ static int	is_valid_flag(char *str)
 	return (1);
 }
 
-static int	has_more_n_flag(char *str)
+int	has_more_n_flag(char *str)
 {
 	int	i;
 	int	flag;
@@ -99,84 +99,4 @@ static int	has_more_n_flag(char *str)
 		flag = 1;
 	}
 	return (flag);
-}
-
-int	end_of_string(char *input)
-{
-	if (!has_n_flag(input))
-		ft_putstr_fd("\n", 1);
-	return (0);
-}
-
-void	replace_fill_basic(char *input, int k)
-{
-	while (input[k])
-	{
-		if (input[k] == '\1' || input[k] == '\x1f')
-			input[k] = ' ';
-		else if (input[k] == '\3')
-			input[k] = '|';
-		else if (input[k] == '\4')
-			input[k] = '<';
-		else if (input[k] == '\5')
-			input[k] = '>';
-		else if (input[k] == '\6')
-		{
-			move_one(&input[k]);
-			continue ;
-		}
-		k++;
-	}
-}
-
-void	skip_spaces(char *input, int i)
-{
-	while (input[i] == ' ')
-		i++;
-	if (input[i])
-		ft_putstr_fd(" ", 1);
-}
-
-void	skip_all_spaces(char *input, int *i)
-{
-	if (input[*i] == ' ')
-		skip_spaces(input, *i);
-	while (input[*i] && input[*i] == ' ')
-		(*i)++;
-}
-
-int	echo_status(char *input, int i, int k)
-{
-	replace_fill_basic(input, k);
-	ft_putstr_fd(&input[i], 1);
-	return (end_of_string(input));
-}
-
-int	echo(char *input, int k)
-{
-	int	i;
-	int	flag;
-
-	i = 0;
-	flag = 0;
-	while (1)
-	{
-		while (input[i] && input[i] != ' ')
-			i++;
-		if (!input[i])
-			return (end_of_string(input));
-		i++;
-		if (!input[i])
-			return (end_of_string(input));
-		skip_all_spaces(input, &i);
-		if (!input[i])
-			return (end_of_string(input));
-		if (flag && !has_more_n_flag(&input[i]))
-			break ;
-		if (input[i] != '-' || !is_valid_flag(&input[i + 1]))
-			break ;
-		else
-			flag = 1;
-	}
-	return (echo_status(input, i, k));
 }

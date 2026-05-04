@@ -62,32 +62,3 @@ int	has_redir_after_empty(char **split, int i)
 	}
 	return (0);
 }
-
-static int	get_next_index(char **split, int i, int *is_cmd)
-{
-	*is_cmd = 0;
-	if (is_pipe(split[i]))
-		return (i + 1);
-	if (split[i][0] == '<' || split[i][0] == '>')
-		return (skip_redirection(split, i));
-	if (should_skip_empty(split, i) || is_redir_argument(split, i))
-		return (i + 1);
-	if ((split[i][0] == '\0' || ft_strcmp(split[i], " ") == 0)
-		&& !has_redir_after_empty(split, i))
-		return (i + 1);
-	*is_cmd = 1;
-	return (i + 1);
-}
-
-int	count_cmds(char **split, int i, int count)
-{
-	int	is_cmd;
-
-	while (split && split[i])
-	{
-		i = get_next_index(split, i, &is_cmd);
-		if (is_cmd)
-			count++;
-	}
-	return (count);
-}

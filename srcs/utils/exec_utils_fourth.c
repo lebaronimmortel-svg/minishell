@@ -73,14 +73,6 @@ int	end_exec_sig(t_exec_ctx *ctx, int exit_code, int last_pid_status)
 	return (exit_code);
 }
 
-void	ctx_init(t_exec_ctx *ctx, t_exec *exec, t_data *data, int cmd_count)
-{
-	ctx->exec = exec;
-	ctx->data = data;
-	ctx->cmd_index = 0;
-	ctx->cmd_count = cmd_count;
-}
-
 char	*get_path(char **env)
 {
 	int		i;
