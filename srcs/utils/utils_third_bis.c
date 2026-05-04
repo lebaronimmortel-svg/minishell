@@ -62,7 +62,7 @@ void	unmask_spaces(char *str)
 	}
 }
 
-void	fonction_trinitaire(char **split, int i)
+void	mask_spaces(char **split, int i)
 {
 	int	j;
 
@@ -93,7 +93,7 @@ char	**quote_clean(char **split)
 	i = 0;
 	while (split && split[i])
 	{
-		fonction_trinitaire(split, i);
+		mask_spaces(split, i);
 		i++;
 	}
 	return (split);

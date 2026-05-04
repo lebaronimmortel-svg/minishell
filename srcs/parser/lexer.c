@@ -31,7 +31,7 @@ static char	convert_type(char *str)
 	return (c);
 }
 
-char	*fonction_blob(char *str, int i)
+char	*append_pid(char *str, int i)
 {
 	char	*ret;
 	char	*tmp;
@@ -67,7 +67,7 @@ static char	*expand_double(char *str)
 	{
 		if (str[i] == '$' && str[i - 1] == '$')
 		{
-			str = fonction_blob(str, i);
+			str = append_pid(str, i);
 			if (!str)
 				return (NULL);
 		}
@@ -95,7 +95,7 @@ void	fonction_void(t_token *token, int i, int quoted)
 	}
 }
 
-int	fonction_viande(t_token *token, char *str, t_data *data, int i)
+int	expand_input(t_token *token, char *str, t_data *data, int i)
 {
 	token[i].type = convert_type(str);
 	token[i].value = ft_strdup(str);
@@ -128,7 +128,7 @@ static int	lex_convert(char **split, t_token *token, t_data *data)
 	while (split[j])
 	{
 		quoted = (ft_strchr(split[j], '"') || ft_strchr(split[j], '\''));
-		if (!fonction_viande(token, split[j], data, i))
+		if (!expand_input(token, split[j], data, i))
 			return (0);
 		if (i == 0 || token[i - 1].type != 'h')
 			remove_quotes(token[i].value);
@@ -192,7 +192,7 @@ static char	*preprocess_operators(char *str, int i, int j)
 	return (result);
 }
 
-t_token	*fonction879(char **split, t_data *data)
+t_token	*assign_lexer(char **split, t_data *data)
 {
 	t_token	*token;
 
@@ -228,7 +228,7 @@ t_token	*lexer(char *str, t_data *data)
 	free(processed);
 	if (!split)
 		return (NULL);
-	token = fonction879(split, data);
+	token = assign_lexer(split, data);
 	if (!token)
 		return (NULL);
 	return (token);
