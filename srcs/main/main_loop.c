@@ -75,3 +75,28 @@ int	execute_prompt(char **split, t_token *lex, t_data *data)
 	}
 	return (status_code);
 }
+
+char	*get_user(t_data *data)
+{
+	int		i;
+	char	*result;
+	char	**split;
+
+	i = 0;
+	while (data->env[i])
+	{
+		if (!ft_strncmp(data->env[i], "USER=", 5))
+		{
+			split = ft_split(data->env[i], '=');
+			if (!split)
+				return (NULL);
+			result = ft_strdup(split[1]);
+			if (!result)
+				return (NULL);
+			free_split(split, 0);
+			return (result);
+		}
+		i++;
+	}
+	return (NULL);
+}
