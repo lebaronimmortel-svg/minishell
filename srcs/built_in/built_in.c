@@ -216,21 +216,21 @@ static void	display_error_msg(t_data *data, char **args)
 	data->end = 1;
 }
 
-static int	fonction8(char **args)
+static int	err_msg_1(char **args)
 {
 	ft_putstr_fd("minishell: exit: too many arguments\n", 2);
 	free_split(args, 0);
 	return (1);
 }
 
-static int	fonction10(t_data *data, char **args)
+static int	finish_program(t_data *data, char **args)
 {
 	free_split(args, 0);
 	data->end = 1;
 	return (data->error_code);
 }
 
-static int	fonction9(t_data *data, char **args)
+static int	err_msg_2(t_data *data, char **args)
 {
 	display_error_msg(data, args);
 	return (2);
@@ -251,12 +251,12 @@ static int	status_code(char *input, t_data *data)
 		unmask_spaces(args[i++]);
 	len = i;
 	if (len == 1)
-		return (fonction10(data, args));
+		return (finish_program(data, args));
 	code = 0;
 	if (!is_numeric_arg(args[1]) || !ft_atoll(args[1], &code))
-		return (fonction9(data, args));
+		return (err_msg_2(data, args));
 	if (len > 2)
-		return (fonction8(args));
+		return (err_msg_1(args));
 	free_split(args, 0);
 	data->end = 1;
 	return ((code % 256 + 256) % 256);

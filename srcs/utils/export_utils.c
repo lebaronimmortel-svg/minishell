@@ -116,10 +116,10 @@ int	fonction2(t_data *data, char *str)
 
 int	fonction4(t_data *data, char *str, int *i, int *j)
 {
-	if (exists(str, data->env_bis, j))
+	if (does_var_exist(str, data->env_bis, j))
 	{
 		(replace(str, data->env_bis, *j));
-		if (exists(str, data->env, i))
+		if (does_var_exist(str, data->env, i))
 			(replace(str, data->env, *j));
 		else
 			if (fonction2(data, str))
@@ -152,7 +152,7 @@ int	add_var(char *str, t_data *data)
 		return (0);
 	}
 	j = 0;
-	if (exists(str, data->env_bis, &j))
+	if (does_var_exist(str, data->env_bis, &j))
 		return (0);
 	else
 		if (fonction1(data, str))
