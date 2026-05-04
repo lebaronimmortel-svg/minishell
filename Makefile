@@ -28,7 +28,23 @@ SRC         = srcs/main/main.c srcs/main/main_loop.c \
               srcs/utils/utils.c \
               srcs/utils/utils_bis.c \
               srcs/utils/utils_third.c \
-              srcs/utils/utils_third_bis.c
+              srcs/utils/utils_third_bis.c \
+              srcs/random/random1.c \
+              srcs/random/random2.c \
+              srcs/random/random3.c \
+              srcs/random/random4.c \
+              srcs/random/random5.c \
+              srcs/random/random6.c \
+              srcs/random/random7.c \
+              srcs/random/random8.c \
+              srcs/random/random9.c \
+              srcs/random/random10.c \
+              srcs/random/random11.c \
+              srcs/random/random12.c \
+              srcs/random/random13.c \
+              srcs/random/random14.c \
+              srcs/random/random15.c \
+              srcs/random/random16.c \
 
 OBJ         = $(SRC:%.c=$(OBJ_DIR)/%.o)
 HEADERS = header/typedef.h header/function.h header/header.h

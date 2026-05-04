@@ -12,30 +12,6 @@
 
 #include "../../header/header.h"
 
-char	*my_get_pid(void)
-{
-	char	**split;
-	char	*result;
-	int		fd;
-	char	buf[1024];
-	int		bytes;
-
-	fd = open("/proc/self/stat", O_RDONLY);
-	if (fd == -1)
-		return (NULL);
-	bytes = read(fd, buf, sizeof(buf));
-	close(fd);
-	buf[bytes] = '\0';
-	split = ft_split(buf, ' ');
-	if (!split)
-		return (NULL);
-	result = ft_strdup(split[0]);
-	if (!result)
-		return (NULL);
-	free_split(split, 0);
-	return (result);
-}
-
 void	unmask_spaces(char *str)
 {
 	int	i;

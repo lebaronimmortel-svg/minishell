@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-static char	*transpose_var(char *str, int index, char *buffer, int flag)
+char	*transpose_var(char *str, int index, char *buffer, int flag)
 {
 	int		i;
 	char	*tmp;
@@ -35,81 +35,17 @@ static char	*transpose_var(char *str, int index, char *buffer, int flag)
 	return (str);
 }
 
-char	*expand_code(char *str, t_data *data)
-{
-	int		i;
-	char	*code_str;
-	char	*old_str;
-
-	if (!str)
-		return (NULL);
-	i = 0;
-	while (str[i] && str[i + 1])
-	{
-		if (str[i] == '$' && str[i + 1] == '?' && is_ok_quote(str, i))
-		{
-			code_str = ft_itoa(data->error_code);
-			old_str = str;
-			str = transpose_var(str, i, code_str, 0);
-			free(old_str);
-			free(code_str);
-			if (!str)
-				return (NULL);
-			i = 0;
-		}
-		else
-			i++;
-	}
-	return (str);
-}
-
-void	assign_begin(char *buffer, int flag)
-{
-	if (!flag)
-	{
-		buffer[0] = '\2';
-		buffer[1] = '\0';
-	}
-}
-
-void	fill_input_spaces(char *buffer)
+void	empty_prompt_spaces(char *buffer)
 {
 	int	j;
 
 	j = 0;
 	while (buffer[j])
 	{
-		if (buffer[j] == ' ')
-			buffer[j] = '\x1f';
+		if (buffer[j] == '\x1f')
+			buffer[j] = '\1';
 		j++;
 	}
-}
-
-static void	var_search(char *buffer, char **envp)
-{
-	int	flag;
-	int	i;
-	int	j;
-
-	flag = 0;
-	i = 0;
-	while (envp[i])
-	{
-		if (!ft_strncmp(envp[i], buffer, ft_strlen(buffer))
-			&& envp[i][ft_strlen(buffer)] == '=')
-		{
-			flag = 1;
-			j = 0;
-			while (envp[i][j] != '=')
-				j++;
-			j++;
-			ft_strlcpy(buffer, &envp[i][j], ft_strlen(envp[i]) - j + 1);
-			fill_input_spaces(buffer);
-			break ;
-		}
-		i++;
-	}
-	assign_begin(buffer, flag);
 }
 
 static int	is_in_dquote(char *str, int index)
@@ -132,19 +68,6 @@ static int	is_in_dquote(char *str, int index)
 		i++;
 	}
 	return (in_dq);
-}
-
-void	empty_prompt_spaces(char *buffer)
-{
-	int	j;
-
-	j = 0;
-	while (buffer[j])
-	{
-		if (buffer[j] == '\x1f')
-			buffer[j] = '\1';
-		j++;
-	}
 }
 
 char	*convert_var(char *str, int index, char **envp)

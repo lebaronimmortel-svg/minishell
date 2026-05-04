@@ -123,17 +123,3 @@ void	infile_redir(char **split, int *i, int check)
 		z++;
 	}
 }
-
-void	end_collect_redir(t_exec *exec, char **envp)
-{
-	int	k;
-
-	k = 0;
-	while (k < exec->redir_count)
-	{
-		if (exec->redir[k].type == 'h' && exec->redir[k].fd == -1)
-			exec->redir[k].fd = handle_heredoc(exec, exec->redir[k].file,
-					envp);
-		k++;
-	}
-}

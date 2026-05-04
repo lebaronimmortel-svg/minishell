@@ -40,7 +40,7 @@ void	handle_single(char *str)
 	}
 }
 
-static int	has_cmd_after_pipe(t_token *lexer, int i)
+int	has_cmd_after_pipe(t_token *lexer, int i)
 {
 	while (lexer[i].type && lexer[i].type != 'p')
 	{
@@ -54,27 +54,7 @@ static int	has_cmd_after_pipe(t_token *lexer, int i)
 	return (0);
 }
 
-int	parser(t_token *lexer)
-{
-	int	i;
-
-	if (lexer[0].type == 'p')
-		return (0);
-	i = 0;
-	while (lexer[i].type)
-	{
-		if ((lexer[i].type == 's' || lexer[i].type == 'h'
-				|| lexer[i].type == 'r' || lexer[i].type == 'a')
-			&& lexer[i + 1].type != 'w')
-			return (0);
-		if (lexer[i].type == 'p' && !has_cmd_after_pipe(lexer, i + 1))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-static void	fill_space(char *str, int *i, char c)
+void	fill_space(char *str, int *i, char c)
 {
 	(*i)++;
 	while (str[*i] != c)

@@ -24,7 +24,7 @@ static int	check_space(const char *str, int i)
 	return (0);
 }
 
-static int	calcul(const char *str, int i, int signe, int result)
+int	calculation_atoi(const char *str, int i, int signe, int result)
 {
 	while (str[i])
 	{
@@ -54,6 +54,6 @@ int	ft_atoi(const char *nptr)
 			signe = -1;
 		i++;
 	}
-	result = calcul(nptr, i, signe, result);
+	result = calculation_atoi(nptr, i, signe, result);
 	return (result);
 }
