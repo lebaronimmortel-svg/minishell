@@ -65,7 +65,7 @@ int	is_valid_export_var(char *str)
 	return (1);
 }
 
-int	fonction(t_data *data, char *str)
+int	replace_both_env(t_data *data, char *str)
 {
 	int	len;
 
@@ -86,7 +86,7 @@ int	fonction(t_data *data, char *str)
 	return (0);
 }
 
-int	fonction1(t_data *data, char *str)
+int	replace_export_env(t_data *data, char *str)
 {
 	int	len;
 
@@ -100,7 +100,7 @@ int	fonction1(t_data *data, char *str)
 	return (0);
 }
 
-int	fonction2(t_data *data, char *str)
+int	export_env_env(t_data *data, char *str)
 {
 	int	len;
 
@@ -114,7 +114,7 @@ int	fonction2(t_data *data, char *str)
 	return (0);
 }
 
-int	fonction4(t_data *data, char *str, int *i, int *j)
+int	add_var_equal(t_data *data, char *str, int *i, int *j)
 {
 	if (does_var_exist(str, data->env_bis, j))
 	{
@@ -122,13 +122,13 @@ int	fonction4(t_data *data, char *str, int *i, int *j)
 		if (does_var_exist(str, data->env, i))
 			(replace(str, data->env, *j));
 		else
-			if (fonction2(data, str))
+			if (export_env_env(data, str))
 				return (1);
 		return (0);
 	}
 	else
 	{
-		if (fonction(data, str))
+		if (replace_both_env(data, str))
 			return (1);
 		return (0);
 	}
@@ -147,7 +147,7 @@ int	add_var(char *str, t_data *data)
 		return (1);
 	if (ft_strchr(str, '='))
 	{
-		if (fonction4(data, str, &i, &j))
+		if (add_var_equal(data, str, &i, &j))
 			return (1);
 		return (0);
 	}
@@ -155,7 +155,7 @@ int	add_var(char *str, t_data *data)
 	if (does_var_exist(str, data->env_bis, &j))
 		return (0);
 	else
-		if (fonction1(data, str))
+		if (replace_export_env(data, str))
 			return (1);
 	return (0);
 }
