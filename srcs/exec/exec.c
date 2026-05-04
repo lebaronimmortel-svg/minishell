@@ -136,7 +136,7 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 	return (result);
 }
 
-int	fonction47(char **split, t_data *data)
+int	is_end_input(char **split, t_data *data)
 {
 	if (split && split[0] && ft_strchr(split[0], '\6'))
 	{
@@ -153,7 +153,7 @@ int	fonction47(char **split, t_data *data)
 	return (1);
 }
 
-int	fonction48(t_data *data)
+int	update_status(t_data *data)
 {
 	if (data->signal)
 	{
@@ -187,11 +187,11 @@ int	exec_main(char **split, int i, t_data *data, int cmd_count)
 	exec.split = split;
 	if (cmd_count == 0)
 	{
-		if (fonction47(split, data) != 1)
+		if (is_end_input(split, data) != 1)
 			return (data->error_code);
 		data->error_code = exec_cmd(&exec, data, split);
 		free_redir(&exec);
-		return (fonction48(data));
+		return (update_status(data));
 	}
 	if (pipe_and_pid(&exec, cmd_count, data->env) == 1)
 		return (1);
