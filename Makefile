@@ -7,61 +7,65 @@ LIBFT_DIR   = srcs/libft
 HEADER_DIR  = header
 
 # --- Files ---
-SRC         = srcs/main/main.c srcs/main/main_loop.c \
-              srcs/exec/exec.c srcs/exec/exec_error.c \
-              srcs/exec/free_exec.c srcs/exec/redir.c \
-              srcs/built_in/built_in.c srcs/built_in/echo.c \
-              srcs/built_in/export.c srcs/built_in/unset.c \
-              srcs/parser/expand.c srcs/parser/lexer.c \
-              srcs/parser/parser.c srcs/utils/exec_utils.c \
-              srcs/utils/exec_utils_bis.c \
-              srcs/utils/exec_utils_fifth.c \
-              srcs/utils/exec_utils_fourth.c \
-              srcs/utils/exec_utils_third.c \
-              srcs/utils/expand_utils.c \
-              srcs/utils/export_utils.c \
-              srcs/utils/free_exec_utils.c \
-              srcs/utils/main_loop_utils.c \
-              srcs/utils/redir_utils.c \
-              srcs/utils/redir_utils_bis.c \
-              srcs/utils/redir_utils_third.c \
-              srcs/utils/utils.c \
-              srcs/utils/utils_bis.c \
-              srcs/utils/utils_third.c \
-              srcs/utils/utils_third_bis.c \
-              srcs/random/random1.c \
-              srcs/random/random2.c \
-              srcs/random/random3.c \
-              srcs/random/random4.c \
-              srcs/random/random5.c \
-              srcs/random/random6.c \
-              srcs/random/random7.c \
-              srcs/random/random8.c \
-              srcs/random/random9.c \
-              srcs/random/random10.c \
-              srcs/random/random11.c \
-              srcs/random/random12.c \
-              srcs/random/random13.c \
-              srcs/random/random14.c \
-              srcs/random/random15.c \
-              srcs/random/random16.c \
-
+SRC         = srcs/main/main.c \
+              srcs/main/finish_program.c \
+              srcs/main/prompt_loop.c \
+              srcs/exec/exec_prompt.c \
+              srcs/exec/exec.c \
+              srcs/exec/exec_built_in.c \
+              srcs/exec/exec_built_in_utils.c \
+              srcs/exec/exec_cmd.c \
+              srcs/exec/exec_cmd_utils.c \
+              srcs/exec/exec_error.c \
+              srcs/exec/free_exec.c \
+              srcs/exec/free_exec_utils.c \
+              srcs/exec/process_exec.c \
+              srcs/exec/status_code.c \
+              srcs/built_in/built_in.c \
+              srcs/built_in/built_in_utils.c \
+              srcs/built_in/cd_utils.c \
+              srcs/built_in/change_path.c \
+              srcs/built_in/echo.c \
+              srcs/built_in/echo_utils.c \
+              srcs/built_in/export.c \
+              srcs/built_in/export_add.c \
+              srcs/built_in/export_utils.c \
+              srcs/built_in/replace_env_var.c \
+              srcs/built_in/unset.c \
+              srcs/parser/check_quote.c \
+              srcs/parser/check_quote_utils.c \
+              srcs/parser/expand.c \
+              srcs/parser/expand_utils.c \
+              srcs/parser/get_pid.c \
+              srcs/parser/handle_spaces.c \
+              srcs/parser/lexer.c \
+              srcs/parser/parser.c \
+              srcs/redir/expand_heredoc.c \
+              srcs/redir/handle_heredoc.c \
+              srcs/redir/handle_redir.c \
+              srcs/redir/heredoc.c \
+              srcs/redir/infile_redir.c \
+              srcs/redir/redir.c \
+              srcs/redir/skip_redir.c \
+              srcs/utils/find_env.c \
+              srcs/utils/get_path.c \
+              srcs/utils/remove_quote.c \
+              srcs/utils/set_signal.c \
+              srcs/utils/split_dup.c \
+              
+              
 OBJ         = $(SRC:%.c=$(OBJ_DIR)/%.o)
 HEADERS = header/typedef.h header/function.h header/header.h
 LIBFT       = $(LIBFT_DIR)/libft.a
-
-# --- Compilation ---
 CC          = cc
 FLAGS       = -Wall -Wextra -Werror -g
 RM          = rm -rf
 
-# --- Rules ---
 all: $(NAME)
 
 $(NAME): $(OBJ) $(LIBFT)
 	$(CC) $(FLAGS) $(OBJ) $(LIBFT) -o $(NAME) -lreadline
 
-# Create objs/ directories automatically
 $(OBJ_DIR)/%.o: %.c $(HEADER)
 	@mkdir -p $(dir $@)
 	$(CC) $(FLAGS) -I $(HEADER_DIR) -I $(LIBFT_DIR) -c $< -o $@

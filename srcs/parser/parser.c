@@ -3,112 +3,108 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexfuen <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/03/08 13:32:29 by alexfuen          #+#    #+#             */
-/*   Updated: 2026/03/08 13:32:31 by alexfuen         ###   ########.fr       */
+/*   Created: 2026/05/04 21:03:29 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/05/04 21:03:32 by alexfuen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../header/header.h"
 
-void	handle_single(char *str)
+char	*expand_code(char *str, t_data *data)
 {
-	int	i;
-	int	flag1;
-	int	flag2;
+	int		i;
+	char	*code_str;
+	char	*old_str;
 
+	if (!str)
+		return (NULL);
 	i = 0;
-	flag1 = 0;
-	flag2 = 0;
-	while (str[i])
+	while (str[i] && str[i + 1])
 	{
-		if (str[i] == 39 && flag1 == 0)
-			flag2 = update_flag(flag2);
-		else if (str[i] == 34 && flag2 == 0)
-			flag1 = update_flag(flag1);
-		if (str[i] == '$')
+		if (str[i] == '$' && str[i + 1] == '?' && is_ok_quote(str, i))
 		{
-			if (flag1 == 0 && flag2 == 0
-				&& (str[i + 1] == 39 || str[i + 1] == 34))
-				move_one(&str[i]);
-			else
-				i++;
+			code_str = ft_itoa(data->error_code);
+			old_str = str;
+			str = transpose_var(str, i, code_str, 0);
+			free(old_str);
+			free(code_str);
+			if (!str)
+				return (NULL);
+			i = 0;
 		}
 		else
 			i++;
 	}
+	return (str);
 }
 
-int	has_cmd_after_pipe(t_token *lexer, int i)
+void	assign_begin(char *buffer, int flag)
 {
-	while (lexer[i].type && lexer[i].type != 'p')
+	if (!flag)
 	{
-		if (lexer[i].type == 'w')
-			return (1);
-		if (lexer[i].type == 'r' || lexer[i].type == 'a'
-			|| lexer[i].type == 's' || lexer[i].type == 'h')
-			return (1);
-		i += 2;
-	}
-	return (0);
-}
-
-void	fill_space(char *str, int *i, char c)
-{
-	(*i)++;
-	while (str[*i] != c)
-	{
-		if (str[*i] == ' ')
-			str[*i] = '\1';
-		else if (str[*i] == '|')
-			str[*i] = '\3';
-		else if (str[*i] == '<')
-			str[*i] = '\4';
-		else if (str[*i] == '>')
-			str[*i] = '\5';
-		(*i)++;
-	}
-	(*i)++;
-}
-
-static void	check(char *str, int *i, int *flag, char *c)
-{
-	while (str[*i])
-	{
-		while (str[*i] && str[*i] != 39 && str[*i] != 34)
-			(*i)++;
-		if (str[*i] && ft_strchr(&str[*i + 1], str[*i]))
-		{
-			*c = str[*i];
-			*flag = 1;
-			break ;
-		}
-		else
-		{
-			if (str[*i] && str[*i + 1])
-				(*i)++;
-			else
-				break ;
-		}
+		buffer[0] = '\2';
+		buffer[1] = '\0';
 	}
 }
 
-void	check_quote(char *str)
+void	fill_input_spaces(char *buffer)
 {
-	int		i;
-	char	c;
-	int		flag;
+	int	j;
 
+	j = 0;
+	while (buffer[j])
+	{
+		if (buffer[j] == ' ')
+			buffer[j] = '\x1f';
+		j++;
+	}
+}
+
+void	var_search(char *buffer, char **envp)
+{
+	int	flag;
+	int	i;
+	int	j;
+
+	flag = 0;
 	i = 0;
-	c = 0;
-	while (1)
+	while (envp[i])
 	{
-		flag = 0;
-		check(str, &i, &flag, &c);
-		if (flag)
-			fill_space(str, &i, c);
-		else
+		if (!ft_strncmp(envp[i], buffer, ft_strlen(buffer))
+			&& envp[i][ft_strlen(buffer)] == '=')
+		{
+			flag = 1;
+			j = 0;
+			while (envp[i][j] != '=')
+				j++;
+			j++;
+			ft_strlcpy(buffer, &envp[i][j], ft_strlen(envp[i]) - j + 1);
+			fill_input_spaces(buffer);
 			break ;
+		}
+		i++;
 	}
+	assign_begin(buffer, flag);
+}
+
+int	parser(t_token *lexer)
+{
+	int	i;
+
+	if (lexer[0].type == 'p')
+		return (0);
+	i = 0;
+	while (lexer[i].type)
+	{
+		if ((lexer[i].type == 's' || lexer[i].type == 'h'
+				|| lexer[i].type == 'r' || lexer[i].type == 'a')
+			&& lexer[i + 1].type != 'w')
+			return (0);
+		if (lexer[i].type == 'p' && !has_cmd_after_pipe(lexer, i + 1))
+			return (0);
+		i++;
+	}
+	return (1);
 }

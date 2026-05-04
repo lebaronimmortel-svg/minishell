@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cd_utils.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/05/04 21:35:05 by alexfuen          #+#    #+#             */
+/*   Updated: 2026/05/04 21:35:07 by alexfuen         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../header/header.h"
 
-long long	atoll_loop(const char *str, int i, int signe, long long *result)
+long long	atoll_loop(const char *str, int i, int sign, long long *result)
 {
 	int	digit;
 
@@ -9,12 +21,12 @@ long long	atoll_loop(const char *str, int i, int signe, long long *result)
 		digit = str[i] - '0';
 		if (digit < 0 || digit > 9)
 			return (0);
-		if (signe == 1)
+		if (sign == 1)
 		{
 			if (*result > (LLONG_MAX - digit) / 10)
 				return (0);
 		}
-		if (signe == -1)
+		if (sign == -1)
 		{
 			if (*result * (-1) < (LLONG_MIN + digit) / 10)
 				return (0);
@@ -31,21 +43,21 @@ long long	atoll_loop(const char *str, int i, int signe, long long *result)
 long long	ft_atoll(const char *nptr, long long *result)
 {
 	int	i;
-	int	signe;
+	int	sign;
 
 	i = 0;
-	signe = 1;
+	sign = 1;
 	while (check_space(nptr, i))
 		i++;
 	if (nptr[i] == '+' || nptr[i] == '-')
 	{
 		if (nptr[i] == '-')
-			signe = -1;
+			sign = -1;
 		i++;
 	}
-	if (!atoll_loop(nptr, i, signe, result))
+	if (!atoll_loop(nptr, i, sign, result))
 		return (0);
-	*result = *result * signe;
+	*result = *result * sign;
 	return (1);
 }
 
