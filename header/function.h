@@ -40,7 +40,7 @@ int		cd(char *input, t_data *data);
 int		unset(char **split, t_data *data);
 
 /* ================================ export.c ============================= */
-int		exists(char *str, char **env, int *i);
+int		does_var_exist(char *str, char **env, int *i);
 int		ft_export(char *input, t_data *data);
 void	export_single(t_data *data);
 
