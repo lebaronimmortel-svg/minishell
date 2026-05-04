@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-void	fonction_hehe(t_exec_ctx *ctx, int ret)
+void	close_exec_fds(t_exec_ctx *ctx, int ret)
 {
 	if (ret == 2 && !ctx->data->end)
 		ctx->data->error_code = 127;
@@ -42,7 +42,7 @@ int	handle_exec_result(int ret, int built_in, t_exec_ctx *ctx)
 	}
 	if (ret == 1 || (ret == 2 && !ctx->data->end))
 	{
-		fonction_hehe(ctx, ret);
+		close_exec_fds(ctx, ret);
 		ctx->cmd_index++;
 		return (1);
 	}
@@ -73,7 +73,7 @@ int	end_exec_sig(t_exec_ctx *ctx, int exit_code, int last_pid_status)
 	return (exit_code);
 }
 
-void	ctx_innit(t_exec_ctx *ctx, t_exec *exec, t_data *data, int cmd_count)
+void	ctx_init(t_exec_ctx *ctx, t_exec *exec, t_data *data, int cmd_count)
 {
 	ctx->exec = exec;
 	ctx->data = data;

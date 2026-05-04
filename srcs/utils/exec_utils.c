@@ -152,7 +152,7 @@ static void	end_fork_created(t_exec *exec, int cmd_index, int cmd_count)
 	}
 }
 
-void	fonction6000(t_exec *exec, int cmd_index, int cmd_count)
+void	dup_exec_fds(t_exec *exec, int cmd_index, int cmd_count)
 {
 	if (cmd_index > 0)
 		dup2(exec->fd[cmd_index - 1][0], STDIN_FILENO);
@@ -181,14 +181,14 @@ void	fork_created(t_exec *exec, int cmd_index, int cmd_count)
 	{
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-		fonction6000(exec, cmd_index, cmd_count);
+		dup_exec_fds(exec, cmd_index, cmd_count);
 		exit(1);
 	}
 	else
 		end_fork_created(exec, cmd_index, cmd_count);
 }
 
-int	fonctionbca(int *had_real_pid, t_exec_ctx *ctx, int i, int *status)
+int	wait_son_status(int *had_real_pid, t_exec_ctx *ctx, int i, int *status)
 {
 	int	last_pid_status;
 
@@ -211,7 +211,7 @@ int	end_exec(t_exec_ctx *ctx, int exit_code, int status, int i)
 	while (i < ctx->cmd_count)
 	{
 		if (ctx->exec->pid[i] > 0)
-			last_pid_status = fonctionbca(&had_real_pid, ctx, i, &status);
+			last_pid_status = wait_son_status(&had_real_pid, ctx, i, &status);
 		i++;
 	}
 	if (!had_real_pid)
