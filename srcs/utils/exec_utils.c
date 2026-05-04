@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-int	fonction17(t_exec *exec)
+int	check_access(t_exec *exec)
 {
 	struct stat	info;
 
@@ -48,7 +48,7 @@ static int	find_env(t_exec *exec, int i)
 	}
 	if (find_env_loop(exec, i) == 0)
 		return (0);
-	if (!fonction17(exec))
+	if (!check_access(exec))
 		return (0);
 	return (1);
 }
@@ -82,7 +82,7 @@ static int	get_path_error(char *path)
 	return (127);
 }
 
-void	fonctionbbb(t_exec *exec, int *err_code)
+void	handle_invalid(t_exec *exec, int *err_code)
 {
 	if (ft_strchr(exec->command[0], '/'))
 	{
@@ -100,7 +100,7 @@ void	fonctionbbb(t_exec *exec, int *err_code)
 	}
 }
 
-void	fonctionccc(t_exec *exec)
+void	handle_perm(t_exec *exec)
 {
 	free_data_split(exec);
 	execve(exec->w_path, exec->command, exec->env);
@@ -108,7 +108,7 @@ void	fonctionccc(t_exec *exec)
 	free_exec_failed(exec, 126);
 }
 
-void	fonctionddd(t_exec *exec)
+void	handle_unknown(t_exec *exec)
 {
 	if (ft_strchr(exec->input, '\6'))
 	{
@@ -130,11 +130,11 @@ static void	exec_command(t_exec *exec)
 		free_exec_failed(exec, 0);
 	}
 	if (exec->command[0][0] == '\0')
-		fonctionddd(exec);
+		handle_unknown(exec);
 	if (find_env(exec, 0) == 1)
-		fonctionbbb(exec, &err_code);
+		handle_invalid(exec, &err_code);
 	if (exec->w_path)
-		fonctionccc(exec);
+		handle_perm(exec);
 	free_exec_failed(exec, 127);
 }
 

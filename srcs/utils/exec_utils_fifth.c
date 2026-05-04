@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-void	fonction_abc(char **split, int cmd_pos, int i, int sp)
+void	set_end_split(char **split, int cmd_pos, int i, int sp)
 {
 	char	*extra;
 
@@ -39,7 +39,7 @@ void	preprocess_split(char **split, int i, int cmd_pos)
 			{
 				sp = space_pos(split[i + 1]);
 				if (sp != -1)
-					fonction_abc(split, cmd_pos, i, sp);
+					set_end_split(split, cmd_pos, i, sp);
 				i++;
 			}
 		}
