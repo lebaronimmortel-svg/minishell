@@ -12,6 +12,13 @@
 
 #include "../../header/header.h"
 
+static void	retrieve_result(int *result, t_exec *exec, int *i)
+{
+	*result = retrieve_status(exec, i);
+	if (*result == 1 || *result == 2)
+		free_redir(exec);
+}
+
 int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 {
 	t_exec	*exec;
@@ -37,7 +44,7 @@ int	exec_main_sequel(char **split, int *i, t_exec_ctx *ctx)
 		status = do_built_in_part(split, i, ctx);
 	if (is_built_in(exec->input))
 		return (status);
-	result = retrieve_status(exec, i);
+	retrieve_result(&result, exec, i);
 	return (result);
 }
 
@@ -56,17 +63,6 @@ int	is_end_input(char **split, t_data *data)
 		return (0);
 	}
 	return (1);
-}
-
-int	update_status(t_data *data)
-{
-	if (data->signal)
-	{
-		data->signal = 0;
-		data->error_code = 130;
-		return (130);
-	}
-	return (data->error_code);
 }
 
 void	set_signal_ign(void)
