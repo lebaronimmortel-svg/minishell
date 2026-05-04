@@ -55,7 +55,7 @@ int	find_env_loop(t_exec *exec, int i)
 	return (1);
 }
 
-void	fonction18(t_exec_ctx *ctx)
+void	close_fds_built_in(t_exec_ctx *ctx)
 {
 	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
 	{
@@ -71,7 +71,7 @@ void	fonction18(t_exec_ctx *ctx)
 	free_redir(ctx->exec);
 }
 
-void	fonction19(t_exec_ctx *ctx)
+void	dup_fds_built_in(t_exec_ctx *ctx)
 {
 	if (ctx->cmd_index > 0 && ctx->exec->fd[ctx->cmd_index - 1][0] != -1)
 		dup2(ctx->exec->fd[ctx->cmd_index - 1][0], STDIN_FILENO);
@@ -88,7 +88,7 @@ int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 
 	saved_stdin = dup(STDIN_FILENO);
 	saved_stdout = dup(STDOUT_FILENO);
-	fonction19(ctx);
+	dup_fds_built_in(ctx);
 	status = 0;
 	if (ctx->exec->redir_count > 0)
 	{
@@ -102,12 +102,12 @@ int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdin);
 	close(saved_stdout);
-	fonction18(ctx);
+	close_fds_built_in(ctx);
 	(*i)++;
 	return (status);
 }
 
-int	fonctionlisse(char **split, int *i)
+int	skip_token1(char **split, int *i)
 {
 	if (is_pipe(split[*i]))
 	{
@@ -127,7 +127,7 @@ int	fonctionlisse(char **split, int *i)
 	return (0);
 }
 
-int	fonctiondure(char **split, int *i)
+int	skip_token2(char **split, int *i)
 {
 	if (split[*i][0] == '\0' && !has_redir_after_empty(split, *i))
 	{
@@ -149,9 +149,9 @@ int	fonctiondure(char **split, int *i)
 
 int	should_skip_token(char **split, int *i)
 {
-	if (fonctionlisse(split, i))
+	if (skip_token1(split, i))
 		return (1);
-	if (fonctiondure(split, i))
+	if (skip_token2(split, i))
 		return (1);
 	return (0);
 }

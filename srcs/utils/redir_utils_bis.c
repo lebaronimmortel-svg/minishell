@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-int	fonction_1234(t_exec *exec, int *i)
+int	init_fds(t_exec *exec, int *i)
 {
 	exec->fd[*i] = malloc(sizeof(int) * 2);
 	if (!exec->fd[*i])
@@ -53,7 +53,7 @@ int	pipe_and_pid_init(t_exec *exec, int cmd_count, int i)
 		return (1);
 	i = 0;
 	while (i < pipe_count)
-		if (fonction_1234(exec, &i))
+		if (init_fds(exec, &i))
 			return (1);
 	exec->pipe_count = pipe_count;
 	return (0);

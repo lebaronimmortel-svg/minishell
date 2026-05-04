@@ -76,7 +76,7 @@ static char	*expand_double(char *str)
 	return (str);
 }
 
-void	fonction_void(t_token *token, int i, int quoted)
+void	delete_spaces(t_token *token, int i, int quoted)
 {
 	int	k;
 
@@ -132,7 +132,7 @@ static int	lex_convert(char **split, t_token *token, t_data *data)
 			return (0);
 		if (i == 0 || token[i - 1].type != 'h')
 			remove_quotes(token[i].value);
-		fonction_void(token, i, quoted);
+		delete_spaces(token, i, quoted);
 		i++;
 		j++;
 	}
