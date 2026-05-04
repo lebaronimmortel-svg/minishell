@@ -12,7 +12,7 @@
 
 #include "../../header/header.h"
 
-static char	*transpose(char *str, int index, char *buffer, int flag)
+static char	*transpose_var(char *str, int index, char *buffer, int flag)
 {
 	int		i;
 	char	*tmp;
@@ -50,7 +50,7 @@ char	*expand_code(char *str, t_data *data)
 		{
 			code_str = ft_itoa(data->error_code);
 			old_str = str;
-			str = transpose(str, i, code_str, 0);
+			str = transpose_var(str, i, code_str, 0);
 			free(old_str);
 			free(code_str);
 			if (!str)
@@ -72,7 +72,7 @@ void	assign_begin(char *buffer, int flag)
 	}
 }
 
-void	fonction20(char *buffer)
+void	fill_input_spaces(char *buffer)
 {
 	int	j;
 
@@ -104,7 +104,7 @@ static void	var_search(char *buffer, char **envp)
 				j++;
 			j++;
 			ft_strlcpy(buffer, &envp[i][j], ft_strlen(envp[i]) - j + 1);
-			fonction20(buffer);
+			fill_input_spaces(buffer);
 			break ;
 		}
 		i++;
@@ -134,7 +134,7 @@ static int	is_in_dquote(char *str, int index)
 	return (in_dq);
 }
 
-void	fonction11(char *buffer)
+void	empty_prompt_spaces(char *buffer)
 {
 	int	j;
 
@@ -167,8 +167,8 @@ char	*convert_var(char *str, int index, char **envp)
 	buffer[i - index - 1] = '\0';
 	var_search(buffer, envp);
 	if (in_dq)
-		fonction11(buffer);
-	str = transpose(str, index, buffer, 1);
+		empty_prompt_spaces(buffer);
+	str = transpose_var(str, index, buffer, 1);
 	return (str);
 }
 
