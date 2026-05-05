@@ -21,11 +21,13 @@ void	handle_invalid(t_exec *exec, int *err_code)
 			execve_error(exec->command[0], ": Permission denied");
 		else
 			execve_error(exec->command[0], ": No such file or directory");
+		free_redir(exec);
 		free_exec_failed(exec, *err_code);
 	}
 	else
 	{
 		execve_error(exec->command[0], ": command not found");
+		free_redir(exec);
 		free_exec_failed(exec, 127);
 	}
 }
