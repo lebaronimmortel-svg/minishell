@@ -28,17 +28,14 @@ To compile and run the project, the standard `Makefile` rules apply:
 
 Resources for this project were : 
 
--
--
--
--
--
--
--
--
+- https://www.reddit.com/
+- https://man7.org/linux/man-pages/
+- https://stackoverflow.com/
+- https://linuxize.com/post/bash-heredoc/
 
-We also used Gemini as an improved internet navigator to find out some technical info such as
-how to use the provided functions, and to find some specific bugs. 
+We also used Gemini as an improved internet navigator to find out some technical info such as :
+- how to use the provided functions
+- to find some specific bugs.
 
 The allowed external functions used to construct this shell include:
 * `readline`, `rl_clear_history`, `rl_on_new_line`, `rl_replace_line`, `rl_redisplay`, `add_history`.
