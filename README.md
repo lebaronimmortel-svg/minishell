@@ -16,6 +16,8 @@ The shell incorporates the following main features:
 * Handles interactive signals appropriately: `ctrl-C` displays a new prompt, `ctrl-D` exits the shell, and `ctrl-\` does nothing.
 * Implements the built-in commands: `echo` (with the `-n` option), `cd` (relative or absolute path), `pwd`, `export`, `unset`, `env`, and `exit`.
 
+Memory leaks are properly managed throughout the implementation, except for potential leaks caused internally by the `readline()` function itself.
+
 ## Instructions
 To compile and run the project, the standard `Makefile` rules apply:
 * Run `make` or `make all` to compile the source code into the required executable using `cc` with `-Wall`, `-Wextra`, and `-Werror` flags.
@@ -23,7 +25,20 @@ To compile and run the project, the standard `Makefile` rules apply:
 * Other available `Makefile` rules include `clean`, `fclean`, and `re`.
 
 ## Resources
-Memory leaks are properly managed throughout the implementation, except for potential leaks caused internally by the `readline()` function itself.
+
+Resources for this project were : 
+
+-
+-
+-
+-
+-
+-
+-
+-
+
+We also used Gemini as an improved internet navigator to find out some technical info such as
+how to use the provided functions, and to find some specific bugs. 
 
 The allowed external functions used to construct this shell include:
 * `readline`, `rl_clear_history`, `rl_on_new_line`, `rl_replace_line`, `rl_redisplay`, `add_history`.
