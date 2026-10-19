@@ -20,7 +20,7 @@ Memory leaks are properly managed throughout the implementation, except for pote
 
 ## Instructions
 To compile and run the project, the standard `Makefile` rules apply:
-* Run `make` or `make all` to compile the source code into the required executable using `cc` with `-Wall`, `-Wextra`, and `-Werror` flags.
+* Run `make` to compile the source code.
 * Once compiled, launch the program by executing `./minishell`.
 * Other available `Makefile` rules include `clean`, `fclean`, and `re`.
 
@@ -28,8 +28,8 @@ To compile and run the project, the standard `Makefile` rules apply:
 
 Resources for this project were : 
 
-- https://man7.org/linux/man-pages/
-- https://linuxize.com/post/bash-heredoc/
+- https://man7.org/linux/man-pages/ - linux official man
+- https://linuxize.com/post/bash-heredoc/ - a bief course to understand heredocs
 
 The allowed external functions used to construct this shell include:
 * `readline`, `rl_clear_history`, `rl_on_new_line`, `rl_replace_line`, `rl_redisplay`, `add_history`.
