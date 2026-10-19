@@ -28,8 +28,8 @@ To compile and run the project, the standard `Makefile` rules apply:
 
 Resources for this project were : 
 
-- https://man7.org/linux/man-pages/ - linux official man
-- https://linuxize.com/post/bash-heredoc/ - a bief course to understand heredocs
+- https://man7.org/linux/man-pages/ — linux official manual
+- https://linuxize.com/post/bash-heredoc/ — a bief course to understand how heredocs work
 
 The allowed external functions used to construct this shell include:
 * `readline`, `rl_clear_history`, `rl_on_new_line`, `rl_replace_line`, `rl_redisplay`, `add_history`.
