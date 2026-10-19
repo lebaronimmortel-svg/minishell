@@ -28,22 +28,13 @@ To compile and run the project, the standard `Makefile` rules apply:
 
 Resources for this project were : 
 
-- https://www.reddit.com/
 - https://man7.org/linux/man-pages/
-- https://stackoverflow.com/
 - https://linuxize.com/post/bash-heredoc/
-
-We also used Gemini as an improved internet navigator to find out some technical info such as :
-- how to use the provided functions
-- to find some specific bugs.
 
 The allowed external functions used to construct this shell include:
 * `readline`, `rl_clear_history`, `rl_on_new_line`, `rl_replace_line`, `rl_redisplay`, `add_history`.
 * `printf`, `malloc`, `free`, `write`, `access`, `open`, `read`, `close`.
-* `fork`, `wait`, `waitpid`, `wait3`, `wait4`.
-* `signal`, `sigaction`, `sigemptyset`, `sigaddset`, `kill`.
-* `exit`, `getcwd`, `chdir`, `stat`, `lstat`, `fstat`, `unlink`, `execve`.
+* `fork`, `wait`, `waitpid`, `signal`.
+* `exit`, `getcwd`, `chdir`, `stat`, `execve`.
 * `dup`, `dup2`, `pipe`.
-* `opendir`, `readdir`, `closedir`.
-* `strerror`, `perror`, `isatty`, `ttyname`, `ttyslot`, `ioctl`.
-* `getenv`, `tcsetattr`, `tcgetattr`, `tgetent`, `tgetflag`, `tgetnum`, `tgetstr`, `tgoto`, `tputs`.
+* `perror`, `ioctl`.
