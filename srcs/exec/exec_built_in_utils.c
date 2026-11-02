@@ -98,6 +98,8 @@ int	do_built_in_part(char **split, int *i, t_exec_ctx *ctx)
 	if (status == 0)
 		status = exec_built_in(ctx->exec->input, ctx->data, split, *i);
 	ctx->exec->env = ctx->data->env;
+	if (ctx->cmd_count > 1)
+		ctx->data->end = 0;
 	dup2(saved_stdin, STDIN_FILENO);
 	dup2(saved_stdout, STDOUT_FILENO);
 	close(saved_stdin);

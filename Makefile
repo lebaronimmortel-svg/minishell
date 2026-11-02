@@ -52,8 +52,9 @@ SRC         = srcs/main/main.c \
               srcs/utils/remove_quote.c \
               srcs/utils/set_signal.c \
               srcs/utils/split_dup.c \
-              
-              
+              srcs/utils/heredoc_utils.c \
+
+
 OBJ         = $(SRC:%.c=$(OBJ_DIR)/%.o)
 HEADERS = header/typedef.h header/function.h header/header.h
 LIBFT       = $(LIBFT_DIR)/libft.a

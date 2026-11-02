@@ -78,30 +78,21 @@ int	end_exec(t_exec_ctx *ctx, int exit_code, int status, int i)
 }
 
 int	handle_hdoc_bis(t_exec *exec, char *delim,
-							char **envp, int *pipefd)
+						char **envp, int *pipefd)
 {
 	pid_t	pid;
 	int		status;
-	char	*line;
-	int		normal_exit;
 
-	normal_exit = 0;
 	pid = fork();
-	if (pid == 0)
+	if (pid < 0)
 	{
-		check_exec(exec);
-		g_ack = 0;
-		signal(SIGINT, handle_sigint_son);
-		while (1)
-		{
-			line = get_line_heredoc(exec, delim, pipefd);
-			if (handle_heredoc_end(&normal_exit, line, delim))
-				break ;
-			expand_heredoc(exec->data->expand, line, pipefd, envp);
-			exec->data->expand = 1;
-		}
-		free_son_heredoc(exec, delim, pipefd, 0);
+		perror("fork");
+		free(delim);
+		close(pipefd[1]);
+		return (1);
 	}
+	if (pid == 0)
+		child_heredoc(exec, delim, envp, pipefd);
 	wait_son(pipefd, &status, exec, pid);
 	return (WEXITSTATUS(status));
 }
