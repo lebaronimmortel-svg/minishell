@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   set_signal.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
+/*   By: alexfuen <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 21:30:58 by alexfuen          #+#    #+#             */
 /*   Updated: 2026/05/04 21:31:01 by alexfuen         ###   ########.fr       */

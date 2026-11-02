@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cmd_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
+/*   By: alexfuen <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 21:36:04 by alexfuen          #+#    #+#             */
 /*   Updated: 2026/05/04 21:36:06 by alexfuen         ###   ########.fr       */

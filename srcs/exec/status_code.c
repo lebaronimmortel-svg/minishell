@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   status_code.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
+/*   By: alexfuen <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 21:37:32 by alexfuen          #+#    #+#             */
 /*   Updated: 2026/05/04 21:37:34 by alexfuen         ###   ########.fr       */
