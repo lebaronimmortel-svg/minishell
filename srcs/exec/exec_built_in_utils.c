@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   exec_built_in_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alexfuen <marvin@d42.fr>                   +#+  +:+       +#+        */
+/*   By: alexfuen <marvin@42.fr>                   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 21:36:13 by alexfuen          #+#    #+#             */
 /*   Updated: 2026/05/04 21:36:14 by alexfuen         ###   ########.fr       */

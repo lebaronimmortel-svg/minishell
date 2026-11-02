@@ -1,49 +1,135 @@
 *This project has been created as part of the 42 curriculum by lukrodri, alexfuen.*
 
+# minishell
+
 ## Description
-Minishell is a project that involves creating a simple shell, functioning like your very own little Bash.
 
-The shell incorporates the following main features:
-* Displays a prompt while waiting for new commands.
-* Maintains a working history.
-* Executes commands by finding the correct executable using the `PATH` variable, absolute paths, or relative paths.
-* Handles single quotes (`'`), which prevent the interpretation of meta-characters.
-* Handles double quotes (`"`), which prevent the interpretation of meta-characters except for the dollar sign (`$`).
-* Implements redirections, including `<` for input , `>` for output , `<<` for heredoc , and `>>` for output in append mode.
-* Supports pipes (`|`), which connect the output of one command to the input of the next.
-* Expands environment variables to their respective values.
-* Expands `$?` to the exit status of the most recently executed foreground pipeline.
-* Handles interactive signals appropriately: `ctrl-C` displays a new prompt, `ctrl-D` exits the shell, and `ctrl-\` does nothing.
-* Implements the built-in commands: `echo` (with the `-n` option), `cd` (relative or absolute path), `pwd`, `export`, `unset`, `env`, and `exit`.
+*minishell* is a small computer shell developed for the 42 `minishell` project.
+It allows the user to interact with the computer by typing commands into the terminal.
+For example :
+```bash
+echo "Hello world" >> file.txt
+cat file.txt
+```
+Will output :
+```bash
+Hello world
+```
 
-Memory leaks are properly managed throughout the implementation, except for potential leaks caused internally by the `readline()` function itself.
+### Key concepts
 
-## Instructions
-To compile and run the project, the standard `Makefile` rules apply:
-* Run `make` or `make all` to compile the source code into the required executable using `cc` with `-Wall`, `-Wextra`, and `-Werror` flags.
-* Once compiled, launch the program by executing `./minishell`.
-* Other available `Makefile` rules include `clean`, `fclean`, and `re`.
+- Strict parsing and tokenization of input
+- Memory management
+- Signals and system calls
+- Built-in functions
+- Pipes and status codes
 
-## Resources
+### External functions
 
-Resources for this project were : 
-
-- https://www.reddit.com/
-- https://man7.org/linux/man-pages/
-- https://stackoverflow.com/
-- https://linuxize.com/post/bash-heredoc/
-
-We also used Gemini as an improved internet navigator to find out some technical info such as :
-- how to use the provided functions
-- to find some specific bugs.
-
-The allowed external functions used to construct this shell include:
 * `readline`, `rl_clear_history`, `rl_on_new_line`, `rl_replace_line`, `rl_redisplay`, `add_history`.
 * `printf`, `malloc`, `free`, `write`, `access`, `open`, `read`, `close`.
-* `fork`, `wait`, `waitpid`, `wait3`, `wait4`.
-* `signal`, `sigaction`, `sigemptyset`, `sigaddset`, `kill`.
-* `exit`, `getcwd`, `chdir`, `stat`, `lstat`, `fstat`, `unlink`, `execve`.
+* `fork`, `wait`, `waitpid`.
+* `signal`.
+* `exit`, `getcwd`, `chdir`, `stat`, `execve`.
 * `dup`, `dup2`, `pipe`.
-* `opendir`, `readdir`, `closedir`.
-* `strerror`, `perror`, `isatty`, `ttyname`, `ttyslot`, `ioctl`.
-* `getenv`, `tcsetattr`, `tcgetattr`, `tgetent`, `tgetflag`, `tgetnum`, `tgetstr`, `tgoto`, `tputs`.
+* `ioctl`.
+
+### Libraries
+
+* `libc`
+* `libreadline`
+
+## Team Information
+
+| Member | 42 login | Role | Main responsibilities |
+| --- | --- | --- | --- |
+| Alexandre | `alexfuen` | Developer | built-in functions, lexer,  parser, signals
+| Lukas | `lukrodri` | Developer | pipes, execution, redirections, heredocs
+
+## Algorithm
+
+```text
+                            User
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │      Prompt     │ ◀───────────────────┐◀────────────────┐
+                    └────────┬────────┘                     │                 │
+                             │                              │                 │
+                    ┌────────┴────────┐                     │                 │
+                    │      Parser     │            ┌────────┴────────┐        │
+                    └────────┬────────┘            │  Error message  |        │
+                             │                     └────────┬────────┘        │        
+                 ┌───────────┴───────────┐                  │                 │
+                 │                       │                  │                 │
+                 ▼                       ▼                  │                 │
+       ┌─────────────────┐       ┌─────────────────┐        │                 │
+       │      Valid      │       │     Invalid     │────────┘                 │
+       └────────┬────────┘       └─────────────────┘                          │
+                │                                                             │
+                ▼                                                             │
+       ┌─────────────────┐                                                    │
+       │    While pipe:  │                                                    │
+       │      exec       │◀──────┐                                            │
+       └────────┬────────┘   ┌───┴──┐                                         │
+                │            | Fork |                                         │
+                │            └───┬──┘                                         │
+                └────────────────┘                                            │
+                │                                                             │
+                │                                                             │
+                ▼                                                             │          
+       ┌─────────────────┐                                           ┌────────┴────────┐                                     
+       |    Wait PID     |──────────────────────────────────────────▶|      Output     |
+       └─────────────────┘                                           └─────────────────┘
+```
+
+---
+
+# Instructions
+
+## Requirements
+
+The project requires:
+
+- Make
+- Clang Compiler
+
+---
+
+## Configuration
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd minishell
+```
+
+---
+
+## Start the Application
+
+Build with:
+
+```bash
+make
+```
+Then launch with:
+```bash
+./minishell
+```
+
+---
+
+# Resources
+
+Main documentation and references used during development:
+
+- Main functions documentation — https://www.man7.org/linux/man-pages
+- A tutorial to understand forking and pipes management — https://www.youtube.com/watch?v=cex9XrZCU14&list=PLfqABt5AS4FkW5mOn2Tn9ZZLLDwA3kZUY
+- An exhaustive tester made by a student from our campus — https://gitlab.com/nda-cunh/minishell_tester
+
+## AI Usage
+
+AI tools were used as a supplementary resource during the project, mainly for technical research, troubleshooting, reviewing edge cases, checking project requirements and assisting with documentation.
+The team remained responsible for the technical decisions, implementation and final validation of the project.
