@@ -29,6 +29,7 @@ void	free_son_heredoc(t_exec *exec, char *delim, int pipe_fd[2], int code)
 		free(delim);
 	free_redir(exec);
 	free_exec_cmd(exec);
+	free_fd(exec);
 	if (exec->pid)
 		free(exec->pid);
 	exit_cleanly(code, exec->data, exec->split);

@@ -158,5 +158,8 @@ int			get_path_error(char *path);
 int			find_env(t_exec *exec, int i);
 char		*get_user(t_data *data);
 long long	ft_atoll(const char *nptr, long long *result);
+int			has_quotes(char *str);
+char		*strip_quotes(char *delimiter);
+void		child_heredoc(t_exec *exec, char *delim, char **envp, int *pipefd);
 
 #endif

@@ -51,7 +51,7 @@ int	is_valid_export_var(char *str)
 	int	i;
 
 	i = 0;
-	if (!ft_isalpha(str[i]))
+	if (!ft_isalpha(str[i]) && str[i] != '_')
 		return (0);
 	while (str[i] && str[i] != ' ' && str[i] != '=')
 	{

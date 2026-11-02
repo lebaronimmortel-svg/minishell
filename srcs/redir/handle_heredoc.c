@@ -27,12 +27,10 @@ int	handle_heredoc(t_exec *exec, char *delimiter, char **envp)
 {
 	int		pipefd[2];
 	char	*delim;
-	int		len;
 
-	if (delimiter[0] == 34 || delimiter[0] == 39)
+	if (has_quotes(delimiter))
 	{
-		len = ft_strlen(delimiter);
-		delim = ft_substr(delimiter, 1, len - 2);
+		delim = strip_quotes(delimiter);
 		if (!delim)
 			return (-1);
 		exec->data->expand = 0;

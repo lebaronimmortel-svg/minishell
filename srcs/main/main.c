@@ -50,7 +50,7 @@ static int	init(t_data *data, char **envp)
 	return (1);
 }
 
-void	prompt_loop(t_data *data, int *status, char **split, t_token *lex)
+void	prompt_loop(t_data *data, char **split, t_token *lex)
 {
 	int		flag;
 	char	*str;
@@ -68,24 +68,21 @@ void	prompt_loop(t_data *data, int *status, char **split, t_token *lex)
 		flag = 0;
 	}
 	if (str == NULL)
-		exit_cleanly(*status, data, split);
+		exit_cleanly(data->error_code, data, split);
 	else if (ft_strlen(str) != 0)
 		add_history(str);
 	lex = lexer(str, data);
 	free(str);
 	if (lex)
-		*status = execute_prompt(split, lex, data);
+		execute_prompt(split, lex, data);
 	if (data->end)
 		exit_cleanly(data->error_code, data, split);
 }
 
 void	main_loop(char **split, t_token *lex, t_data *data)
 {
-	int		status;
-
-	status = 0;
 	while (1)
-		prompt_loop(data, &status, split, lex);
+		prompt_loop(data, split, lex);
 }
 
 int	main(int argc, char **argv, char **envp)
