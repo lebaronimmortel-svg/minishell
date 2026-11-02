@@ -2,7 +2,7 @@
 
 # minishell
 
-## Description
+# Description
 
 *minishell* is a small computer shell developed for the 42 `minishell` project.
 It allows the user to interact with the computer by typing commands into the terminal.
