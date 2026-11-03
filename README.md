@@ -126,7 +126,7 @@ Then launch with:
 Main documentation and references used during development:
 
 - Main functions documentation — https://www.man7.org/linux/man-pages
-- A tutorial to understand forking and pipes management — https://www.youtube.com/watch?v=cex9XrZCU14&list=PLfqABt5AS4FkW5mOn2Tn9ZZLLDwA3kZUY
+- A tutorial to understand forking and pipe management — https://www.youtube.com/watch?v=cex9XrZCU14&list=PLfqABt5AS4FkW5mOn2Tn9ZZLLDwA3kZUY
 - An exhaustive tester made by a student from our campus — https://gitlab.com/nda-cunh/minishell_tester
 
 ## AI Usage
